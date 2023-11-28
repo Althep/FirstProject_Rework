@@ -37,7 +37,7 @@ public class MonsterState : LivingEntity
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(!monsterActState is Sleep || !monsterActState is Chase)
+        if(!(monsterActState is Sleep) &&!(monsterActState is Chase))
         {
             monsterActState = this.transform.GetComponent<Chase>();
         }

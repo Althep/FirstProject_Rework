@@ -1,0 +1,11 @@
+﻿id,name,itemtype,equiptype,weapontype,armortype,slot,damage,defense,range,attspeed,tier,option,consumkind,conditiontype,conditionname,panalty,sh,weight,acc
+0,Poison,Consumable,,,,0,0,0,0,0,1,Poision,Potion,Update,Poision,0,0,0,0
+1,Teleport,Consumable,,,,0,0,0,0,0,1,Teleport,Scroll,End,Teleport,0,0,0,0
+2,Book,Consumable,,,,0,0,0,0,0,2,GetMagics,Book,None,None,0,0,0,0
+3,FireBolt,Consumable,,,,0,0,0,0,0,2,FireBolt,Evoke,None,None,0,0,0,0
+4,asdf,Consumable,,,,0,0,0,0,0,1,Poision,Potion,Update,Poision,0,0,0,0
+5,4temp,Consumable,,,,0,0,0,0,0,4,Heal,Potion,None,None,0,0,0,0
+6,5temp,Consumable,,,,0,0,0,0,0,5,Heal,Potion,None,None,0,0,0,0
+7,6temp,Consumable,,,,0,0,0,0,0,6,Heal,Potion,None,None,0,0,0,0
+8,3temp,Consumable,,,,0,0,0,0,0,3,Heal,Potion,None,None,0,0,0,0
+9,Heal,Consumable,,,,0,0,0,0,0,1,Heal,Potion,None,None,0,0,0,0

@@ -1,0 +1,3 @@
+﻿id,name,targettype,damagetype,ecole,magictype,damage,range,scale,level,mp,description,missiletype
+0,MagicBolt,target,physics,conjuration,attack,1,4,0,1,1,it's a bolt,missile
+1,FireBolt,target,fire,fire,attack,2,4,0,1,2,it's firebolt,missile

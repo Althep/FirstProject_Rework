@@ -104,28 +104,14 @@ public class PathFinding : MonoBehaviour
     Vector2 drawingEnd;
     public Vector2 destination;
     public List<Node> path = new List<Node>();
-    // Start is called before the first frame update
+
+
     void Start()
     {
         mapMakeScript = GameObject.Find("GameManager").transform.GetComponent<MapMake>();
-        Vector2 Test = new Vector2();
-        Test.x = 0;
-        Test.y = 0;
-        Astar(Test);
         monsterAct = this.gameObject.transform.GetComponent<MonsterState>().monsterActState;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.tag == "Player" && !monsterAct is Sleep)
-            Astar(collision.transform.position);
-    }
 
     public void Astar(Vector2 Dest) 
     {
