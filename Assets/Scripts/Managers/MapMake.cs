@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public enum TileType
 {
     tile,
@@ -21,39 +22,62 @@ public class MapMake : MonoBehaviour
     int dividingMin = 80;
     int dividingMax = 120;
     int maxCount = 5;
+    MonsterManager monsterManager;
     public GameObject tilePrefab;
     public GameObject wallPrefab;
     public GameObject doorPrefab;
-    public GameObject AstarTest;
     public List<Vector2> tilePosList = new List<Vector2>();
     public List<Vector2> monsterPosList = new List<Vector2>();
-    List<Vector2> wallPosList = new List<Vector2>();
-    List<Vector2> upStaires = new List<Vector2>();
-    List<Vector2> downStaires = new List<Vector2>();
-    List<Vector2> doorPosList = new List<Vector2>();
+    public List<Vector2> wallPosList = new List<Vector2>();
+    public List<Vector2> upStaires = new List<Vector2>();
+    public List<Vector2> downStaires = new List<Vector2>();
+    public List<Vector2> doorPosList = new List<Vector2>();
     private void Awake()
     {
-        MapInitiate();
-        
+        monsterManager = this.transform.GetComponent<MonsterManager>();
     }
     void Start()
     {
-        Debug.Log(map.GetLength(0));
-        Debug.Log(map.GetLength(1));
-        MapDivide(0, 0, xSize, ySize, 0);
-        TwistingDungeon();
-        ObjectInstantiate();
-        Vector2 testStart = new Vector2();
-        testStart.x = xSize - 1;
-        testStart.y = ySize - 1;
-        Instantiate(AstarTest, testStart, Quaternion.identity);
+        
     }
 
     void Update()
     {
         
     }
-   
+    private void OnEnable()
+    {
+        StartCoroutine("AddMapGenerateFunction");
+        
+        Debug.Log("OnEnable");
+    }
+    IEnumerator AddMapGenerateFunction()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.OnMapGenerate.AddListener(MapGenerate);
+            yield return null;
+            Debug.Log(1);
+            monsterManager.AddMonsterSpawnFunction();
+            if (monsterManager == null)
+            {
+                Debug.Log("Null1");
+            }
+            yield return null;
+            GameManager.instance.OnMapGenerate.Invoke();
+        }
+        else
+        {
+            Debug.Log("NullError");
+        }
+    }
+    public void MapGenerate()
+    {
+        MapInitiate();
+        MapDivide(0, 0, xSize, ySize, 0);
+        TwistingDungeon();
+        ObjectInstantiate();
+    }
     void ObjectInstantiate()
     {
         for(int i = 0; i < tilePosList.Count; i++)

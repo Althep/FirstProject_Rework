@@ -14,7 +14,10 @@ public class MonsterState : LivingEntity
     public float attackRange;
     public int awakingRate;
 
-
+    private void Start()
+    {
+        monsterActState = this.transform.GetComponent<Rest>();
+    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)

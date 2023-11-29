@@ -104,15 +104,10 @@ public class PathFinding : MonoBehaviour
     Vector2 drawingEnd;
     public Vector2 destination;
     public List<Node> path = new List<Node>();
-
-
     void Start()
     {
         mapMakeScript = GameObject.Find("GameManager").transform.GetComponent<MapMake>();
-        monsterAct = this.gameObject.transform.GetComponent<MonsterState>().monsterActState;
     }
-
-
     public void Astar(Vector2 Dest) 
     {
         map = mapMakeScript.map;

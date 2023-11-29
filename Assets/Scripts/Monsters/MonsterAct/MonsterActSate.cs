@@ -7,11 +7,12 @@ public class MonsterActSate : MonoBehaviour
     MapMake mapScript;
     protected Vector2 nextPos;
     protected MonsterState myState;
-    private void Start()
+    private void OnEnable()
     {
         myState = this.gameObject.transform.GetComponent<MonsterState>();
-        mapScript = GameObject.FindWithTag("FieldManager").transform.GetComponent<MapMake>() ;
+        mapScript = GameManager.instance.gameObject.transform.GetComponent<MapMake>();
     }
+    
     protected virtual void SetNextPos(Vector2 next)
     {
         nextPos.x = next.x;
