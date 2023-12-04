@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 478169293}
   - component: {fileID: 478169295}
   - component: {fileID: 478169294}
+  - component: {fileID: 478169296}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -170,6 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floor: 0
+  stairNumber: 0
   asdf: {fileID: 0}
   OnMapGenerate:
     m_PersistentCalls:
@@ -206,12 +208,26 @@ MonoBehaviour:
   tilePrefab: {fileID: 1881903457329616686, guid: c9894224afa4c74489d402f5334815b5, type: 3}
   wallPrefab: {fileID: 4714155948972619454, guid: 8648f5850c4503342b263af52de0c922, type: 3}
   doorPrefab: {fileID: 6726660409819116942, guid: 0d122678357b1534e9c52980652aab35, type: 3}
+  upStairPrefab: {fileID: 7699250016760731593, guid: cb43177e2f1cbc6448f7d28e388203e7, type: 3}
+  downStairPrefab: {fileID: 3766183073307344242, guid: 009c38c968a6cae4bb9f6a93b64a408c, type: 3}
   tilePosList: []
   monsterPosList: []
   wallPosList: []
   upStaires: []
   downStaires: []
   doorPosList: []
+--- !u!114 &478169296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478169290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d7a285197631347a13fae7eede00af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,6 +380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraObj: {fileID: 0}
   playerObj: {fileID: 0}
+  playerPos: {x: 0, y: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

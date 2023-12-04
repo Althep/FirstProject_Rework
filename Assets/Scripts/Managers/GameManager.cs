@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     public int floor;
+    public int stairNumber=0;
     public static GameManager instance;
     [SerializeField]GameManager asdf;
     public UnityEvent OnMapGenerate;
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         SetInstance();
+        InstantiatePlayerObj();
     }
 
     void Start()
@@ -29,13 +31,19 @@ public class GameManager : MonoBehaviour
     {
         
     }
-    void InstantiatePlayerObj()
+    public void InstantiatePlayerObj()
     {
         if (playerObj == null)
         {
-            playerObj = Instantiate(playerPrefab, mapScript.upStaires[0], Quaternion.identity);
-            DontDestroyOnLoad(playerObj);
+            Instantiate(playerPrefab);
         }
+    }
+    public void SetPlayerNextFloor()
+    {
+        Vector3 genPos = mapScript.upStaires[this.stairNumber];
+        genPos.z--;
+        playerObj.transform.position = genPos;
+        Debug.Log("genPos"+genPos);
     }
     void SetInstance()
     {
@@ -49,6 +57,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        
+        mapScript = this.gameObject.transform.GetComponent<MapMake>();
     }
     void AddFloor()
     {

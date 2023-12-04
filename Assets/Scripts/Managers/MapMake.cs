@@ -22,10 +22,13 @@ public class MapMake : MonoBehaviour
     int dividingMin = 80;
     int dividingMax = 120;
     int maxCount = 5;
+    
     MonsterManager monsterManager;
     public GameObject tilePrefab;
     public GameObject wallPrefab;
     public GameObject doorPrefab;
+    public GameObject upStairPrefab;
+    public GameObject downStairPrefab;
     public List<Vector2> tilePosList = new List<Vector2>();
     public List<Vector2> monsterPosList = new List<Vector2>();
     public List<Vector2> wallPosList = new List<Vector2>();
@@ -45,55 +48,61 @@ public class MapMake : MonoBehaviour
     {
         
     }
-    private void OnEnable()
-    {
-        StartCoroutine("AddMapGenerateFunction");
-        
-        Debug.Log("OnEnable");
-    }
-    IEnumerator AddMapGenerateFunction()
-    {
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.OnMapGenerate.AddListener(MapGenerate);
-            yield return null;
-            Debug.Log(1);
-            monsterManager.AddMonsterSpawnFunction();
-            if (monsterManager == null)
-            {
-                Debug.Log("Null1");
-            }
-            yield return null;
-            GameManager.instance.OnMapGenerate.Invoke();
-        }
-        else
-        {
-            Debug.Log("NullError");
-        }
-    }
+    
     public void MapGenerate()
     {
         MapInitiate();
         MapDivide(0, 0, xSize, ySize, 0);
         TwistingDungeon();
+        MakeStairPos();
         ObjectInstantiate();
     }
     void ObjectInstantiate()
     {
-        for(int i = 0; i < tilePosList.Count; i++)
+        for(int j = 0; j < map.GetLength(0);j++)
         {
-            Instantiate(tilePrefab, tilePosList[i], Quaternion.identity);
+            for(int i = 0; i < map.GetLength(1); i++)
+            {
+                Instantiate(tilePrefab, new Vector3(i,j,1), Quaternion.identity);
+                switch (map[j,i])
+                {
+                    case TileType.tile:
+                        break;
+                    case TileType.wall:
+                        Instantiate(wallPrefab, new Vector2(i, j), Quaternion.identity);
+                        break;
+                    case TileType.door:
+                        Instantiate(doorPrefab, new Vector2(i, j), Quaternion.identity);
+                        break;
+                    case TileType.water:
+                        break;
+                    case TileType.monster:
+                        break;
+                    case TileType.player:
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
-        for(int i = 0; i < wallPosList.Count; i++)
+        for(int i =0; i < upStaires.Count; i++)
         {
-            Instantiate(wallPrefab, wallPosList[i], Quaternion.identity);
+            GameObject go = Instantiate(upStairPrefab, upStaires[i], Quaternion.identity);
+            go.transform.GetComponent<Stair>().stairNumber = i;
+            go =Instantiate(downStairPrefab, downStaires[i], Quaternion.identity);
+            go.transform.GetComponent<Stair>().stairNumber = i;
         }
-        for(int i = 0; i< doorPosList.Count; i++)
+        for(int i = -1; i <=map.GetLength(0); i++)
         {
-            Instantiate(doorPrefab, doorPosList[i], Quaternion.identity);
+            Instantiate(wallPrefab, new Vector2(-1,i), Quaternion.identity);
+            Instantiate(wallPrefab, new Vector2( map.GetLength(1), i), Quaternion.identity);
+        }
+        for(int i = -1; i <= map.GetLength(1); i++)
+        {
+            Instantiate(wallPrefab, new Vector2(i,-1), Quaternion.identity);
+            Instantiate(wallPrefab, new Vector2( i, map.GetLength(0)), Quaternion.identity);
         }
     }
-
     public void MapInitiate()
     {
         RandomSize(minMapSize, maxMapSize);
@@ -158,7 +167,7 @@ public class MapMake : MonoBehaviour
                 }
             }
         }
-    }
+    }//BSP
     int RerollDivied(int start, int end, int divide)
     {
         if (start >= divide || end <= divide||start+1==divide||end-1==divide)
@@ -170,7 +179,6 @@ public class MapMake : MonoBehaviour
             return divide;
         }
     }
-
     void TwistingDungeon()
     {
         int constant;
@@ -272,7 +280,10 @@ public class MapMake : MonoBehaviour
             tilePosList.Add(upStaires[i]);
             tilePosList.Add(downStaires[i]);
         }
-
+        for(int i =0; i < 3; i++)
+        {
+            Debug.Log(upStaires[i]);
+        }
     }
     void SetPlayer()
     {

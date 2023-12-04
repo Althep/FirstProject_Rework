@@ -14,8 +14,10 @@ public class FogOfWar : MonoBehaviour
     void Start()
     {
         myRenderer = this.transform.GetComponent<SpriteRenderer>();
-        player = GameObject.FindWithTag("Player");
+        player = GameManager.instance.playerObj;
         oldLayer = this.gameObject.layer;
+        //ShotLayCast();
+        ChangeColorToLayer();
     }
 
     // Update is called once per frame
@@ -26,14 +28,29 @@ public class FogOfWar : MonoBehaviour
 
     void ChangeColorToLayer()
     {
+        if (myRenderer == null)
+        {
+            myRenderer = this.transform.GetComponent<SpriteRenderer>();
+        }
         switch (this.gameObject.layer)
         {
             case 6: // UnSeen
-                myRenderer.color = Color.black;
-                break;
-            case 7:// visited
                 if (this.transform.tag != "Monster")
                 {
+                    myRenderer.color = Color.black;
+                }
+                else
+                {
+                    Color newColor = new Color();
+                    newColor = Color.white;
+                    newColor.a = 0;
+                    myRenderer.color = newColor;
+                }
+                break;
+            case 7:// Seen
+                if (this.transform.tag != "Monster")
+                {
+                    Debug.Log(11);
                     myRenderer.color = Color.gray;
                 }
                 else
@@ -54,6 +71,7 @@ public class FogOfWar : MonoBehaviour
 
     void ShotLayCast()
     {
+        Debug.Log("LayCasted");
         bool isBlock = false;
         int originLayer = this.gameObject.layer;
         myPos = this.transform.position;
@@ -73,32 +91,40 @@ public class FogOfWar : MonoBehaviour
         {
             this.gameObject.layer = LayerMask.NameToLayer("InSight");
         }
+        if(isBlock && this.gameObject.layer == LayerMask.NameToLayer("InSight"))
+        {
+            this.gameObject.layer = LayerMask.NameToLayer("Seen");
+        }
         oldLayer = this.gameObject.layer;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        ShotLayCast();
+        if (collision.gameObject == player)
+        {
+            ShotLayCast();
+        }
         if (oldLayer != this.gameObject.layer)
         {
             ChangeColorToLayer();
             oldLayer = this.gameObject.layer;
         }
     }
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.tag == "Plaer"&&this.gameObject.layer!=6)
+        if (collision.gameObject == player && this.gameObject.layer != 6)
         {
-            this.gameObject.layer = LayerMask.NameToLayer("Visited");
+            this.gameObject.layer = LayerMask.NameToLayer("Seen");
             oldLayer = this.gameObject.layer;
             ChangeColorToLayer();
         }
     }
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if(this.transform.tag == "Monster")
+        if (this.transform.tag == "Monster")
         {
-            if(collision.transform.tag == "Player" && (myPos != (Vector2)(this.transform.position)))
+            if (collision.gameObject == player && (myPos != (Vector2)(this.transform.position) || playerPos != (Vector2)(player.transform.position)))
             {
                 ShotLayCast();
                 ChangeColorToLayer();
@@ -106,12 +132,11 @@ public class FogOfWar : MonoBehaviour
         }
         else
         {
-            if (collision.transform.tag == "Player" && (playerPos != (Vector2)(player.transform.position)))
+            if (collision.gameObject == player && (playerPos != (Vector2)(player.transform.position)))
             {
                 ShotLayCast();
                 ChangeColorToLayer();
             }
         }
-        
     }
 }

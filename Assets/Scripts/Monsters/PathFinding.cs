@@ -137,7 +137,6 @@ public class PathFinding : MonoBehaviour
             closed[now.y,now.x] = true;
             if (now.x == Dest.x && now.y == Dest.y)
             {
-                //path.Clear();
                 GetPath(now, Dest, parents);
                 break;
             }
