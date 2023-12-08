@@ -4,25 +4,43 @@ using UnityEngine;
 
 public class LivingEntity : MonoBehaviour
 {
-    int maxHp;
-    int currntHp;
-    bool isDead;
-    int turnPont;
+    protected int maxHp;
+    protected int currntHp;
+    protected bool isDead;
+    protected int base_AttackSpeed;
+    protected int base_MoveSpeed;
+    public int attackSpeed=10;
+    public int moveSpeed=10;
     public int turn;
-    protected virtual void Damaged(int damage)
+    public int oldTurn;
+    public MoveState moveState;
+
+
+    private void Start()
+    {
+        
+
+    }
+    public virtual void Damaged(int damage)
     {
         currntHp -= damage;
         IsDead();
     }
-    public virtual void Attack()
+    public virtual void Attack(LivingEntity target)
     {
 
     }
-    protected void IsDead()
+    protected virtual void IsDead()
     {
-        if (currntHp <= 0)
-        {
-            isDead = true;
-        }
+        
+    }
+    protected virtual void OnMove()
+    {
+
+    }
+    protected virtual void SetSpeed()
+    {
+        attackSpeed = base_AttackSpeed;
+        moveSpeed = base_MoveSpeed;
     }
 }

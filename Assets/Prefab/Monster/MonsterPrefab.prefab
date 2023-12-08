@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: -5661733324561162457}
   - component: {fileID: 8574691172037819850}
   - component: {fileID: -3362463253351369005}
+  - component: {fileID: 8833335888978385874}
   m_Layer: 6
   m_Name: MonsterPrefab
   m_TagString: Monster
@@ -125,6 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad8bbee53659ebf47839a7b6425cf317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerObj: {fileID: 0}
 --- !u!114 &1782715785200161726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53bb6b2ea0b82664c995ce6ceddd6d39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerObj: {fileID: 0}
 --- !u!114 &-5661733324561162457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,6 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b93dab7556bf04480d830b9704e3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerObj: {fileID: 0}
 --- !u!114 &8574691172037819850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,6 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7729ba1fa89d1584b946b21716a65c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerObj: {fileID: 0}
 --- !u!114 &-3362463253351369005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,3 +260,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa1c9177b61afff4182780a8877205c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerObj: {fileID: 0}
+--- !u!114 &8833335888978385874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8343863398999632985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf942f00887b6a9428c01f68481a27f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0}

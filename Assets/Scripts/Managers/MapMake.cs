@@ -24,17 +24,20 @@ public class MapMake : MonoBehaviour
     int maxCount = 5;
     
     MonsterManager monsterManager;
+
     public GameObject tilePrefab;
     public GameObject wallPrefab;
     public GameObject doorPrefab;
     public GameObject upStairPrefab;
     public GameObject downStairPrefab;
+
     public List<Vector2> tilePosList = new List<Vector2>();
     public List<Vector2> monsterPosList = new List<Vector2>();
     public List<Vector2> wallPosList = new List<Vector2>();
     public List<Vector2> upStaires = new List<Vector2>();
     public List<Vector2> downStaires = new List<Vector2>();
     public List<Vector2> doorPosList = new List<Vector2>();
+    public List<Vector2> playerPos = new List<Vector2>();
     private void Awake()
     {
         monsterManager = this.transform.GetComponent<MonsterManager>();
@@ -279,10 +282,6 @@ public class MapMake : MonoBehaviour
         {
             tilePosList.Add(upStaires[i]);
             tilePosList.Add(downStaires[i]);
-        }
-        for(int i =0; i < 3; i++)
-        {
-            Debug.Log(upStaires[i]);
         }
     }
     void SetPlayer()

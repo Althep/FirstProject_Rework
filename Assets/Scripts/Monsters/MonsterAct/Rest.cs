@@ -6,6 +6,14 @@ public class Rest : MonsterActSate
 {
     public override void CollideStart()
     {
-        myState.monsterActState = this.transform.GetComponent<Chase>();
+        myState.myActState = this.transform.GetComponent<Chase>();
     }
+
+
+    public override void SetNextPos()
+    {
+        GetRandomAroundPos();
+    }
+   
+
 }

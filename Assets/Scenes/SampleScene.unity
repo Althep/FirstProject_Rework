@@ -136,6 +136,8 @@ GameObject:
   - component: {fileID: 478169295}
   - component: {fileID: 478169294}
   - component: {fileID: 478169296}
+  - component: {fileID: 478169297}
+  - component: {fileID: 478169298}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -172,7 +174,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floor: 0
   stairNumber: 0
-  asdf: {fileID: 0}
   OnMapGenerate:
     m_PersistentCalls:
       m_Calls: []
@@ -191,6 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterPrefab: {fileID: 8343863398999632985, guid: ae6da51f1b7a4d14aaf4856cd540b333, type: 3}
+  monsterList: []
 --- !u!114 &478169295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +230,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d7a285197631347a13fae7eede00af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &478169297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478169290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 585c423f650d20b44b025ed456b278d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMoveState: 0
+--- !u!114 &478169298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478169290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e8a4f1c4e5a29143b5e6ce55b0982d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turn: 0
+  monsterStateList: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

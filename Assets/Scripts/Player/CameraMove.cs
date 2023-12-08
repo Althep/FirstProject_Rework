@@ -26,8 +26,6 @@ public class CameraMove : MonoBehaviour
         }
         if (playerObj != null && playerPos!=(Vector2)playerObj.transform.position)
         {
-            Debug.Log(1);
-
             this.gameObject.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, playerObj.transform.position.z - 10) ;
             playerPos = playerObj.transform.position;
         }

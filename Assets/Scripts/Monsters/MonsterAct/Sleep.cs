@@ -5,9 +5,9 @@ using UnityEngine;
 public class Sleep : MonsterActSate
 {
 
-    protected override void SetNextPos(Vector2 next)
+    public override void SetNextPos()
     {
-        base.SetNextPos(this.gameObject.transform.position);
+        nextPos = this.gameObject.transform.position;
     }
 
     public override void CollideStart()
@@ -15,7 +15,8 @@ public class Sleep : MonsterActSate
         int temp = Random.Range(0, 100);
         if (temp <= myState.awakingRate)
         {
-            myState.monsterActState = this.gameObject.transform.GetComponent<Chase>();
+            myState.myActState = this.gameObject.transform.GetComponent<Chase>();
         }
     }
+
 }

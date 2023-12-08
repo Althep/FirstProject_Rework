@@ -98,18 +98,28 @@ public class PathFinding : MonoBehaviour
     TileType[,] map;
     bool[,] closed;
     int[,] open;
-    MapMake mapMakeScript;
+    public MapMake mapMakeScript;
     MonsterActSate monsterAct;
     Vector2 drawingStart;
     Vector2 drawingEnd;
     public Vector2 destination;
     public List<Node> path = new List<Node>();
+    private void OnEnable()
+    {
+        mapMakeScript = GameManager.instance.transform.GetComponent<MapMake>();
+    }
     void Start()
     {
-        mapMakeScript = GameObject.Find("GameManager").transform.GetComponent<MapMake>();
+        
     }
     public void Astar(Vector2 Dest) 
     {
+        Debug.Log("Astar");
+        if (mapMakeScript == null)
+        {
+            Debug.Log("MapScript Null");
+            mapMakeScript = GameManager.instance.transform.GetComponent<MapMake>();
+        }
         map = mapMakeScript.map;
         Node[,] parents = new Node[mapMakeScript.ySize, mapMakeScript.xSize];
         PriorityQueue<Node> q = new PriorityQueue<Node>();
@@ -119,7 +129,7 @@ public class PathFinding : MonoBehaviour
         //int[,] cost = new int[mapMakeScript.ySize,mapMakeScript.xSize];
         int[] dx = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
         int[] dy = new int[] { 1, 1, 1, 0, 0, -1, -1, -1 };
-        int[] cost = new int[] { 14, 10, 14, 10, 10, 14, 10, 14 };
+        int[] cost = new int[] { 10, 10, 10, 10, 10, 10, 10, 10 };//{ 14, 10, 14, 10, 10, 14, 10, 14 };
         Vector2 nowPos = new Vector2();
         for (int i = 0; i < mapMakeScript.ySize; i++)
             for (int j = 0; j < mapMakeScript.xSize; j++)
@@ -173,6 +183,11 @@ public class PathFinding : MonoBehaviour
         
         while(LastNode.x!=(int)this.gameObject.transform.position.x||LastNode.y!=(int)this.gameObject.transform.position.y)
         {
+            if (parents.Length == 0)
+            {
+                
+                break;
+            }
             LastNode = parents[LastNode.y, LastNode.x];
             path.Add(LastNode);
         }
@@ -184,6 +199,14 @@ public class PathFinding : MonoBehaviour
             Debug.DrawLine(drawingStart, drawingEnd, Color.red,30f);
         }
         
+    }
+
+    public void VisualizePath()
+    {
+        for(int i = 0; i < path.Count-1; i++)
+        {
+            Debug.DrawLine(new Vector2(path[i].x,path[i].y),new Vector2(path[i+1].x,path[i+1].y),Color.red,4f);
+        }
     }
     
 

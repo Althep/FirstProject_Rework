@@ -7,7 +7,7 @@ public class MonsterManager : MonoBehaviour
     int monsterSpawnPoint;
     public GameObject monsterPrefab;
     MapMake mapScript;
-    List<GameObject> monsterList = new List<GameObject>();
+    public List<GameObject> monsterList = new List<GameObject>();
     List<Vector2> tileList;
     // Start is called before the first frame update
     private void OnEnable()
@@ -18,6 +18,7 @@ public class MonsterManager : MonoBehaviour
     {
         mapScript = this.gameObject.transform.GetComponent<MapMake>();
         tileList = mapScript.tilePosList;
+        
     }
 
     // Update is called once per frame
@@ -27,26 +28,28 @@ public class MonsterManager : MonoBehaviour
     }
     public void AddMonsterSpawnFunction()
     {
-        Debug.Log("AddCount");
-        GameManager.instance.OnMapGenerate.AddListener(MonsterCountInitiate);
-        Debug.Log("Added");
-        Debug.Log("AddInitiate");
-        GameManager.instance.OnMapGenerate.AddListener(MonsterInitiate);
-        Debug.Log("Added");
+        MonsterCountInitiate();
+        MonsterInitiate();
     }
 
     void MonsterCountInitiate()
     {
-        Debug.Log(4);
-        monsterSpawnPoint = 5;
+        monsterSpawnPoint = 1;
     }
     public void MonsterInitiate()
     {
-        Debug.Log(3);
         for (int i = 0; i < monsterSpawnPoint; i++)
         {
-            SetRandomIndex();
+            GameObject go;
+            int randomIndex;
+            randomIndex = Random.Range(0, mapScript.tilePosList.Count);
+            go = Instantiate(monsterPrefab, mapScript.tilePosList[randomIndex], Quaternion.identity);
+            mapScript.TileInfoChange(mapScript.tilePosList[randomIndex], TileType.monster, tileList, mapScript.monsterPosList);
+            monsterList.Add(go);
+            go.name = i.ToString();
+            //SetRandomIndex();
         }
+        //TurnManager.instance.monsterStateList.Add()
     }
     void SetRandomIndex()
     {
@@ -61,4 +64,5 @@ public class MonsterManager : MonoBehaviour
     {
 
     }
+    
 }

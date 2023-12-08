@@ -9,15 +9,15 @@ public class FogOfWar : MonoBehaviour
     Vector2 myPos;
     Vector2 playerPos;
     int oldLayer;
-
+    int oldTurn;
     // Start is called before the first frame update
     void Start()
     {
         myRenderer = this.transform.GetComponent<SpriteRenderer>();
         player = GameManager.instance.playerObj;
         oldLayer = this.gameObject.layer;
-        //ShotLayCast();
         ChangeColorToLayer();
+        ShotLayCast();
     }
 
     // Update is called once per frame
@@ -50,7 +50,6 @@ public class FogOfWar : MonoBehaviour
             case 7:// Seen
                 if (this.transform.tag != "Monster")
                 {
-                    Debug.Log(11);
                     myRenderer.color = Color.gray;
                 }
                 else
@@ -68,10 +67,9 @@ public class FogOfWar : MonoBehaviour
                 break;
         }
     }
-
+    
     void ShotLayCast()
     {
-        Debug.Log("LayCasted");
         bool isBlock = false;
         int originLayer = this.gameObject.layer;
         myPos = this.transform.position;
@@ -85,7 +83,6 @@ public class FogOfWar : MonoBehaviour
             {
                 isBlock = true;
             }
-
         }
         if (!isBlock)
         {
@@ -124,18 +121,20 @@ public class FogOfWar : MonoBehaviour
     {
         if (this.transform.tag == "Monster")
         {
-            if (collision.gameObject == player && (myPos != (Vector2)(this.transform.position) || playerPos != (Vector2)(player.transform.position)))
+            if (collision.gameObject == player && (myPos != (Vector2)(this.transform.position) || TurnManager.instance.turn!=oldTurn))
             {
                 ShotLayCast();
                 ChangeColorToLayer();
+                oldTurn = TurnManager.instance.turn;
             }
         }
         else
         {
-            if (collision.gameObject == player && (playerPos != (Vector2)(player.transform.position)))
+            if (collision.gameObject == player && (TurnManager.instance.turn != oldTurn))
             {
                 ShotLayCast();
                 ChangeColorToLayer();
+                oldTurn = TurnManager.instance.turn;
             }
         }
     }

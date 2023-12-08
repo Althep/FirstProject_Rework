@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
     public int floor;
     public int stairNumber=0;
     public static GameManager instance;
-    [SerializeField]GameManager asdf;
     public UnityEvent OnMapGenerate;
     public GameObject playerObj;
     public GameObject playerPrefab;
@@ -22,11 +21,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         floor = 0;
-        //OnMapGenerate.Invoke();
-        
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -43,7 +39,6 @@ public class GameManager : MonoBehaviour
         Vector3 genPos = mapScript.upStaires[this.stairNumber];
         genPos.z--;
         playerObj.transform.position = genPos;
-        Debug.Log("genPos"+genPos);
     }
     void SetInstance()
     {
@@ -51,7 +46,6 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
-            asdf = instance;
         }
         else
         {

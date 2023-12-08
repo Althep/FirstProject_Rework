@@ -4,40 +4,32 @@ using UnityEngine;
 
 public class Chase : MonsterActSate
 {
-    PathFinding astarScript;
-    Vector2 PlayerPos;
-    // Start is called before the first frame update
     void Start()
     {
-        astarScript = this.transform.GetComponent<PathFinding>();
         myState = this.gameObject.transform.GetComponent<MonsterState>();
     }
 
-    void Update()
+    public override void SetNextPos()
     {
-        
-    }
-    public void GetNext()
-    {
-        Vector2 temp = new Vector2();
-        temp.x = astarScript.path[0].x;
-        temp.y = astarScript.path[0].y;
-
-        SetNextPos(temp);
-    }
-    void IsAttack()
-    {
-        if (myState.turn >= 1)
+        Debug.Log("chase NextPosFunction");
+        pathFinding.Astar(myState.target.transform.position);
+        if(pathFinding.path.Count != 0)
         {
-            float distance;
-            distance = Vector2.Distance(this.gameObject.transform.position, myState.target.transform.position);
-            if (distance <= myState.attackRange)
-            {
-                myState.Attack();
-                myState.turn--;
-            }
+            myState.path = pathFinding.path;
+            nextPos.x = myState.path[0].x;
+            nextPos.y = myState.path[0].y;
         }
-        
+        else
+        {
+            myState.myActState = this.gameObject.transform.GetComponent<Rest>();
+        }
+
+
+
     }
-    
+
+
+
+
+
 }
