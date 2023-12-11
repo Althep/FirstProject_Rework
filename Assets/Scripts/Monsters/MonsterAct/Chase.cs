@@ -11,25 +11,19 @@ public class Chase : MonsterActSate
 
     public override void SetNextPos()
     {
-        Debug.Log("chase NextPosFunction");
         pathFinding.Astar(myState.target.transform.position);
-        if(pathFinding.path.Count != 0)
+        if(pathFinding.path.Count >2)
         {
             myState.path = pathFinding.path;
-            nextPos.x = myState.path[0].x;
-            nextPos.y = myState.path[0].y;
+            nextPos.x = myState.path[1].x;
+            nextPos.y = myState.path[1].y;
+            myState.oldPlayerPos = myState.target.transform.position;
+
         }
         else
         {
+            Debug.Log("getPathFaild");
             myState.myActState = this.gameObject.transform.GetComponent<Rest>();
         }
-
-
-
     }
-
-
-
-
-
 }

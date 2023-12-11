@@ -62,12 +62,15 @@ public class InputManager : MonoBehaviour
                     InputMoveKey();
                     break;
                 case TileType.wall:
+                    Debug.Log("NExt Tile is Wall");
                     break;
                 case TileType.door:
+                    InputMoveKey();
                     break;
                 case TileType.water:
                     break;
                 case TileType.monster:
+                    Debug.Log("NExt Tile is Monster");
                     break;
                 case TileType.player:
                     break;

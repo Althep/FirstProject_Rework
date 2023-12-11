@@ -6,8 +6,7 @@ public class MonsterActSate : MonoBehaviour
 {
     MapMake mapScript;
     [SerializeField] protected Vector2 nextPos;
-    protected Vector2 playerOldPos;
-    protected Vector2 myOldPos;
+    public Vector2 playerOldPos;
     protected MonsterState myState;
     protected PathFinding astarScript;
     public GameObject playerObj;
@@ -31,19 +30,34 @@ public class MonsterActSate : MonoBehaviour
 
     }
 
-    protected IEnumerator Move()
+    protected void Move()
+    {
+        
+        Vector2 now = this.transform.position;
+        Vector2 MoveTo = nextPos - now;
+        float maxDistance = SetMoveDistance(MoveTo);
+        mapScript.TileInfoSwap(now, nextPos, mapScript.monsterPosList, mapScript.tilePosList, TileType.monster);
+        Debug.Log("Move");
+        Debug.Log("Next : "+nextPos);
+        this.transform.position = nextPos;
+    }
+    IEnumerator SlideMove()
     {
         Vector2 now = this.transform.position;
         Vector2 MoveTo = nextPos - now;
-        mapScript.TileInfoSwap(now, nextPos, mapScript.monsterPosList, mapScript.tilePosList, TileType.monster);
-
+        float maxDistance = SetMoveDistance(MoveTo);
         while (Vector2.Distance(now,nextPos)>0.2f)
         {
             this.transform.Translate(MoveTo*Time.deltaTime*4f);
+            if (maxDistance <= Vector2.Distance(this.transform.position, nextPos))
+            {
+                Debug.Log("MonsterMoveBreak;");
+                break;
+            }
+                
             yield return null;
         }
-        myState.turn--;
-        this.transform.position = nextPos;
+
     }
     protected void Attack()
     {
@@ -54,7 +68,6 @@ public class MonsterActSate : MonoBehaviour
             targetEntity = myState.target.transform.GetComponent<LivingEntity>();
             targetEntity.Damaged(myState.damage);
         }
-        myState.turn--;
     }
 
     public void TurnAct()
@@ -64,10 +77,11 @@ public class MonsterActSate : MonoBehaviour
             case MoveState.idle:
                 break;
             case MoveState.move:
-                StartCoroutine("Move");
+                Move();
                 break;
             case MoveState.attack:
-                Attack();
+                Debug.Log("DoAttack");
+                //Attack();
                 break;
             default:
                 break;
@@ -78,16 +92,33 @@ public class MonsterActSate : MonoBehaviour
     {
         Vector2 nowPos = this.transform.position;
         int[] dx = new int[]{1, 1, 1, 0, 0, 0, -1, -1, -1};
-        int[] dy = new int[]{ 1, 0, -1, 1, 0, -1, 1, 0, -1 };
+        int[] dy = new int[]{1, 0, -1, 1, 0, -1, 1, 0, -1};
         List<Vector2> tiles = new List<Vector2>();
         for(int i =0; i < dx.Length; i++)
         {
-            if(mapScript.map[(int)nowPos.x+dx[i], (int)nowPos.y+dy[i]] == TileType.tile)
+            if((nowPos.x+dx[i])>=mapScript.xSize || nowPos.y+dy[i]>=mapScript.ySize || nowPos.x+dx[i]<0 || nowPos.y+dy[i]<0)
+            {
+                continue;
+            }
+            if(mapScript.map[((int)nowPos.y+dy[i]), ((int)nowPos.x + dx[i])] == TileType.tile)
             {
                 tiles.Add(new Vector2(nowPos.x + dx[i], nowPos.y + dy[i]));
             }
         }
         nextPos = tiles[Random.Range(0, tiles.Count)];
     }
-    
+    float SetMoveDistance(Vector2 moveDirection)
+    {
+        float maxDixtance = 1.5f;
+        if (Mathf.Abs(moveDirection.x) == Mathf.Abs(moveDirection.y))
+        {
+            maxDixtance = 1.4f;
+        }
+        else
+        {
+            maxDixtance = 1.1f;
+        }
+        return maxDixtance;
+    }
+
 }

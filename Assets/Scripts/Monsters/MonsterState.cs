@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.Events;
 public class MonsterState : LivingEntity
 {
+    public Vector2 oldPlayerPos;
     public GameObject target;
     public List<Node> path;
     public int damage;
     public int leftTurnPoint;
     public MonsterActSate myActState;
-    public float attackRange=1.5f;
+    public float attackRange = 1.42f;
     public int awakingRate;
     public string State;
     PlayerState playerState;
@@ -20,8 +21,9 @@ public class MonsterState : LivingEntity
         target = GameManager.instance.playerObj;
         base_MoveSpeed = 10;
         base_AttackSpeed = 10;
+        attackRange = 1.42f;
         SetSpeed();
-        playerState = GameManager.instance.playerObj.transform.GetComponent<PlayerState>(); 
+        playerState = GameManager.instance.playerObj.transform.GetComponent<PlayerState>();
         EventManager.Instance.OnPlayerMove.AddListener(OnPlayerMove);
     }
 
@@ -36,13 +38,14 @@ public class MonsterState : LivingEntity
         TurnPointAdd();
         SetMoveState();
         TurnCalculate();
-        MonsterAct();
         GetNextPos();
         TurnAct();
+
+
     }
     void SetMoveState()
     {
-        if(myActState is Chase && Vector2.Distance(this.gameObject.transform.position,target.transform.position)<=attackRange)
+        if (myActState is Chase && Vector2.Distance(this.gameObject.transform.position, target.transform.position) <= attackRange)
         {
             moveState = MoveState.attack;
         }
@@ -57,11 +60,18 @@ public class MonsterState : LivingEntity
     }
     void GetNextPos()
     {
-        this.myActState.SetNextPos();
+        myActState.SetNextPos();
     }
     void TurnAct()
     {
-        this.myActState.TurnAct();
+        while (turn > 0)
+        {
+            Debug.Log("MonsterStateTurnAct");
+            myActState.TurnAct();
+            turn--;
+        }
+            
+        
     }
     public void TurnPointAdd()
     {
@@ -101,28 +111,7 @@ public class MonsterState : LivingEntity
         }
     }
 
-    public void MonsterAct()
-    {
-        while (turn>0)
-        {
-            switch (moveState)
-            {
-                case MoveState.idle:
-                    Debug.Log("DoNothing");
-                    break;
-                case MoveState.move:
-                    Debug.Log("DoMove");
-                    break;
-                case MoveState.attack:
-                    Debug.Log("DoAttack");
-                    break;
-                default:
-                    break;
-            }
-            turn--;
-        }
-        //moveState = MoveState.idle;
-    }
+    
     protected override void IsDead()
     {
         if (currntHp <= 0)
@@ -172,6 +161,7 @@ public class MonsterState : LivingEntity
         if (collision.transform.tag == "Player" && myActState is Chase)
         {
             myActState = this.transform.GetComponent<Searching>();
+            oldPlayerPos = GameManager.instance.playerObj.transform.position;
         }
     }
 
@@ -182,5 +172,5 @@ public class MonsterState : LivingEntity
             myActState = this.transform.GetComponent<Chase>();
         }
     }
-    
+
 }

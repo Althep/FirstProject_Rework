@@ -72,10 +72,10 @@ public class MapMake : MonoBehaviour
                     case TileType.tile:
                         break;
                     case TileType.wall:
-                        Instantiate(wallPrefab, new Vector2(i, j), Quaternion.identity);
+                        Instantiate(wallPrefab, new Vector3(i, j,0), Quaternion.identity);
                         break;
                     case TileType.door:
-                        Instantiate(doorPrefab, new Vector2(i, j), Quaternion.identity);
+                        Instantiate(doorPrefab, new Vector3(i, j,0), Quaternion.identity);
                         break;
                     case TileType.water:
                         break;
@@ -288,5 +288,14 @@ public class MapMake : MonoBehaviour
     {
         int temp = Random.Range(0, downStaires.Count);
         
+    }
+    bool IsInSize(Vector2 Pos)
+    {
+        bool temp = true;
+        if (Pos.x > xSize || Pos.y > ySize || Pos.x < 0 || Pos.y < 0)
+        {
+            temp = false;
+        }
+        return temp;
     }
 }

@@ -14,28 +14,20 @@ public class Searching : MonsterActSate
 
     public override void SetNextPos()
     {
-        if (pathFinding.path.Count != 0)
+        //playerOldPos = GameManager.instance.playerObj.transform.position;
+        pathFinding.Astar(myState.oldPlayerPos);
+        if (pathFinding.path.Count>2)
         {
-            nextPos.x = pathFinding.path[0].x;
-            nextPos.y = pathFinding.path[0].y;
-            pathFinding.path.RemoveAt(0);
+            myState.path = pathFinding.path;
+            nextPos.x = myState.path[1].x;
+            nextPos.y = myState.path[1].y;
         }
         else
         {
-            myState.myActState = this.gameObject.transform.GetComponent<Rest>();
+            Debug.Log("searching Path Fild");
+            nextPos = this.transform.position;
         }
+        
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
-    }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        
-    }
 }

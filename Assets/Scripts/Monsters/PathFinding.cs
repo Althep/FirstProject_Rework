@@ -18,6 +18,7 @@ public struct Node : IComparable<Node>
         return F > other.F ? 1 : -1;
     }
 }
+
 public class PriorityQueue<T> where T : IComparable<T> 
 {
     //작은 순으로 정렬하는 우선순위 큐
@@ -93,13 +94,13 @@ public class PriorityQueue<T> where T : IComparable<T>
     }
 
 }
+
 public class PathFinding : MonoBehaviour
 {
     TileType[,] map;
-    bool[,] closed;
-    int[,] open;
     public MapMake mapMakeScript;
     MonsterActSate monsterAct;
+    MonsterState myState;
     Vector2 drawingStart;
     Vector2 drawingEnd;
     public Vector2 destination;
@@ -110,10 +111,19 @@ public class PathFinding : MonoBehaviour
     }
     void Start()
     {
-        
+        myState = this.transform.GetComponent<MonsterState>();
     }
     public void Astar(Vector2 Dest) 
     {
+        if (path.Count > 0)
+        {
+            path.Clear();
+        }
+        bool[,] closed;
+        int[,] open;
+        int[] dx = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
+        int[] dy = new int[] { 1, 1, 1, 0, 0, -1, -1, -1 };
+        int[] cost = new int[] { 10, 10, 10, 10, 10, 10, 10, 10 };//{ 14, 10, 14, 10, 10, 14, 10, 14 };
         Debug.Log("Astar");
         if (mapMakeScript == null)
         {
@@ -122,18 +132,19 @@ public class PathFinding : MonoBehaviour
         }
         map = mapMakeScript.map;
         Node[,] parents = new Node[mapMakeScript.ySize, mapMakeScript.xSize];
-        PriorityQueue<Node> q = new PriorityQueue<Node>();
+        PriorityQueue <Node>q = new PriorityQueue<Node>();
         Node start = new Node();
         closed = new bool[mapMakeScript.ySize,mapMakeScript.xSize];
         open = new int[mapMakeScript.ySize, mapMakeScript.xSize];
         //int[,] cost = new int[mapMakeScript.ySize,mapMakeScript.xSize];
-        int[] dx = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
-        int[] dy = new int[] { 1, 1, 1, 0, 0, -1, -1, -1 };
-        int[] cost = new int[] { 10, 10, 10, 10, 10, 10, 10, 10 };//{ 14, 10, 14, 10, 10, 14, 10, 14 };
         Vector2 nowPos = new Vector2();
         for (int i = 0; i < mapMakeScript.ySize; i++)
+        {
             for (int j = 0; j < mapMakeScript.xSize; j++)
+            {
                 open[i, j] = Int32.MaxValue;
+            }
+        }
         nowPos = this.gameObject.transform.position;
         start.x = (int)nowPos.x;
         start.y = (int)nowPos.y;
@@ -147,7 +158,7 @@ public class PathFinding : MonoBehaviour
             closed[now.y,now.x] = true;
             if (now.x == Dest.x && now.y == Dest.y)
             {
-                GetPath(now, Dest, parents);
+                GetPath(now,parents);
                 break;
             }
             for (int i = 0; i < dx.Length; i++)
@@ -162,7 +173,7 @@ public class PathFinding : MonoBehaviour
                     continue;
                 if (f > open[(int)closePos.y, (int)closePos.x])
                     continue;
-                if (mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.tile && mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.door)
+                if (mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.tile && mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.door && mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.player)
                     continue;
                 Node next = new Node()
                 {
@@ -172,31 +183,37 @@ public class PathFinding : MonoBehaviour
                     G=cost[i]
                 };
                 q.Push(next);
+                //Debug.Log("Next : "+next.x +","+next.y);
                 open[next.y, next.x] = next.F;
                 parents[next.y, next.x] = now;
             }
         }
     }
 
-    public void GetPath(Node LastNode,Vector2 Dest,Node[,]parents)
+    public void GetPath(Node LastNode,Node[,]parents)
     {
-        
         while(LastNode.x!=(int)this.gameObject.transform.position.x||LastNode.y!=(int)this.gameObject.transform.position.y)
         {
+            if (Vector2.Distance(this.gameObject.transform.position, GameManager.instance.playerObj.transform.position) <= myState.attackRange)
+            {
+                LastNode = parents[LastNode.y, LastNode.x];
+                path.Add(LastNode);
+                break;
+            }
             if (parents.Length == 0)
             {
-                
                 break;
             }
             LastNode = parents[LastNode.y, LastNode.x];
             path.Add(LastNode);
         }
-
+        path.Reverse();
         for (int i = 0; i < path.Count-1; i++)
         {
             drawingStart = new Vector2(path[i].x, path[i].y);
             drawingEnd = new Vector2(path[i+1].x, path[i+1].y);
             Debug.DrawLine(drawingStart, drawingEnd, Color.red,30f);
+            //Debug.Log("Path : "+"i : " + path[i]);
         }
         
     }
