@@ -7,7 +7,7 @@ public class Sleep : MonsterActSate
 
     public override void SetNextPos()
     {
-        nextPos = this.gameObject.transform.position;
+        myState.nextPos = this.gameObject.transform.position;
     }
 
     public override void CollideStart()

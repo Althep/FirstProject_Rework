@@ -17,7 +17,7 @@ public class FogOfWar : MonoBehaviour
         player = GameManager.instance.playerObj;
         oldLayer = this.gameObject.layer;
         ChangeColorToLayer();
-        ShotLayCast();
+        ShotRayCast();
     }
 
     // Update is called once per frame
@@ -68,7 +68,7 @@ public class FogOfWar : MonoBehaviour
         }
     }
     
-    void ShotLayCast()
+    void ShotRayCast()
     {
         bool isBlock = false;
         int originLayer = this.gameObject.layer;
@@ -100,7 +100,7 @@ public class FogOfWar : MonoBehaviour
     {
         if (collision.gameObject == player)
         {
-            ShotLayCast();
+            ShotRayCast();
         }
         if (oldLayer != this.gameObject.layer)
         {
@@ -123,7 +123,7 @@ public class FogOfWar : MonoBehaviour
         {
             if (collision.gameObject == player && (myPos != (Vector2)(this.transform.position) || TurnManager.instance.turn!=oldTurn))
             {
-                ShotLayCast();
+                ShotRayCast();
                 ChangeColorToLayer();
                 oldTurn = TurnManager.instance.turn;
             }
@@ -132,7 +132,7 @@ public class FogOfWar : MonoBehaviour
         {
             if (collision.gameObject == player && (TurnManager.instance.turn != oldTurn))
             {
-                ShotLayCast();
+                ShotRayCast();
                 ChangeColorToLayer();
                 oldTurn = TurnManager.instance.turn;
             }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class MonsterActSate : MonoBehaviour
 {
     MapMake mapScript;
-    [SerializeField] protected Vector2 nextPos;
+    //[SerializeField] protected Vector2 nextPos;
     public Vector2 playerOldPos;
     protected MonsterState myState;
     protected PathFinding astarScript;
@@ -34,22 +34,22 @@ public class MonsterActSate : MonoBehaviour
     {
         
         Vector2 now = this.transform.position;
-        Vector2 MoveTo = nextPos - now;
+        Vector2 MoveTo = myState.nextPos - now;
         float maxDistance = SetMoveDistance(MoveTo);
-        mapScript.TileInfoSwap(now, nextPos, mapScript.monsterPosList, mapScript.tilePosList, TileType.monster);
+        mapScript.TileInfoSwap(now, myState.nextPos, mapScript.monsterPosList, mapScript.tilePosList, TileType.monster);
         Debug.Log("Move");
-        Debug.Log("Next : "+nextPos);
-        this.transform.position = nextPos;
+        Debug.Log("Next : "+ myState.nextPos);
+        this.transform.position = myState.nextPos;
     }
     IEnumerator SlideMove()
     {
         Vector2 now = this.transform.position;
-        Vector2 MoveTo = nextPos - now;
+        Vector2 MoveTo = myState.nextPos - now;
         float maxDistance = SetMoveDistance(MoveTo);
-        while (Vector2.Distance(now,nextPos)>0.2f)
+        while (Vector2.Distance(now, myState.nextPos) >0.2f)
         {
             this.transform.Translate(MoveTo*Time.deltaTime*4f);
-            if (maxDistance <= Vector2.Distance(this.transform.position, nextPos))
+            if (maxDistance <= Vector2.Distance(this.transform.position, myState.nextPos))
             {
                 Debug.Log("MonsterMoveBreak;");
                 break;
@@ -105,7 +105,7 @@ public class MonsterActSate : MonoBehaviour
                 tiles.Add(new Vector2(nowPos.x + dx[i], nowPos.y + dy[i]));
             }
         }
-        nextPos = tiles[Random.Range(0, tiles.Count)];
+        myState.nextPos = tiles[Random.Range(0, tiles.Count)];
     }
     float SetMoveDistance(Vector2 moveDirection)
     {

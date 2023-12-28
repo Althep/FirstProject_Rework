@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class MonsterState : LivingEntity
 {
     public Vector2 oldPlayerPos;
+    public Vector2 nextPos;
     public GameObject target;
     public List<Node> path;
     public int damage;

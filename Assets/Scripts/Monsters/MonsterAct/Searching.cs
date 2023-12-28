@@ -19,13 +19,13 @@ public class Searching : MonsterActSate
         if (pathFinding.path.Count>2)
         {
             myState.path = pathFinding.path;
-            nextPos.x = myState.path[1].x;
-            nextPos.y = myState.path[1].y;
+            myState.nextPos.x = myState.path[1].x;
+            myState.nextPos.y = myState.path[1].y;
         }
         else
         {
             Debug.Log("searching Path Fild");
-            nextPos = this.transform.position;
+            myState.nextPos = this.transform.position;
         }
         
     }

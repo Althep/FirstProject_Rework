@@ -12,11 +12,11 @@ public class Chase : MonsterActSate
     public override void SetNextPos()
     {
         pathFinding.Astar(myState.target.transform.position);
-        if(pathFinding.path.Count >2)
+        if(pathFinding.path.Count >=2)
         {
             myState.path = pathFinding.path;
-            nextPos.x = myState.path[1].x;
-            nextPos.y = myState.path[1].y;
+            myState.nextPos.x = myState.path[1].x;
+            myState.nextPos.y = myState.path[1].y;
             myState.oldPlayerPos = myState.target.transform.position;
 
         }

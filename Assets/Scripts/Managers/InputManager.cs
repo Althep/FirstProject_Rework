@@ -73,6 +73,7 @@ public class InputManager : MonoBehaviour
                     Debug.Log("NExt Tile is Monster");
                     break;
                 case TileType.player:
+                    Debug.Log("PlayerPosError");
                     break;
                 default:
                     break;
@@ -109,6 +110,7 @@ public class InputManager : MonoBehaviour
         playerPos = playerObj.transform.position;
         playerState.moveState = MoveState.move;
         float maxDistance = SetMoveDistance(moveDirection);
+        mapScript.TileInfoSwap(playerPos, playerPos + moveDirection, mapScript.playerPos, mapScript.tilePosList, TileType.player);
         while (Vector2.Distance(playerPos + moveDirection, playerObj.transform.position) >= 0.2f)
         {
             playerObj.transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
@@ -125,7 +127,7 @@ public class InputManager : MonoBehaviour
             EventManager.Instance.OnPlayerMove.Invoke();
         }
         playerState.moveState = MoveState.idle;
-        mapScript.TileInfoSwap(playerPos,playerPos+moveDirection,mapScript.playerPos,mapScript.tilePosList,TileType.player);
+        
     }
     public IEnumerator PlayerAttack()
     {
