@@ -10,6 +10,8 @@ public class FogOfWar : MonoBehaviour
     Vector2 playerPos;
     int oldLayer;
     int oldTurn;
+    int posy;
+    int posx;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,8 @@ public class FogOfWar : MonoBehaviour
         oldLayer = this.gameObject.layer;
         ChangeColorToLayer();
         ShotRayCast();
+        posx = (int)gameObject.transform.position.x;
+        posy = (int)gameObject.transform.position.y;
     }
 
     // Update is called once per frame
@@ -38,6 +42,8 @@ public class FogOfWar : MonoBehaviour
                 if (this.transform.tag != "Monster")
                 {
                     myRenderer.color = Color.black;
+                    MiniMapPanel.instance.CellColorChange(posy,posx,gameObject.layer);
+                    
                 }
                 else
                 {
@@ -45,6 +51,7 @@ public class FogOfWar : MonoBehaviour
                     newColor = Color.white;
                     newColor.a = 0;
                     myRenderer.color = newColor;
+                    
                 }
                 break;
             case 7:// Seen
@@ -61,7 +68,10 @@ public class FogOfWar : MonoBehaviour
                 }
                 break;
             case 8:// insight
-                myRenderer.color = Color.white;
+                {
+                    myRenderer.color = Color.white;
+                    MiniMapPanel.instance.CellColorChange(posy, posx,gameObject.layer);
+                }
                 break;
             default:
                 break;

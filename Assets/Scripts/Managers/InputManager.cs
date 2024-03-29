@@ -25,6 +25,7 @@ public class InputManager : MonoBehaviour
     
     Vector3 moveDirection;
     Vector3 playerPos;
+
     void Start()
     {
         playerObj = GameManager.instance.playerObj;
@@ -67,13 +68,13 @@ public class InputManager : MonoBehaviour
                 case TileType.door:
                     InputMoveKey();
                     break;
-                case TileType.water:
+                case TileType.stair:
                     break;
                 case TileType.monster:
                     Debug.Log("NExt Tile is Monster");
                     break;
                 case TileType.player:
-                    Debug.Log("PlayerPosError");
+                    //Debug.Log("PlayerPosError");
                     break;
                 default:
                     break;

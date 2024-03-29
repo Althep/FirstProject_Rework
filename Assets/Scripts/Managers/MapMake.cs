@@ -7,9 +7,10 @@ public enum TileType
     tile,
     wall,
     door,
-    water,
+    stair,
     monster,
-    player
+    player,
+    item
 }
 public class MapMake : MonoBehaviour
 {
@@ -17,13 +18,14 @@ public class MapMake : MonoBehaviour
     public TileType[,] map;
     public int xSize;
     public int ySize;
-    int minMapSize=30;
-    int maxMapSize=60;
+    //int minMapSize=30;
+    //int maxMapSize=60;
     int dividingMin = 80;
     int dividingMax = 120;
     int maxCount = 5;
     
     MonsterManager monsterManager;
+    [SerializeField]MiniMapPanel miniMap;
 
     public GameObject tilePrefab;
     public GameObject wallPrefab;
@@ -59,6 +61,7 @@ public class MapMake : MonoBehaviour
         TwistingDungeon();
         MakeStairPos();
         ObjectInstantiate();
+        MiniMapMaping();
     }
     void ObjectInstantiate()
     {
@@ -77,7 +80,7 @@ public class MapMake : MonoBehaviour
                     case TileType.door:
                         Instantiate(doorPrefab, new Vector3(i, j,0), Quaternion.identity);
                         break;
-                    case TileType.water:
+                    case TileType.stair:
                         break;
                     case TileType.monster:
                         break;
@@ -108,7 +111,9 @@ public class MapMake : MonoBehaviour
     }
     public void MapInitiate()
     {
-        RandomSize(minMapSize, maxMapSize);
+        //RandomSize(minMapSize, maxMapSize);
+        xSize = 32;
+        ySize = 32;
         map = new TileType[ySize,xSize];
         for(int y = 0; y < ySize; y++)
         {
@@ -118,12 +123,19 @@ public class MapMake : MonoBehaviour
             }
         }
         //맵크기 초기화
-        
+        miniMap = GameObject.Find("Canvas").transform.GetChild(2).transform.GetComponent<MiniMapPanel>();
     }
     void RandomSize(int min,int max)
     {
         ySize = UnityEngine.Random.Range(min,max+1);
         xSize = UnityEngine.Random.Range(min, max + 1);
+    }
+    void MiniMapMaping()
+    {
+        miniMap.mapData = map;
+        miniMap.mapCells = new MapCell[ySize,xSize];
+        miniMap.SetCellPosition();
+        Debug.Log("MiniMapMaping");
     }
     void MapDivide(int startX,int startY,int endX,int endY,int count)
     {
@@ -225,7 +237,7 @@ public class MapMake : MonoBehaviour
                         break;
                     case TileType.door:
                         break;
-                    case TileType.water:
+                    case TileType.stair:
                         break;
                     case TileType.monster:
                         break;
