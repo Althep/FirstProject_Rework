@@ -42,7 +42,7 @@ public class FogOfWar : MonoBehaviour
                 if (this.transform.tag != "Monster")
                 {
                     myRenderer.color = Color.black;
-                    MiniMapPanel.instance.CellColorChange(posy,posx,gameObject.layer);
+                    //MiniMapPanel.instance.CellColorChange(posy,posx,gameObject.layer);
                     
                 }
                 else

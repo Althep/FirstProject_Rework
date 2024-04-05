@@ -83,6 +83,11 @@ public class MapCell : MonoBehaviour
                 break;
         }
     }
+    void UpperOBJColorRemove()
+    {
+        Color color = new Color(0,0,0,0);
+        upperOBJ.color = color;
+    }
     void UnSeenTile()
     {
         mapCell.color = Color.black;

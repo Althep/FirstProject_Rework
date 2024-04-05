@@ -2,6 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+public interface IMoveable
+{
+    public void MoveNext(int nextX,int nextY,GameObject gameObject)
+    {
+        Vector3Int nextPos = new Vector3Int(nextX, nextY);
+        gameObject.transform.position = nextPos;
+    }
+}
+
+public interface IDamageable
+{
+    public void Damaged(int Hp , int Damage)
+    {
+        Hp -= Damage;
+    }
+
+}
 public class LivingEntity : MonoBehaviour
 {
     protected int maxHp;
