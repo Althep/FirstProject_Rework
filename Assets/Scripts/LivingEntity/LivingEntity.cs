@@ -3,36 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public interface IMoveable
+public struct EntityState
 {
-    public void MoveNext(int nextX,int nextY,GameObject gameObject)
-    {
-        Vector3Int nextPos = new Vector3Int(nextX, nextY);
-        gameObject.transform.position = nextPos;
-    }
-}
-
-public interface IDamageable
-{
-    public void Damaged(int Hp , int Damage)
-    {
-        Hp -= Damage;
-    }
-
-}
-public class LivingEntity : MonoBehaviour
-{
-    protected int maxHp;
-    protected int currntHp;
-    protected bool isDead;
-    protected int base_AttackSpeed;
-    protected int base_MoveSpeed;
-    public int attackSpeed=10;
-    public int moveSpeed=10;
+    public int maxHp;
+    public int currntHp;
+    public bool isDead;
+    public int base_AttackSpeed;
+    public int base_MoveSpeed;
+    public int attackSpeed;
+    public int moveSpeed;
     public int turn;
     public int oldTurn;
+    public int damage;
+}
+
+public class LivingEntity : MonoBehaviour
+{
+    public EntityState myState;
+    
     public MoveState moveState;
     public int lastDamaged;
+    
     GameObject hpSliderObj;
     Slider hpSlider;
     GameObject myCanvasObj;
@@ -52,7 +43,7 @@ public class LivingEntity : MonoBehaviour
     }
     public virtual void Damaged(int damage)
     {
-        currntHp -= damage;
+        myState.currntHp -= damage;
         IsDead();
         SetHpBarValue();
     }
@@ -82,7 +73,7 @@ public class LivingEntity : MonoBehaviour
     }
     void SetHpBarValue()
     {
-        hpSlider.value = currntHp / maxHp;
+        hpSlider.value = myState.currntHp / myState.maxHp;
     }
     public virtual void Attack(LivingEntity target)
     {
@@ -98,7 +89,7 @@ public class LivingEntity : MonoBehaviour
     }
     protected virtual void SetSpeed()
     {
-        attackSpeed = base_AttackSpeed;
-        moveSpeed = base_MoveSpeed;
+        myState.attackSpeed = myState.base_AttackSpeed;
+        myState.moveSpeed = myState.base_MoveSpeed;
     }
 }

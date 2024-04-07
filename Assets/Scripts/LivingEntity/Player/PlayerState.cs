@@ -14,8 +14,10 @@ public class PlayerState : LivingEntity
     }
     private void Start()
     {
-        base_AttackSpeed = 10;
-        base_MoveSpeed = 10;
+        myState.base_AttackSpeed = 10;
+        myState.base_MoveSpeed = 10;
+        myState.moveSpeed = myState.base_MoveSpeed;
+        myState.attackSpeed = myState.base_AttackSpeed;
     }
     private void FixedUpdate()
     {
@@ -35,7 +37,7 @@ public class PlayerState : LivingEntity
     }
     public override void Attack(LivingEntity target)
     {
-        
+        target.Damaged(myState.damage);
     }
 
 

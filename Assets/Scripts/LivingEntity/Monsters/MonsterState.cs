@@ -8,7 +8,6 @@ public class MonsterState : LivingEntity
     public Vector2 nextPos;
     public GameObject target;
     public List<Node> path;
-    public int damage;
     public int leftTurnPoint;
     public MonsterActSate myActState;
     public float attackRange = 1.42f;
@@ -20,8 +19,8 @@ public class MonsterState : LivingEntity
     {
         myActState = this.transform.GetComponent<Rest>();
         target = GameManager.instance.playerObj;
-        base_MoveSpeed = 10;
-        base_AttackSpeed = 10;
+        myState.base_MoveSpeed = 10;
+        myState.base_AttackSpeed = 10;
         attackRange = 1.42f;
         SetSpeed();
         playerState = GameManager.instance.playerObj.transform.GetComponent<PlayerState>();
@@ -33,6 +32,11 @@ public class MonsterState : LivingEntity
         ShowState();
         distance = Vector2.Distance(target.transform.position, this.gameObject.transform.position).ToString();
         CanvasSetActive();
+        if (leftTurnPoint != 0)
+        {
+            Debug.Log(leftTurnPoint);
+        }
+        
     }
 
     void OnPlayerMove()
@@ -42,8 +46,6 @@ public class MonsterState : LivingEntity
         TurnCalculate();
         GetNextPos();
         TurnAct();
-
-
     }
     void SetMoveState()
     {
@@ -66,11 +68,11 @@ public class MonsterState : LivingEntity
     }
     void TurnAct()
     {
-        while (turn > 0)
+        while (myState.turn > 0)
         {
             Debug.Log("MonsterStateTurnAct");
             myActState.TurnAct();
-            turn--;
+            myState.turn--;
         }
             
         
@@ -83,10 +85,12 @@ public class MonsterState : LivingEntity
                 Debug.Log("PlayerMoveStateError");
                 break;
             case MoveState.move:
-                leftTurnPoint += playerState.moveSpeed;
+                leftTurnPoint += playerState.myState.moveSpeed;
+                Debug.Log("!");
                 break;
             case MoveState.attack:
-                leftTurnPoint += playerState.attackSpeed;
+                leftTurnPoint += playerState.myState.attackSpeed;
+                Debug.Log("!!");
                 break;
             default:
                 break;
@@ -101,12 +105,12 @@ public class MonsterState : LivingEntity
                 Debug.Log("Idle!");
                 break;
             case MoveState.move:
-                turn = leftTurnPoint / moveSpeed;
-                leftTurnPoint %= moveSpeed;
+                myState.turn = leftTurnPoint / myState.moveSpeed;
+                leftTurnPoint %= myState.moveSpeed;
                 break;
             case MoveState.attack:
-                turn = leftTurnPoint / attackSpeed;
-                leftTurnPoint %= attackSpeed;
+                myState.turn = leftTurnPoint / myState.attackSpeed;
+                leftTurnPoint %= myState.attackSpeed;
                 break;
             default:
                 break;
@@ -116,9 +120,9 @@ public class MonsterState : LivingEntity
     
     protected override void IsDead()
     {
-        if (currntHp <= 0)
+        if (myState.currntHp <= 0)
         {
-            isDead = true;
+            myState.isDead = true;
             EventManager.Instance.OnPlayerMove.RemoveListener(this.OnPlayerMove);
         }
     }

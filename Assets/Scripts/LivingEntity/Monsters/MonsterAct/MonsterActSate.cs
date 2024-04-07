@@ -11,6 +11,7 @@ public class MonsterActSate : MonoBehaviour
     protected PathFinding astarScript;
     public GameObject playerObj;
     protected PathFinding pathFinding;
+
     private void OnEnable()
     {
         myState = this.gameObject.transform.GetComponent<MonsterState>();
@@ -64,7 +65,7 @@ public class MonsterActSate : MonoBehaviour
         if (Vector2.Distance(this.transform.position, myState.target.transform.position) <= myState.attackRange)
         {
             targetEntity = myState.target.transform.GetComponent<LivingEntity>();
-            targetEntity.Damaged(myState.damage);
+            targetEntity.Damaged(myState.myState.damage);
         }
     }
 
