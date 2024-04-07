@@ -6,11 +6,13 @@ public enum MoveState
 {
     idle,
     move,
-    attack
+    attack,
+    cast
 }
 
 public class InputManager : MonoBehaviour
 {
+    //인풋 설정에서 Horizental Virtical 옵션을 바꿔 넘버패드로 키입력을 받게 바꿈
     // Start is called before the first frame update
     float HoriInput;
     float VirtyInput;
@@ -18,11 +20,10 @@ public class InputManager : MonoBehaviour
 
     public MoveState playerMoveState = MoveState.idle;
 
-
     GameObject playerObj;
     PlayerState playerState;
     MapMake mapScript;
-    
+    GameObject aimObj;
     Vector3 moveDirection;
     Vector3 playerPos;
 
@@ -31,6 +32,7 @@ public class InputManager : MonoBehaviour
         playerObj = GameManager.instance.playerObj;
         mapScript = GameManager.instance.gameObject.transform.GetComponent<MapMake>();
         playerState = playerObj.transform.GetComponent<PlayerState>();
+        aimObj = transform.GetChild(1).gameObject;
     }
     private void FixedUpdate()
     {
@@ -72,6 +74,7 @@ public class InputManager : MonoBehaviour
                     break;
                 case TileType.monster:
                     Debug.Log("NExt Tile is Monster");
+                    //MoveState Attack으로 바꾼 후 Attack함수에서 실행 후 idle로 바꿀 필요 있음
                     break;
                 case TileType.player:
                     //Debug.Log("PlayerPosError");
@@ -156,6 +159,7 @@ public class InputManager : MonoBehaviour
         return maxDixtance;
     }
 
+    
 
 
 }

@@ -35,9 +35,9 @@ public class PlayerState : LivingEntity
             Destroy(this.gameObject);
         }
     }
-    public override void Attack(LivingEntity target)
+    public override void Attack(LivingEntity target,int damage)
     {
-        target.Damaged(myState.damage);
+        target.Damaged(damage);
     }
 
 
