@@ -21,6 +21,8 @@ public class MonsterState : LivingEntity
         target = GameManager.instance.playerObj;
         myState.base_MoveSpeed = 10;
         myState.base_AttackSpeed = 10;
+        myState.maxHp = 10;
+        myState.currntHp = myState.maxHp;
         attackRange = 1.42f;
         SetSpeed();
         playerState = GameManager.instance.playerObj.transform.GetComponent<PlayerState>();

@@ -26,7 +26,6 @@ public class MiniMapPanel : MonoBehaviour
     }
     public void SetCellPosition()
     {
-        CheckTest();
         int count = 0;
         for (int y = 0; y < mapData.GetLength(0); y++)
         {
@@ -36,17 +35,11 @@ public class MiniMapPanel : MonoBehaviour
                 mapCell.SetPosition(x,y);
                 mapCells[y, x] = mapCell;
                 mapCells[y, x].SetTilePosition(mapData[y, x]);
-                Debug.Log(y+" "+x);
                 count++;
             }
         }
     }
 
-    void CheckTest()
-    {
-        Debug.Log(mapData.GetLength(0));
-        Debug.Log(mapData.GetLength(1));
-    }
     
     public void CellColorChange(int y, int x,int layer)
     {

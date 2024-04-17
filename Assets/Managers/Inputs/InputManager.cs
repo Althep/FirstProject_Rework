@@ -21,9 +21,11 @@ public class InputManager : MonoBehaviour
     public MoveState playerMoveState = MoveState.idle;
 
     GameObject playerObj;
+    GameObject[] targets;
+    
     PlayerState playerState;
     MapMake mapScript;
-    GameObject aimObj;
+    Input lastInput;
     Vector3 moveDirection;
     Vector3 playerPos;
 
@@ -32,31 +34,24 @@ public class InputManager : MonoBehaviour
         playerObj = GameManager.instance.playerObj;
         mapScript = GameManager.instance.gameObject.transform.GetComponent<MapMake>();
         playerState = playerObj.transform.GetComponent<PlayerState>();
-        aimObj = transform.GetChild(1).gameObject;
+        
     }
     private void FixedUpdate()
     {
-        if (playerState.moveState == MoveState.idle)
+        
+        if (playerState.moveState == MoveState.idle && Input.anyKeyDown)
         {
+            
             OnkeyPlayerMove();
         }
+
     }
     public void OnkeyPlayerMove()
     {
         AxisInput();
         int nexty = (int)(playerObj.transform.position.y + moveDirection.y);
         int nextx = (int)(playerObj.transform.position.x + moveDirection.x);
-        /*
-        if ( IsInSize() && (mapScript.map[nexty, nextx] == TileType.tile))
-        {
-            InputMoveKey();
-        }
-
-        else if(IsInSize() && (mapScript.map[nexty, nextx] == TileType.monster))
-        {
-
-        }
-        */
+        Vector2 next = new Vector2(nextx,nexty);
         if (IsInSize())
         {
             switch (mapScript.map[nexty, nextx])
@@ -65,7 +60,6 @@ public class InputManager : MonoBehaviour
                     InputMoveKey();
                     break;
                 case TileType.wall:
-                    Debug.Log("NExt Tile is Wall");
                     break;
                 case TileType.door:
                     InputMoveKey();
@@ -73,7 +67,7 @@ public class InputManager : MonoBehaviour
                 case TileType.stair:
                     break;
                 case TileType.monster:
-                    Debug.Log("NExt Tile is Monster");
+                    MakeCollider(next);
                     //MoveState Attack으로 바꾼 후 Attack함수에서 실행 후 idle로 바꿀 필요 있음
                     break;
                 case TileType.player:
@@ -91,7 +85,7 @@ public class InputManager : MonoBehaviour
         int nextx = (int)(playerObj.transform.position.x + moveDirection.x);
         if ((nextx < mapScript.xSize && nexty < mapScript.ySize) && (nextx>-1 && nexty>-1))
         {
-            temp = true;
+            temp = true;    
         }
         return temp;
     }
@@ -100,6 +94,7 @@ public class InputManager : MonoBehaviour
         HoriInput = Input.GetAxisRaw("Horizontal");
         VirtyInput = Input.GetAxisRaw("Vertical");
         moveDirection = new Vector3(HoriInput, VirtyInput, 0);
+        
     }
 
     public void InputMoveKey()
@@ -115,6 +110,7 @@ public class InputManager : MonoBehaviour
         playerState.moveState = MoveState.move;
         float maxDistance = SetMoveDistance(moveDirection);
         mapScript.TileInfoSwap(playerPos, playerPos + moveDirection, mapScript.playerPos, mapScript.tilePosList, TileType.player);
+        
         while (Vector2.Distance(playerPos + moveDirection, playerObj.transform.position) >= 0.2f)
         {
             playerObj.transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
@@ -131,18 +127,18 @@ public class InputManager : MonoBehaviour
             EventManager.Instance.OnPlayerMove.Invoke();
         }
         playerState.moveState = MoveState.idle;
-        
     }
-    public IEnumerator PlayerAttack()
+    public void PlayerAttack(LivingEntity target,int damage)
     {
         playerState.moveState = MoveState.attack;
-        //playerState.Attack();
+        playerState.Attack(target);
+        Debug.Log("111111");
         if (EventManager.Instance.OnPlayerMove != null)
         {
             EventManager.Instance.OnPlayerMove.Invoke();
         }
         playerState.moveState = MoveState.idle;
-        yield return null;
+
     }
 
     float SetMoveDistance(Vector2 moveDirection)
@@ -158,8 +154,19 @@ public class InputManager : MonoBehaviour
         }
         return maxDixtance;
     }
-
-    
-
-
+    void MakeCollider(Vector2 next)
+    {
+        Collider2D[] col;
+        LivingEntity entity;
+        col = Physics2D.OverlapCircleAll(next, 0.1f); // 0.1f크기의 콜라이더 생성 해 다음위치의 오브젝트들 잡아옴
+        foreach (Collider2D collider in col)
+        {
+            if(collider.CompareTag("Monster"))
+            {
+                Debug.Log("Find Target");
+                collider.gameObject.TryGetComponent<LivingEntity>(out entity);
+                PlayerAttack(entity, playerState.myState.damage);
+            }
+        }
+    }
 }

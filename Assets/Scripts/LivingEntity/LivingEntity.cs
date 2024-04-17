@@ -75,9 +75,9 @@ public class LivingEntity : MonoBehaviour
     {
         hpSlider.value = myState.currntHp / myState.maxHp;
     }
-    public virtual void Attack(LivingEntity target,int damage)
+    public virtual void Attack(LivingEntity target)
     {
-        target.Damaged(damage);
+        target.Damaged(myState.damage);
     }
     protected virtual void IsDead()
     {

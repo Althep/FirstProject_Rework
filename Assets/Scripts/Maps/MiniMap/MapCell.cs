@@ -25,7 +25,6 @@ public class MapCell : MonoBehaviour
     public void SetMapCell()
     {
         mapCell = transform.GetComponent<Image>();
-        Debug.Log(mapCell);
     }
     public void SetUpperOBJ()
     {
