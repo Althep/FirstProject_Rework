@@ -25,7 +25,7 @@ public class InputManager : MonoBehaviour
     
     PlayerState playerState;
     MapMake mapScript;
-    Input lastInput;
+    KeyCode lastInput;
     Vector3 moveDirection;
     Vector3 playerPos;
 
@@ -38,8 +38,21 @@ public class InputManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        
-        if (playerState.moveState == MoveState.idle && Input.anyKeyDown)
+        /*
+        if (Input.anyKey)
+        {
+            foreach(KeyCode keycode in System.Enum.GetValues(typeof(KeyCode)))
+            {
+                if (Input.GetKeyDown(keycode))
+                {
+                    lastInput = keycode;
+                    Debug.Log(lastInput);
+                    Debug.Log(keycode);
+                }
+            }
+        }
+        */
+        if (playerState.moveState == MoveState.idle )
         {
             
             OnkeyPlayerMove();
@@ -89,12 +102,12 @@ public class InputManager : MonoBehaviour
         }
         return temp;
     }
+
     void AxisInput()
     {
-        HoriInput = Input.GetAxisRaw("Horizontal");
+        HoriInput = Input.GetAxisRaw("Horizontal"); //<- ->
         VirtyInput = Input.GetAxisRaw("Vertical");
         moveDirection = new Vector3(HoriInput, VirtyInput, 0);
-        
     }
 
     public void InputMoveKey()
