@@ -18,7 +18,7 @@ public class InputManager : MonoBehaviour
     float VirtyInput;
     float moveSpeed = 4f;
 
-    public MoveState playerMoveState = MoveState.idle;
+    //public MoveState playerMoveState = MoveState.idle;
     bool CanInput;
 
     GameObject playerObj;
@@ -41,13 +41,11 @@ public class InputManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if(playerMoveState == MoveState.idle&&Input.anyKeyDown)
+        if(playerState.moveState == MoveState.idle)
         {
             OnkeyPlayerMove();
+            
         }
-        
-
-
     }
     /*
     public bool KeyCodeCompare()
@@ -83,27 +81,28 @@ public class InputManager : MonoBehaviour
         int nexty = (int)(playerObj.transform.position.y + moveDirection.y);
         int nextx = (int)(playerObj.transform.position.x + moveDirection.x);
         Vector2 next = new Vector2(nextx, nexty);
-        playerState.moveState = MoveState.move;
         if (IsInSize())
         {
             switch (mapScript.map[nexty, nextx])
             {
                 case TileType.tile:
                     InputMoveKey();
+                    Debug.Log("MovableTile");
                     break;
                 case TileType.wall:
+                    Debug.Log("Wall");
                     break;
                 case TileType.door:
                     InputMoveKey();
                     break;
                 case TileType.stair:
+                    Debug.Log("stair");
                     break;
                 case TileType.monster:
                     MakeCollider(next);
                     //MoveState Attack으로 바꾼 후 Attack함수에서 실행 후 idle로 바꿀 필요 있음
                     break;
                 case TileType.player:
-                    //Debug.Log("PlayerPosError");
                     break;
                 default:
                     break;
@@ -133,6 +132,7 @@ public class InputManager : MonoBehaviour
     {
         if (HoriInput != 0 || VirtyInput != 0)
         {
+            playerState.moveState = MoveState.move;
             StartCoroutine("Moving");
         }
     }
@@ -141,7 +141,7 @@ public class InputManager : MonoBehaviour
         playerPos = playerObj.transform.position;
         float maxDistance = SetMoveDistance(moveDirection);
         mapScript.TileInfoSwap(playerPos, playerPos + moveDirection, mapScript.playerPos, mapScript.tilePosList, TileType.player);
-
+        playerState.moveState = MoveState.move;
         while (Vector2.Distance(playerPos + moveDirection, playerObj.transform.position) >= 0.2f)
         {
             playerObj.transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
@@ -163,13 +163,12 @@ public class InputManager : MonoBehaviour
     {
         playerState.moveState = MoveState.attack;
         playerState.Attack(target);
-        Debug.Log("111111");
         if (EventManager.Instance.OnPlayerMove != null)
         {
             EventManager.Instance.OnPlayerMove.Invoke();
         }
         StartCoroutine("WaitInputTime");
-        Debug.Log(TurnManager.instance.turn);
+
         playerState.moveState = MoveState.idle;
 
     }
@@ -200,7 +199,6 @@ public class InputManager : MonoBehaviour
         {
             if (collider.CompareTag("Monster"))
             {
-                Debug.Log("Find Target");
                 collider.gameObject.TryGetComponent<LivingEntity>(out entity);
                 PlayerAttack(entity, playerState.myState.damage);
             }

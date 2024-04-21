@@ -124,7 +124,6 @@ public class PathFinding : MonoBehaviour
         int[] dx = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
         int[] dy = new int[] { 1, 1, 1, 0, 0, -1, -1, -1 };
         int[] cost = new int[] { 8, 10, 8, 10, 10, 8, 10, 8 };//{ 14, 10, 14, 10, 10, 14, 10, 14 };
-        Debug.Log("Astar");
         if (mapMakeScript == null)
         {
             Debug.Log("MapScript Null");

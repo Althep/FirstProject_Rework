@@ -72,8 +72,8 @@ public class MonsterState : LivingEntity
     {
         while (myState.turn > 0)
         {
-            Debug.Log("MonsterStateTurnAct");
             myActState.TurnAct();
+            Debug.Log(myState.turn);
             myState.turn--;
         }
             
@@ -88,11 +88,9 @@ public class MonsterState : LivingEntity
                 break;
             case MoveState.move:
                 leftTurnPoint += playerState.myState.moveSpeed;
-                Debug.Log("!");
                 break;
             case MoveState.attack:
                 leftTurnPoint += playerState.myState.attackSpeed;
-                Debug.Log("!!");
                 break;
             default:
                 break;

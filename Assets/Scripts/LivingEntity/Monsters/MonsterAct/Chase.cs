@@ -20,9 +20,12 @@ public class Chase : MonsterActSate
             myState.oldPlayerPos = myState.target.transform.position;
 
         }
+        else if (pathFinding.path.Count == 1&& Vector2.Distance(playerObj.transform.position,this.gameObject.transform.position)<1.42f)
+        {
+            myState.moveState = MoveState.attack;
+        }
         else
         {
-            Debug.Log("getPathFaild");
             myState.myActState = this.gameObject.transform.GetComponent<Rest>();
         }
     }

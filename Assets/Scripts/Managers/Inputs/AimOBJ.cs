@@ -26,7 +26,6 @@ public class AimOBJ : MonoBehaviour
     public void SetTargets(GameObject collisionObj)
     {
         targets.Add(collisionObj);
-        Debug.Log(collisionObj.name + targets.Count);
     }
     public void FindTargetEntity()
     {

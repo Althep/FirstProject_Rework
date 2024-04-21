@@ -79,7 +79,6 @@ public class MonsterActSate : MonoBehaviour
                 Move();
                 break;
             case MoveState.attack:
-                Debug.Log("DoAttack");
                 //Attack();
                 break;
             default:

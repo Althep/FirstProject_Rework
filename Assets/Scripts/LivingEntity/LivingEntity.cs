@@ -31,11 +31,10 @@ public class LivingEntity : MonoBehaviour
     private void Awake()
     {
         SetCanvas();
-        Debug.Log(this.gameObject.name);
     }
     private void Start()
     {
-        Debug.Log(this.gameObject.layer);
+
     }
     private void Update()
     {
@@ -49,14 +48,9 @@ public class LivingEntity : MonoBehaviour
     }
     void SetCanvas()
     {
-        Debug.Log("SetMyCanvas");
         myCanvasObj = this.gameObject.transform.GetChild(0).transform.gameObject;
-        Debug.Log(myCanvasObj);
         hpSliderObj = myCanvasObj.transform.GetChild(0).gameObject;
-        Debug.Log(hpSliderObj);
         hpSlider = hpSliderObj.transform.GetComponent<Slider>();
-        Debug.Log(hpSlider);
-        Debug.Log(this.gameObject.name);
     }
     protected void CanvasSetActive()
     {

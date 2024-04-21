@@ -135,7 +135,6 @@ public class MapMake : MonoBehaviour
         miniMap.mapData = map;
         miniMap.mapCells = new MapCell[ySize,xSize];
         miniMap.SetCellPosition();
-        Debug.Log("MiniMapMaping");
     }
     void MapDivide(int startX,int startY,int endX,int endY,int count)
     {
