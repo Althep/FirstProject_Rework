@@ -7,7 +7,8 @@ public enum MoveState
     idle,
     move,
     attack,
-    cast
+    cast,
+    threw
 }
 
 public class InputManager : MonoBehaviour
@@ -22,6 +23,7 @@ public class InputManager : MonoBehaviour
     bool CanInput;
 
     GameObject playerObj;
+    GameObject aimObj;
     GameObject[] targets;
 
     PlayerState playerState;
@@ -37,14 +39,39 @@ public class InputManager : MonoBehaviour
         playerObj = GameManager.instance.playerObj;
         mapScript = GameManager.instance.gameObject.transform.GetComponent<MapMake>();
         playerState = playerObj.transform.GetComponent<PlayerState>();
+        aimObj = playerObj.transform.GetChild(1).gameObject;
 
     }
     private void FixedUpdate()
     {
-        if(playerState.moveState == MoveState.idle)
+        
+        if (Input.GetKeyUp(KeyCode.Z))
         {
-            OnkeyPlayerMove();
-            
+            playerState.moveState = MoveState.cast;
+        }
+        MoveStateOnKey();
+
+
+    }
+    void MoveStateOnKey()
+    {
+        switch (playerState.moveState)
+        {
+            case MoveState.idle:
+                OnkeyPlayerMove();
+                break;
+            case MoveState.move:
+                break;
+            case MoveState.attack:
+                break;
+            case MoveState.cast:
+                OnKeyPlayerAim();
+                break;
+            case MoveState.threw:
+                OnKeyPlayerAim();
+                break;
+            default:
+                break;
         }
     }
     /*
@@ -107,6 +134,18 @@ public class InputManager : MonoBehaviour
                 default:
                     break;
             }
+        }
+    }
+    public void OnKeyPlayerAim()
+    {
+        aimObj.SetActive(true);
+        AxisInput();
+        int nexty = (int)(playerObj.transform.position.y + moveDirection.y);
+        int nextx = (int)(playerObj.transform.position.x + moveDirection.x);
+        Vector2 next = new Vector2(nextx, nexty);
+        if (IsInSize())
+        {
+            aimObj.transform.position = next;
         }
     }
     bool IsInSize()
