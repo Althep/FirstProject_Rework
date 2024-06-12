@@ -19,23 +19,21 @@ public class ItemBase
     public int weight;
     public ItemKind itemKind;
     public List<string> functions;
-}
-public class EquipMent : ItemBase
-{
-    public int slot;
-    EquipType equipType; 
-    EquipMent()
+
+    public virtual void Use()
     {
-        this.itemKind = ItemKind.Equipment;
+        switch (itemKind)
+        {
+            case ItemKind.None:
+                break;
+            case ItemKind.Consumable:
+                break;
+            case ItemKind.Equipment:
+
+                break;
+            default:
+                break;
+        }
     }
-}
-public class Consumable : ItemBase 
-{
-    public int amunt;
-    Consumable()
-    {
-        this.itemKind = ItemKind.Consumable;
-    }
-    public int amount;
 }
 

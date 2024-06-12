@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+
 public class EquipInfo : MonoBehaviour
 {
-    Dictionary<int , EquipBase> equipMents;
+    public Dictionary<int , EquipBase> equipMents;
 
+    //player Equip Info
     /* SlotNumber
      *  0,1 = Weapon And Sheild
      *  2 = Helm
@@ -14,26 +18,5 @@ public class EquipInfo : MonoBehaviour
     */
 
 
-    public void EquipItem(int slotNumber, EquipBase itemInfo)
-    {
-        if (equipMents[slotNumber] != null)
-        {
-            equipMents[slotNumber].CallUnEquip();
-            equipMents[slotNumber] = itemInfo;
-            equipMents[slotNumber].CallEquip();
-
-        }
-        else
-        {
-            equipMents.Add(slotNumber, itemInfo);
-            equipMents[slotNumber] = itemInfo;
-            equipMents[slotNumber].CallEquip();
-
-        }
-    }
-    public void UnEquipItem(int slotNumber)
-    {
-        equipMents[slotNumber].CallUnEquip();
-        equipMents[slotNumber] = null;
-    }
+    
 }

@@ -4,14 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ItemSlot : ButtonUI
 {
-    int slotNumber;
+    public int slotNumber;
     ItemBase slotItem;
-    
-
+    Image slotImage;
+    Button inventoryButton;
     private void Start()
     {
-        
+        slotImage = transform.GetChild(1).transform.GetComponent<Image>();
 
     }
+
+
+    
+
+
 
 }
