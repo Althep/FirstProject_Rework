@@ -5,7 +5,7 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
 
-    List<ItemBase> inventoryItems;
+    public List<ItemBase> inventoryItems;
     LivingEntity myEntity;
     EquipInfo myEquip;
     // Start is called before the first frame update
