@@ -8,7 +8,8 @@ public enum MoveState
     move,
     attack,
     cast,
-    threw
+    threw,
+    uiOpen
 }
 
 public class InputManager : MonoBehaviour
@@ -28,20 +29,28 @@ public class InputManager : MonoBehaviour
 
     PlayerState playerState;
     MapMake mapScript;
+    UIManager uiManager;
 
-    KeyCode lastInput;
-    KeyCode currentKey;
     Vector3 moveDirection;
     Vector3 playerPos;
+
+    KeyCode[] UIKeyCodes;
+
+    Dictionary<string, KeyCode> UInameToKeyCode = new Dictionary<string, KeyCode>();
+    Dictionary<KeyCode, GameObject> UIKeyCodeToObj = new Dictionary<KeyCode, GameObject>();
+
+    KeyCode inputKey;
 
     void Start()
     {
         playerObj = GameManager.instance.playerObj;
         mapScript = GameManager.instance.gameObject.transform.GetComponent<MapMake>();
+        uiManager = GameManager.instance.gameObject.transform.GetComponent<UIManager>();
         playerState = playerObj.transform.GetComponent<PlayerState>();
         aimObj = playerObj.transform.GetChild(1).gameObject;
-
+        
     }
+
     private void FixedUpdate()
     {
         
@@ -50,9 +59,16 @@ public class InputManager : MonoBehaviour
             playerState.moveState = MoveState.cast;
         }
         MoveStateOnKey();
-
+        foreach(KeyCode key in UIKeyCodeToObj.Keys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                UIObjectOnOff(key);
+            }
+        }
 
     }
+    #region MoveControll
     void MoveStateOnKey()
     {
         switch (playerState.moveState)
@@ -70,38 +86,15 @@ public class InputManager : MonoBehaviour
             case MoveState.threw:
                 OnKeyPlayerAim();
                 break;
+            case MoveState.uiOpen:
+                //UI 오브젝트가 열렸을경우 방향키 할당, 이동함수
+                break;
+
             default:
                 break;
         }
     }
-    /*
-    public bool KeyCodeCompare()
-    {
-        // 현재 입력된 키와 마지막으로 입력된 키 비교
-        if (Input.anyKeyDown)
-        {
-            foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
-            {
-                if (Input.GetKeyDown(keyCode))
-                {
-                    if (keyCode == lastInput && lastInputTime+0.5f<Time.time)
-                    {
-                        //Debug.Log("현재 입력된 키는 마지막으로 입력된 키와 같습니다.");
-                        isSame = true;
-                    }
-                    else
-                    {
-                        Debug.Log("현재 입력된 키는 마지막으로 입력된 키와 다릅니다.");
-                        isSame = false;
-                        lastInputTime = Time.time;
-                        lastInput = keyCode;
-                    }
-                }
-            }
-        }
-        return isSame;
-    }
-    */
+   
     public void OnkeyPlayerMove()
     {
         AxisInput();
@@ -243,4 +236,25 @@ public class InputManager : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region UIControll
+
+    void UIObjectOnOff(KeyCode key)
+    {
+        GameObject uiObj = UIKeyCodeToObj[key];
+        if(uiObj.activeSelf)
+        {
+            uiObj.SetActive(false);
+            playerState.moveState = MoveState.idle;
+        }
+        else
+        {
+            uiObj.SetActive(true);
+            playerState.moveState = MoveState.uiOpen;
+        }
+    }
+
+    #endregion
+
 }
