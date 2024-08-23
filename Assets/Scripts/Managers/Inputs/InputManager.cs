@@ -31,13 +31,14 @@ public class InputManager : MonoBehaviour
     MapMake mapScript;
     UIManager uiManager;
 
+
     Vector3 moveDirection;
     Vector3 playerPos;
 
     KeyCode[] UIKeyCodes;
 
-    Dictionary<string, KeyCode> UInameToKeyCode = new Dictionary<string, KeyCode>();
-    Dictionary<KeyCode, GameObject> UIKeyCodeToObj = new Dictionary<KeyCode, GameObject>();
+    public Dictionary<string, KeyCode> UInameToKeyCode = new Dictionary<string, KeyCode>();
+    public Dictionary<KeyCode, GameObject> UIKeyCodeToObj = new Dictionary<KeyCode, GameObject>();
 
     KeyCode inputKey;
 
@@ -45,26 +46,34 @@ public class InputManager : MonoBehaviour
     {
         playerObj = GameManager.instance.playerObj;
         mapScript = GameManager.instance.gameObject.transform.GetComponent<MapMake>();
-        uiManager = GameManager.instance.gameObject.transform.GetComponent<UIManager>();
+        uiManager = GameManager.instance.UIManager;
         playerState = playerObj.transform.GetComponent<PlayerState>();
         aimObj = playerObj.transform.GetChild(1).gameObject;
         
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         
         if (Input.GetKeyUp(KeyCode.Z))
         {
             playerState.moveState = MoveState.cast;
         }
+
         MoveStateOnKey();
+
         foreach(KeyCode key in UIKeyCodeToObj.Keys)
         {
             if (Input.GetKeyDown(key))
             {
+                Debug.Log(key);
                 UIObjectOnOff(key);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            uiManager.RemoveUIListUpdate();
         }
 
     }
@@ -243,15 +252,18 @@ public class InputManager : MonoBehaviour
     void UIObjectOnOff(KeyCode key)
     {
         GameObject uiObj = UIKeyCodeToObj[key];
+        Debug.Log(UIKeyCodeToObj[key].name);
         if(uiObj.activeSelf)
         {
             uiObj.SetActive(false);
             playerState.moveState = MoveState.idle;
+            uiManager.RemoveUIListUpdate();
         }
         else
         {
             uiObj.SetActive(true);
             playerState.moveState = MoveState.uiOpen;
+            uiManager.AddUIListUpDate(uiObj);
         }
     }
 

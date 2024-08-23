@@ -6,16 +6,24 @@ public class GameManager : MonoBehaviour
 {
     public int floor;
     public int stairNumber=0;
+    
     public static GameManager instance;
+    
     public UnityEvent OnMapGenerate;
+    
     public GameObject playerObj;
     public GameObject playerPrefab;
+
     List<int> visitedFloor = new List<int>();
+    
     MapMake mapScript;
+    public InputManager inputManager;
+    public UIManager UIManager = new UIManager();
     private void Awake()
     {
         SetInstance();
         InstantiatePlayerObj();
+        SetInputManager();
     }
 
     void Start()
@@ -62,5 +70,9 @@ public class GameManager : MonoBehaviour
             visitedFloor.Add(floor);
         }
             
+    }
+    void SetInputManager()
+    {
+        inputManager = transform.GetComponent<InputManager>();
     }
 }
