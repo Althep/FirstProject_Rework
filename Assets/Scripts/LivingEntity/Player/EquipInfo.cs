@@ -7,15 +7,32 @@ using UnityEngine;
 
 public class EquipInfo : MonoBehaviour
 {
-    public Dictionary<int , EquipBase> equipMents;
+    public Dictionary<EquipType, EquipBase> equipMents;
 
-    //player Equip Info
-    /* SlotNumber
-     *  0,1 = Weapon And Sheild
-     *  2 = Helm
-     *  3 = Armor
-     *  4 = Boots
-    */
+    //슬롯의 string을 가져와서 EquipBase 키값이 있는지 비교
+
+
+    public void UseEquip(EquipBase equip)
+    {
+        if (equipMents.ContainsKey(equip.equipType))
+        {
+            if (equip == equipMents[equip.equipType])
+            {
+                equipMents[equip.equipType] = null;
+            }
+            else
+            {
+                equipMents[equip.equipType] = equip;
+            }
+
+            //EquipChange
+        }
+        else
+        {
+            equipMents.Add(equip.equipType,equip);
+        }
+    }
+
 
 
     

@@ -6,7 +6,8 @@ public class EquipBase : ItemBase
 {
 
     EquipInfo playerEqip;
-    EquipType equipType;
+    EquipType _equipType;
+    public EquipType equipType { set { equipType = _equipType; } get { return _equipType; } }
     
 
 }

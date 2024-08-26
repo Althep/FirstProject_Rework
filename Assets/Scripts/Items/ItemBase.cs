@@ -10,7 +10,11 @@ public enum ItemKind
 }
 public enum EquipType
 {
-
+    Weapon,
+    Helmet,
+    Armor,
+    Glove,
+    Shoose
 }
 public class ItemBase
 {

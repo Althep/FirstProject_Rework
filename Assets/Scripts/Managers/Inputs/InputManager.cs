@@ -116,16 +116,16 @@ public class InputManager : MonoBehaviour
             {
                 case TileType.tile:
                     InputMoveKey();
-                    Debug.Log("MovableTile");
+                    //Debug.Log("MovableTile");
                     break;
                 case TileType.wall:
-                    Debug.Log("Wall");
+                    //Debug.Log("Wall");
                     break;
                 case TileType.door:
                     InputMoveKey();
                     break;
                 case TileType.stair:
-                    Debug.Log("stair");
+                    //Debug.Log("stair");
                     break;
                 case TileType.monster:
                     MakeCollider(next);
