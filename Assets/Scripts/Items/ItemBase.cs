@@ -1,43 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum ItemKind
+using System;
+public enum ItemType
 {
-    None,
     Consumable,
     Equipment
 }
-public enum EquipType
+
+public enum ConsumType
 {
-    Weapon,
-    Helmet,
-    Armor,
-    Glove,
-    Shoose
+    Potion,
+    Book,
+    Scroll,
+    Evoke,
+    Food
+    
 }
+
 public class ItemBase
 {
-    public int id;
-    public string name;
-    public int weight;
-    public ItemKind itemKind;
-    public List<string> functions;
+    public int _index;
+    public int index { get { return _index; } }
 
-    public virtual void Use()
-    {
-        switch (itemKind)
-        {
-            case ItemKind.None:
-                break;
-            case ItemKind.Consumable:
-                break;
-            case ItemKind.Equipment:
+    public string _name;
+    public string name { get { return _name; } }
 
-                break;
-            default:
-                break;
-        }
-    }
+    protected int _weight;
+    public int weight { get { return _weight; } }
+
+    
 }
+
+
 

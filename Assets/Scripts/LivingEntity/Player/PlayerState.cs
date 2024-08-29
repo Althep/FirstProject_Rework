@@ -6,7 +6,10 @@ public class PlayerState : LivingEntity
 {
     public GameObject player;
     public InputManager inputManager;
-    
+
+    public ItemInventory myInventory = new ItemInventory();
+    public MagicInventory myMagic = new MagicInventory();
+
     private void Awake()
     {
         inputManager = GameManager.instance.transform.GetComponent<InputManager>();

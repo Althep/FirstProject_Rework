@@ -335,7 +335,6 @@ GameObject:
   - component: {fileID: 8574691172037819850}
   - component: {fileID: -3362463253351369005}
   - component: {fileID: 8833335888978385874}
-  - component: {fileID: 6000895602123108580}
   - component: {fileID: 6340775759556550173}
   m_Layer: 6
   m_Name: MonsterPrefab
@@ -603,18 +602,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapMakeScript: {fileID: 0}
   destination: {x: 0, y: 0}
---- !u!114 &6000895602123108580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8343863398999632985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10cbaf63e2441964fa868dea9c6b92e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6340775759556550173
 MonoBehaviour:
   m_ObjectHideFlags: 0

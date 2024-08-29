@@ -33,6 +33,9 @@ public class MapMake : MonoBehaviour
     public GameObject upStairPrefab;
     public GameObject downStairPrefab;
 
+    public Dictionary<Vector2, TileType> TileMap = new Dictionary<Vector2, TileType>();
+    public Dictionary<Vector2, TileType> LivingEntityMap = new Dictionary<Vector2, TileType>();
+
     public List<Vector2> tilePosList = new List<Vector2>();
     public List<Vector2> monsterPosList = new List<Vector2>();
     public List<Vector2> wallPosList = new List<Vector2>();

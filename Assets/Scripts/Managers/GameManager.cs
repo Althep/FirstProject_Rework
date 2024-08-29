@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     MapMake mapScript;
     public InputManager inputManager;
     public UIManager UIManager = new UIManager();
+
+    public ItemManager item = new ItemManager();
     private void Awake()
     {
         SetInstance();
@@ -29,6 +31,14 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         floor = 0;
+        //item.AddKeysScripts();
+        item.InitiateItem();
+        
+
+        foreach( KeyValuePair<EquipType,EquipItem> kvp in item.EquipScripts)
+        {
+            Debug.Log($"key : {kvp.Key},value : {kvp.Value}");
+        }
     }
 
     void Update()

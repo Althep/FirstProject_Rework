@@ -7,29 +7,29 @@ using UnityEngine;
 
 public class EquipInfo : MonoBehaviour
 {
-    public Dictionary<EquipType, EquipBase> equipMents;
+    public Dictionary<EquipType, EquipItem> equipMents;
 
     //슬롯의 string을 가져와서 EquipBase 키값이 있는지 비교
 
 
-    public void UseEquip(EquipBase equip)
+    public void UseEquip(EquipItem equip)
     {
-        if (equipMents.ContainsKey(equip.equipType))
+        if (equipMents.ContainsKey(equip._equipType))
         {
-            if (equip == equipMents[equip.equipType])
+            if (equip == equipMents[equip._equipType])
             {
-                equipMents[equip.equipType] = null;
+                equipMents[equip._equipType] = null;
             }
             else
             {
-                equipMents[equip.equipType] = equip;
+                equipMents[equip._equipType] = equip;
             }
 
             //EquipChange
         }
         else
         {
-            equipMents.Add(equip.equipType,equip);
+            equipMents.Add(equip._equipType,equip);
         }
     }
 

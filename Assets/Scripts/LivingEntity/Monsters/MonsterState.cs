@@ -31,7 +31,7 @@ public class MonsterState : LivingEntity
 
     private void Update()
     {
-        ShowState();
+        //ShowState();
         distance = Vector2.Distance(target.transform.position, this.gameObject.transform.position).ToString();
         CanvasSetActive();
         if (leftTurnPoint != 0)

@@ -7,7 +7,7 @@ public class InventoryUI : UIBase
     // Start is called before the first frame update
 
     GameObject playerOBJ;
-    Inventory playerInven;
+    ItemInventory playerInven;
     public GameObject inventorySlot;
     
 
@@ -28,7 +28,7 @@ public class InventoryUI : UIBase
     void SetPlayerOBJ()
     {
         playerOBJ = GameManager.instance.playerObj;
-        playerInven = playerOBJ.transform.GetComponent<Inventory>();
+        playerInven = playerOBJ.transform.GetComponent<ItemInventory>();
     }
 
 
@@ -39,11 +39,7 @@ public class InventoryUI : UIBase
 
     void MakeInventorySlot()
     {
-        for(int i = 0; i < playerInven.inventoryItems.Count; i++)
-        {
-            
-
-        }
+        
 
     }
 
