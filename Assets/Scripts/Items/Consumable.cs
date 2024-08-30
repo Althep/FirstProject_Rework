@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConsumItem : MonoBehaviour
+public class Consumable : MonoBehaviour
 {
-    ConsumBase myInfo;
+    public ConsumItem myInfo;
 }

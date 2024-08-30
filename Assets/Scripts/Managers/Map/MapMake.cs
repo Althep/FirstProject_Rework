@@ -263,7 +263,6 @@ public class MapMake : MonoBehaviour
         {
             change.Add(changePos);
         }
-
     }
     public void TileInfoSwap(Vector2 originPos,Vector2 nextPos,List<Vector2> originList,List<Vector2> nextList,TileType nextTileType)
     {

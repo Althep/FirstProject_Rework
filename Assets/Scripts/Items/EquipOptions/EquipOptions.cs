@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EvokeBase : ConsumBase
+public class EquipOptions : MonoBehaviour
 {
-    
     void Start()
     {
         

@@ -17,18 +17,31 @@ public enum EquipType
 public class EquipItem : ItemBase
 {
     public EquipType _equipType;
+    public EquipOptions options;
 
+    public EquipItem()
+    {
+        Register();
+    }
     protected void Register()
     {
-        if (!GameManager.instance.item.EquipScripts.ContainsKey(_equipType))
+        string name = this.GetType().Name;
+        Debug.Log(name);
+        if (name == "EquipItem")
+            return;
+        if (!GameManager.instance.item.EquipScripts.ContainsKey(name))
         {
-            GameManager.instance.item.EquipScripts.Add(_equipType, this);
+            GameManager.instance.item.EquipScripts.Add(name, this);
         }
     }
 
-    public virtual EquipItem Clone()
+    public virtual EquipItem Clone(EquipType type)
     {
-        switch (_equipType)
+        if (_equipType != type)
+        {
+            _equipType = type;
+        }
+        switch (type)
         {
             case EquipType.Weapon:
                 return new Weapon();
@@ -47,81 +60,106 @@ public class EquipItem : ItemBase
             case EquipType.Ring:
                 return new Ring();
         }
-        throw new ArgumentException("Type Exception", nameof(_equipType));
+        throw new ArgumentException("Type Exception", nameof(type));
     }
 
 }
 
 public class Weapon : EquipItem
 {
+    public int damage;
+    public int attackSpeed;
+    /*
     public Weapon()
     {
         _equipType = EquipType.Weapon;
         Register();
     }
-
+    */
 
 }
 
 public class Shield : EquipItem
 {
+    int defense;
+    int blockRate;
+    /*
     public Shield()
     {
         _equipType = EquipType.Shield;
         Register();
     }
+    */
 
 }
 
 public class Helm : EquipItem
 {
+    int defense;
+    /*
     public Helm()
     {
         _equipType = EquipType.Helm;
         Register();
 
     }
+    */
 }
 public class Armor : EquipItem
 {
+    int defense;
+    /*
     public Armor()
     {
         _equipType = EquipType.Armor;
         Register();
 
     }
+    */
 }
 public class Amulet : EquipItem
 {
+    /*
+    int defense;
     public Amulet()
     {
         _equipType = EquipType.Amulet;
         Register();
 
     }
+    */
 }
 public class Glove : EquipItem
 {
+    int defense;
+    /*
     public Glove()
     {
         _equipType = EquipType.Glove;
         Register();
 
     }
+    */
 }
 public class Shoose : EquipItem
 {
+    int defense;
+    /*
     public Shoose()
     {
         _equipType = EquipType.Shoose;
         Register();
     }
+    */
 }
 public class Ring : EquipItem
 {
+    int defense;
+    /*
     public Ring()
     {
         _equipType = EquipType.Ring;
         Register();
     }
+    */
 }

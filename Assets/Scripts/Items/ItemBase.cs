@@ -8,15 +8,7 @@ public enum ItemType
     Equipment
 }
 
-public enum ConsumType
-{
-    Potion,
-    Book,
-    Scroll,
-    Evoke,
-    Food
-    
-}
+
 
 public class ItemBase
 {
