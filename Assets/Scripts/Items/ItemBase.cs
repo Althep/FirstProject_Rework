@@ -21,7 +21,12 @@ public class ItemBase
     protected int _weight;
     public int weight { get { return _weight; } }
 
-    
+    protected void GetMyData()
+    {
+
+
+
+    }
 }
 
 

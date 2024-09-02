@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public struct EntityState
 {
+    
+    public int def;
     public int maxHp;
     public int currntHp;
     public bool isDead;

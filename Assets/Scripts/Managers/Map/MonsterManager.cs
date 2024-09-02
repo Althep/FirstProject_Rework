@@ -40,13 +40,20 @@ public class MonsterManager : MonoBehaviour
     {
         for (int i = 0; i < monsterSpawnPoint; i++)
         {
-            GameObject go;
+            GameObject go = new GameObject();
             int randomIndex;
             randomIndex = Random.Range(0, mapScript.tilePosList.Count);
+            //go.AddComponent<MonsterState>();
+            //go.transform.position = mapScript.tilePosList[randomIndex];
+            //GameManager.instance.dataManager.SetMonsterData(0, go.transform.GetComponent<MonsterState>());
+            
             go = Instantiate(monsterPrefab, mapScript.tilePosList[randomIndex], Quaternion.identity);
             mapScript.TileInfoChange(mapScript.tilePosList[randomIndex], TileType.monster, tileList, mapScript.monsterPosList);
+            
             monsterList.Add(go);
             go.name = i.ToString();
+            GameManager.instance.dataManager.SetMonsterData(1, go.transform.GetComponent<MonsterState>());
+            go.name = go.transform.GetComponent<MonsterState>().name;
             //SetRandomIndex();
         }
         //TurnManager.instance.monsterStateList.Add()

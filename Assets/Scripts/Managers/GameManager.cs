@@ -18,9 +18,11 @@ public class GameManager : MonoBehaviour
     
     MapMake mapScript;
     public InputManager inputManager;
+    public CSVReader csvReader = new CSVReader();
     public UIManager UIManager = new UIManager();
-
+    public DataManager dataManager = new DataManager();
     public ItemManager item = new ItemManager();
+    
     private void Awake()
     {
         SetInstance();
@@ -43,6 +45,8 @@ public class GameManager : MonoBehaviour
         {
             item.ItemFactory();
         }
+        Debug.Log(dataManager);
+        //dataManager.ReadMonsterData();
     }
 
     void Update()

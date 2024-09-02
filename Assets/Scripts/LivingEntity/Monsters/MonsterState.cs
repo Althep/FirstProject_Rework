@@ -2,19 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
+enum MosnsterType
+{
+    anumal,
+    humanoid
+}
 public class MonsterState : LivingEntity
 {
+
+    public int index;
     public Vector2 oldPlayerPos;
     public Vector2 nextPos;
     public GameObject target;
     public List<Node> path;
-    public int leftTurnPoint;
+    public int exp;
     public MonsterActSate myActState;
     public float attackRange = 1.42f;
     public int awakingRate;
+    public int leftTurnPoint;
+
     public string State;
+
     PlayerState playerState;
+
     public string distance;
+
     private void Start()
     {
         myActState = this.transform.GetComponent<Rest>();
@@ -25,6 +38,7 @@ public class MonsterState : LivingEntity
         myState.currntHp = myState.maxHp;
         attackRange = 1.42f;
         SetSpeed();
+        
         playerState = GameManager.instance.playerObj.transform.GetComponent<PlayerState>();
         EventManager.Instance.OnPlayerMove.AddListener(OnPlayerMove);
     }

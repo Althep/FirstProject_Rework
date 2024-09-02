@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-
+using System;
 public class CSVReader
 {
     public Dictionary<string,List<object>> CSVReade(string path)
@@ -14,6 +14,11 @@ public class CSVReader
         
         TextAsset csvData = Resources.Load<TextAsset>(path);
 
+        if(csvData == null)
+        {
+            Debug.Log("CSVDataError");
+            return null;
+        }
         lines = csvData.ToString().Split('\n');
         
         if (lines.Length<=1)

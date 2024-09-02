@@ -79,9 +79,15 @@ public class Weapon : EquipItem
 
 }
 
-public class Shield : EquipItem
+public class Defensive : EquipItem
 {
     int defense;
+    
+}
+
+public class Shield : EquipItem
+{
+    
     int blockRate;
     /*
     public Shield()
@@ -95,7 +101,6 @@ public class Shield : EquipItem
 
 public class Helm : EquipItem
 {
-    int defense;
     /*
     public Helm()
     {
@@ -107,7 +112,6 @@ public class Helm : EquipItem
 }
 public class Armor : EquipItem
 {
-    int defense;
     /*
     public Armor()
     {
@@ -131,7 +135,6 @@ public class Amulet : EquipItem
 }
 public class Glove : EquipItem
 {
-    int defense;
     /*
     public Glove()
     {
@@ -143,7 +146,6 @@ public class Glove : EquipItem
 }
 public class Shoose : EquipItem
 {
-    int defense;
     /*
     public Shoose()
     {
@@ -154,7 +156,6 @@ public class Shoose : EquipItem
 }
 public class Ring : EquipItem
 {
-    int defense;
     /*
     public Ring()
     {
