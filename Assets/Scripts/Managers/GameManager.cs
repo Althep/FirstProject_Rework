@@ -36,17 +36,6 @@ public class GameManager : MonoBehaviour
         //item.AddKeysScripts();
         item.InitiateItem();
         
-
-        foreach( KeyValuePair<string,EquipItem> kvp in item.EquipScripts)
-        {
-            Debug.Log($"key : {kvp.Key},value : {kvp.Value}");
-        }
-        for(int i = 0;  i< 10; i++)
-        {
-            item.ItemFactory();
-        }
-        Debug.Log(dataManager);
-        //dataManager.ReadMonsterData();
     }
 
     void Update()

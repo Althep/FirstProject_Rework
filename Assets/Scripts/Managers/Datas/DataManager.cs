@@ -34,54 +34,135 @@ public class DataManager
         Debug.Log(monsterData);
     }
 
-    void ReadAllItems()
+    public void ReadAllItems()
     {
         Array value = Enum.GetValues(typeof(EquipType));
 
         
         foreach (EquipType type in value)
         {
-            string name = type.ToString();
+            string typeName = type.ToString();
             string path = "";
-            path += name;
+            path += typeName;
 
             Dictionary<string, List<object>> itemDatas = GameManager.instance.csvReader.CSVReade(path);
 
-            allItems.Add(name, itemDatas);
+            allItems.Add(typeName, itemDatas);
         }
-
+        value = Enum.GetValues(typeof(ConsumType));
         foreach(ConsumType type in value)
         {
-            string name = type.ToString();
+            string typeName = type.ToString();
             string path = "";
-            path += name;
+            path += typeName;
 
             Dictionary<string, List<object>> consumDatas = GameManager.instance.csvReader.CSVReade(path);
 
-            allItems.Add(name, consumDatas);
+            allItems.Add(typeName, consumDatas);
         }
 
     }
 
     public void SetMonsterData(int index, MonsterState monsterState)
     {
+        if (monsterData == null)
+        {
+            Debug.Log("Monster DataError");
+            return;
+        }
+
         monsterState.name = monsterData["name"][index].ToString();
-        Debug.Log($"name : { monsterData["name"][index]}");
         monsterState.index = Convert.ToInt32(monsterData["index"][index]);
-        Debug.Log($"index : {monsterData["index"][index]}");
         monsterState.exp = Convert.ToInt32(monsterData["exp"][index]);
-        Debug.Log($"exp : {monsterData["exp"][index]}");
         monsterState.myState.maxHp = Convert.ToInt32(monsterData["maxhp"][index]);
-        Debug.Log($"maxphp : {monsterData["maxhp"][index]}");
         monsterState.myState.currntHp = monsterState.myState.maxHp;
         monsterState.myState.damage = Convert.ToInt32(monsterData["damage"][index]);
-        Debug.Log($"damage : {monsterData["damage"][index]}");
         monsterState.myState.def = Convert.ToInt32(monsterData["def"][index]);
-        Debug.Log($"def : {monsterData["def"][index]}");
         monsterState.myState.base_MoveSpeed = Convert.ToInt32(monsterData["moveSpeed"][index]);
-        Debug.Log($"ms : {monsterData["moveSpeed"][index]}");
         monsterState.myState.base_AttackSpeed = Convert.ToInt32(monsterData["attackSpeed"][index]);
-        Debug.Log($"as : {monsterData["attackSpeed"][index]}");
     }
 
+    public void SetItempData<T>(string itemType,int index,T itemData) where T : ItemBase
+    {
+        //공통부분
+        switch (itemData)
+        {
+            case  EquipItem equip:
+                SetEquipData<EquipItem>(itemType, index, equip);
+                break;
+            case ConsumItem consum:
+                SetConsumData<ConsumItem>(itemType,index,consum);
+                break;
+            default:
+                break;
+        }
+        
+    }
+    public void SetEquipData<T>(string itemType, int index, T itemData) where T : EquipItem
+    {
+        string type = typeof(ItemData).ToString();
+        itemData.name = allItems[type]["name"][index].ToString();
+        itemData.index = Convert.ToInt32(allItems[type]["index"][index]);
+        itemData.weight = Convert.ToInt32(allItems[type]["weight"][index]);
+        switch (itemData)
+        {
+            case Weapon weapon:
+                weapon.damage = Convert.ToInt32(allItems[type]["damage"][index]);
+                weapon.attackSpeed = Convert.ToInt32(allItems[type]["attackSpeed"][index]);
+                break;
+            case Shield shield:
+                shield.defense = Convert.ToInt32(allItems[type]["def"][index]);
+                shield.blockRate = Convert.ToInt32(allItems[type]["blockRate"][index]);
+                break;
+            case Helm helm:
+                helm.defense = Convert.ToInt32(allItems[type]["def"][index]);
+                break;
+            case Armor armor:
+                armor.defense = Convert.ToInt32(allItems[type]["def"][index]);
+                break;
+            case Amulet amulet:
+                amulet.defense = Convert.ToInt32(allItems[type]["def"][index]);
+                break;
+            case Glove glove:
+                glove.defense = Convert.ToInt32(allItems[type]["def"][index]);
+                break;
+            case Shoose shoose:
+                shoose.defense = Convert.ToInt32(allItems[type]["def"][index]);
+                break;
+            case Ring ring:
+                ring.defense = Convert.ToInt32(allItems[type]["def"][index]);
+                break;
+            default:
+                break;
+        }
+
+    }
+    public void SetConsumData<T>(string itemType, int index, T itemData) where T : ConsumItem
+    {
+        string gear = typeof(ItemData).ToString();
+        itemData.index = index; 
+        switch (itemData)
+        {
+            case Potion potion:
+                
+                break;
+            case Book book:
+                break;
+            case Scroll scroll:
+                break;
+            case Evoke evoke:
+                break;
+            case Food food:
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public void SetBasicItemData(ItemData iteam)
+    {
+
+
+    }
 }
