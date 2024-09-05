@@ -34,8 +34,10 @@ public class GameManager : MonoBehaviour
     {
         floor = 0;
         //item.AddKeysScripts();
-        item.InitiateItem();
-        
+        //item.InitiateItem();
+        dataManager.ReadItemByTiers();
+
+
     }
 
     void Update()

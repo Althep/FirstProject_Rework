@@ -26,7 +26,7 @@ public class EquipItem : ItemBase
     protected void Register()
     {
         string name = this.GetType().Name;
-        Debug.Log(name);
+        //Debug.Log(name);
         if (name == "EquipItem")
             return;
         if (!GameManager.instance.item.EquipScripts.ContainsKey(name))
@@ -91,7 +91,7 @@ public class Shield : Defensive
     public int blockRate;
     /*
     public Shield()
-    {
+    { 
         _equipType = EquipType.Shield;
         Register();
     }

@@ -29,7 +29,7 @@ public class MonsterManager : MonoBehaviour
     public void AddMonsterSpawnFunction()
     {
         MonsterCountInitiate();
-        MonsterInitiate();
+        //MonsterInitiate();
     }
 
     void MonsterCountInitiate()

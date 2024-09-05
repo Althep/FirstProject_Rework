@@ -6,18 +6,9 @@ using System.Reflection;
 using System.Linq;
 public class ItemManager
 {
-    static ItemManager _Instance;
-    public static ItemManager Instance { get { Init(); return _Instance; } }
+    public DataManager dataManager;
     public Dictionary<string, EquipItem> EquipScripts = new Dictionary<string, EquipItem>();
     public Dictionary<string, ConsumItem> ConsumScripts = new Dictionary<string, ConsumItem>();
-    static void Init()
-    {
-        if(_Instance == null)
-        {
-            _Instance = new ItemManager();
-        }
-    }
-
 
     T GetRandomType<T>() where T : Enum
     {
@@ -30,21 +21,28 @@ public class ItemManager
     {
         GameObject go = new GameObject();
         var (itemType,consum, equip) = GetItemKind();
-
+        if(dataManager == null)
+        {
+            dataManager = GameManager.instance.dataManager;
+        }
         if(itemType == ItemType.Equipment && consum==null)
         {
             EquipType type = GetRandomEquipType();
             string key = type.ToString();
-            EquipMents iteminfo = go.AddComponent<EquipMents>();
-            iteminfo.myInfo = EquipScripts[key].Clone(type);
+            int index = 0;
+            EquipMents itemInfo = go.AddComponent<EquipMents>();
+            itemInfo.myInfo = EquipScripts[key].Clone(type);
+            dataManager.SetItempData(key, index, itemInfo.myInfo);
             Debug.Log(go.transform.GetComponent<EquipMents>().myInfo._equipType);
         }
         else if (itemType == ItemType.Consumable && equip == null)
         {
             ConsumType type = GetRandomConsumType();
             string key = type.ToString();
+            int index = 0;
             Consumable itemInfo = go.AddComponent<Consumable>();
             itemInfo.myInfo = ConsumScripts[key].Clone(type);
+            dataManager.SetItempData(key, index, itemInfo.myInfo);
             Debug.Log(go.transform.GetComponent<Consumable>().myInfo._consumType);
         }
         else

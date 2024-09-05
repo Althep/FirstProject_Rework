@@ -18,6 +18,8 @@ public class DataManager
     public Dictionary<string, List<object>> magicDatas { get { return _magicDatas; } }
 
     Dictionary<string, Dictionary<string, List<object>>> allItems = new Dictionary<string, Dictionary<string, List<object>>>();
+
+    Dictionary<string, List<object>> TestData = new Dictionary<string, List<object>>();
     /*
     public DataManager()
     {
@@ -32,7 +34,26 @@ public class DataManager
         //_monsterDatas = CSVReader.CSVReade(path);
         monsterData = GameManager.instance.csvReader.CSVReade(path);
         Debug.Log(monsterData);
+        
     }
+
+    public void ReadItemByTiers()
+    {
+        string path = "EquipItemData";
+
+        TestData = GameManager.instance.csvReader.CSVReade(path);
+
+        List<int> indexes = new List<int>();
+        
+        
+        Debug.Log("count : " + TestData["tier"].Count);
+        
+        
+    }
+
+
+
+
 
     public void ReadAllItems()
     {
@@ -42,8 +63,9 @@ public class DataManager
         foreach (EquipType type in value)
         {
             string typeName = type.ToString();
-            string path = "";
-            path += typeName;
+            
+            string path = "EquipItemData";
+            //path += typeName;
 
             Dictionary<string, List<object>> itemDatas = GameManager.instance.csvReader.CSVReade(path);
 
@@ -82,7 +104,7 @@ public class DataManager
         monsterState.myState.base_AttackSpeed = Convert.ToInt32(monsterData["attackSpeed"][index]);
     }
 
-    public void SetItempData<T>(string itemType,int index,T itemData) where T : ItemBase
+    public void SetItempData(string itemType,int index,ItemBase itemData) 
     {
         //공통부분
         switch (itemData)

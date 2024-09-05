@@ -15,7 +15,7 @@ public enum ConsumType
 public class ConsumItem : ItemBase
 {
     public ConsumType _consumType;
-    
+    public string function;
 
     public ConsumItem()
     {
@@ -24,7 +24,7 @@ public class ConsumItem : ItemBase
     protected void Register()
     {
         string name = this.GetType().Name;
-        Debug.Log(name);
+        //Debug.Log(name);
         if (name == "ConsumItem")
             return;
         if (!GameManager.instance.item.ConsumScripts.ContainsKey(name))
@@ -78,4 +78,11 @@ public class Food : ConsumItem
 {
 
 }
+/*
+public class ConsumFunction
+{
 
+
+
+}
+*/

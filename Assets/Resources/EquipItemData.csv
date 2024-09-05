@@ -1,22 +1,41 @@
-﻿id,name,itemtype,equiptype,weapontype,armortype,slot,damage,defense,range,attspeed,tier,option,consumkind,conditiontype,conditionname,panalty,sh,weight,acc,damreduce
-0,Dagger,Equipment,Weapon,ShortSword,,OneHand,2,0,1,1,1,,None,None,None,0,0,2,7,0
-1,LongSword,Equipment,Weapon,LongSword,,OneHand,3,0,1,1,1,,None,None,None,0,0,4,6,0
-2,HandAxe,Equipment,Weapon,Axe,,OneHand,4,0,1,1,1,,None,None,None,0,0,3,5,0
-3,Hammer,Equipment,Weapon,Hammer,,OneHand,4,0,1,1,1,,None,None,None,0,0,5,4,0
-4,ShortSword,Equipment,Weapon,ShortSword,,OneHand,4,0,1,1,2,,None,None,None,0,0,2,9,0
-5,TwoHandSword,Equipment,Weapon,LongSword,,TwoHand,5,0,1,1,2,,None,None,None,0,0,6,5,0
-6,Axe,Equipment,Weapon,Axe,,TwoHand,6,0,1,1,2,,None,None,None,0,0,5,5,0
-7,Mallet,Equipment,Weapon,Hammer,,OneHand,7,0,1,1,2,,None,None,None,0,0,5,5,0
-8,Robe,Equipment,Armor,,Cloth,Armor,0,3,1,0,1,,None,None,None,1,0,1,0,0
-9,LeatherArmor,Equipment,Armor,,LightArmor,Armor,0,5,1,0,1,,None,None,None,3,0,10,0,0
-10,PlateArmor,Equipment,Armor,,HeavyArmor,Armor,0,8,1,0,2,,None,None,None,9,0,20,0,1
-11,Glove,Equipment,Glove,,Cloth,Glove,0,1,1,0,1,,None,None,None,1,0,0.5,0,0
-12,BoardShield,Equipment,Shield,,Shield,OneHand,0,2,1,0,1,,None,None,None,3,3,5,0,0
-13,Hat,Equipment,Helm,,Cloth,Helm,0,1,1,0,1,,None,None,None,1,0,0.5,0,0
-14,Shoes,Equipment,Shoes,,Cloth,Shoes,0,1,1,0,1,,None,None,None,1,0,1,0,0
-15,Ring,Equipment,Ring,,,Ring,2,2,1,0,1,,None,None,None,0,0,0.1,0,0
-16,Amulet,Equipment,Amulet,,,Amulet,0,0,1,0,2,,None,None,None,0,0,0.1,0,0
-17,Tier3Temp,Equipment,Weapon,ShortSword,,OneHand,0,0,1,1,3,,None,None,None,0,0,0.1,0,0
-18,Tier4Temp,Equipment,Weapon,ShortSword,,OneHand,0,0,1,1,4,,None,None,None,0,0,0.1,0,0
-19,Tier5Temp,Equipment,Weapon,ShortSword,,OneHand,0,0,1,1,5,,None,None,None,0,0,0.1,0,0
-20,Tier6Temp,Equipment,Weapon,ShortSword,,OneHand,0,0,1,1,6,,None,None,None,0,0,0.1,0,0
+﻿index,name,weight,equipType,damage,attackSpeed,defense,blockRate,tier
+1,Sword,5,Weapon,15,10,,,1
+2,Short Sword,4,Weapon,12,12,,,2
+3,Long Sword,6,Weapon,18,9,,,3
+4,Broad Sword,7,Weapon,20,8,,,4
+5,Great Sword,9,Weapon,25,7,,,5
+6,Wooden Shield,6,Shield,,,10,5,1
+7,Iron Shield,10,Shield,,,20,10,2
+8,Steel Shield,12,Shield,,,30,15,3
+9,Tower Shield,15,Shield,,,35,20,4
+10,Magic Shield,8,Shield,,,25,18,5
+11,Leather Helm,2,Helm,,,5,,1
+12,Iron Helm,4,Helm,,,10,,2
+13,Steel Helm,5,Helm,,,15,,3
+14,Golden Helm,6,Helm,,,20,,4
+15,Dragon Helm,8,Helm,,,25,,5
+16,Leather Armor,8,Armor,,,20,,1
+17,Chainmail Armor,12,Armor,,,25,,2
+18,Plate Armor,15,Armor,,,35,,3
+19,Dragon Armor,18,Armor,,,40,,4
+20,Mythril Armor,10,Armor,,,30,,5
+21,Silver Amulet,1,Amulet,,,2,,3
+22,Gold Amulet,1,Amulet,,,3,,3
+23,Platinum Amulet,1,Amulet,,,4,,3
+24,Emerald Amulet,1,Amulet,,,5,,3
+25,Ruby Amulet,1,Amulet,,,6,,3
+26,Leather Gloves,1,Glove,,,3,,1
+27,Chain Gloves,2,Glove,,,4,,2
+28,Steel Gloves,3,Glove,,,5,,3
+29,Magic Gloves,1,Glove,,,6,,4
+30,Dragon Gloves,2,Glove,,,7,,5
+31,Cloth Shoes,1,Shoose,,,2,,1
+32,Leather Shoes,2,Shoose,,,3,,2
+33,Iron Shoes,3,Shoose,,,4,,3
+34,Steel Shoes,4,Shoose,,,5,,4
+35,Magic Shoes,2,Shoose,,,6,,5
+36,Silver Ring,1,Ring,,,1,,3
+37,Gold Ring,1,Ring,,,2,,3
+38,Platinum Ring,1,Ring,,,3,,3
+39,Emerald Ring,1,Ring,,,4,,3
+40,Ruby Ring,1,Ring,,,5,,3
