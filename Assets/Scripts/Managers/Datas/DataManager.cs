@@ -11,15 +11,17 @@ public class DataManager
     Dictionary<string, List<object>> _ConsumItemData;
     public Dictionary<string, List<object>> consumItemData { get { return _ConsumItemData; } }
 
-    Dictionary<string, List<object>> _EquipMentsData;
-    public Dictionary<string, List<object>> equipMentsData { get { return _EquipMentsData; } }
+
+    public Dictionary<string, List<object>> equipMentsData;
 
     Dictionary<string, List<object>> _magicDatas;
     public Dictionary<string, List<object>> magicDatas { get { return _magicDatas; } }
 
     Dictionary<string, Dictionary<string, List<object>>> allItems = new Dictionary<string, Dictionary<string, List<object>>>();
 
-    Dictionary<string, List<object>> TestData = new Dictionary<string, List<object>>();
+    Dictionary<string, List<object>> EquipData = new Dictionary<string, List<object>>();
+
+    Dictionary<int, List<int>> indexBytier = new Dictionary<int, List<int>>();
     /*
     public DataManager()
     {
@@ -31,9 +33,7 @@ public class DataManager
     public void ReadMonsterData()
     {
         string path = "MonsterData";
-        //_monsterDatas = CSVReader.CSVReade(path);
         monsterData = GameManager.instance.csvReader.CSVReade(path);
-        Debug.Log(monsterData);
         
     }
 
@@ -41,12 +41,28 @@ public class DataManager
     {
         string path = "EquipItemData";
 
-        TestData = GameManager.instance.csvReader.CSVReade(path);
+        equipMentsData = GameManager.instance.csvReader.CSVReade(path);
+        
+        for(int i =0; i< equipMentsData["tier"].Count; i++)
+        {
+            int tier = Convert.ToInt32(equipMentsData["tier"][i]);
+            int index = Convert.ToInt32(equipMentsData["index"][i]);
+            if (indexBytier.ContainsKey(tier))
+            {
+                indexBytier[tier].Add(index);
+            }
+            else
+            {
+                
+                indexBytier[tier] = new List<int>();
+                indexBytier[tier].Add(index);
+            }
+        }
 
-        List<int> indexes = new List<int>();
-        
-        
-        Debug.Log("count : " + TestData["tier"].Count);
+        foreach(var key in indexBytier.Keys)
+        {
+            Debug.Log($"key : {key}  value : {string.Join(",",indexBytier[key])}");
+        }
         
         
     }
