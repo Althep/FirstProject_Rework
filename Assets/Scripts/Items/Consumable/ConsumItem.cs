@@ -30,6 +30,7 @@ public class ConsumItem : ItemBase
         if (!GameManager.instance.item.ConsumScripts.ContainsKey(name))
         {
             GameManager.instance.item.ConsumScripts.Add(name, this);
+            Debug.Log($"regist  : {name}");
         }
     }
     public virtual ConsumItem Clone(ConsumType type)

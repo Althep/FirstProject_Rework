@@ -110,9 +110,11 @@ public class InputManager : MonoBehaviour
         int nexty = (int)(playerObj.transform.position.y + moveDirection.y);
         int nextx = (int)(playerObj.transform.position.x + moveDirection.x);
         Vector2 next = new Vector2(nextx, nexty);
+        
         if (IsInSize())
         {
-            switch (mapScript.map[nexty, nextx])
+            Debug.Log($"Next Pos Data : {mapScript.TileMap[next]}");
+            switch (mapScript.TileMap[next])
             {
                 case TileType.tile:
                     InputMoveKey();
@@ -181,7 +183,7 @@ public class InputManager : MonoBehaviour
     {
         playerPos = playerObj.transform.position;
         float maxDistance = SetMoveDistance(moveDirection);
-        mapScript.TileInfoSwap(playerPos, playerPos + moveDirection, mapScript.playerPos, mapScript.tilePosList, TileType.player);
+        mapScript.EntityMove(playerPos, playerPos + moveDirection,TileType.player);
         playerState.moveState = MoveState.move;
         while (Vector2.Distance(playerPos + moveDirection, playerObj.transform.position) >= 0.2f)
         {

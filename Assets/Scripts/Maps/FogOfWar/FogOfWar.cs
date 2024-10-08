@@ -36,13 +36,14 @@ public class FogOfWar : MonoBehaviour
         {
             myRenderer = this.transform.GetComponent<SpriteRenderer>();
         }
+        Vector2 Pos = new Vector2(posx, posy);
         switch (this.gameObject.layer)
         {
             case 6: // UnSeen
                 if (this.transform.tag != "Monster")
                 {
                     myRenderer.color = Color.black;
-                    //MiniMapPanel.instance.CellColorChange(posy,posx,gameObject.layer);
+                    MiniMapPanel.instance.CellColorChange(Pos, gameObject.layer);
                     
                 }
                 else
@@ -65,12 +66,13 @@ public class FogOfWar : MonoBehaviour
                     newColor = Color.white;
                     newColor.a = 0;
                     myRenderer.color = newColor;
+                    MiniMapPanel.instance.CellColorChange(Pos, gameObject.layer);
                 }
                 break;
             case 8:// insight
                 {
                     myRenderer.color = Color.white;
-                    MiniMapPanel.instance.CellColorChange(posy, posx,gameObject.layer);
+                    MiniMapPanel.instance.CellColorChange(Pos, gameObject.layer);
                 }
                 break;
             default:
@@ -131,7 +133,7 @@ public class FogOfWar : MonoBehaviour
     {
         if (this.transform.tag == "Monster")
         {
-            if (collision.gameObject == player && (myPos != (Vector2)(this.transform.position) || TurnManager.instance.turn!=oldTurn))
+            if (collision.gameObject == player && (myPos != new Vector2((int)this.transform.position.x,(int)this.transform.position.y) || TurnManager.instance.turn!=oldTurn))
             {
                 ShotRayCast();
                 ChangeColorToLayer();

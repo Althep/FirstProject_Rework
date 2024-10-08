@@ -97,7 +97,7 @@ public class PriorityQueue<T> where T : IComparable<T>
 
 public class PathFinding : MonoBehaviour
 {
-    TileType[,] map;
+    Dictionary<Vector2, TileType> map;
     public MapMake mapMakeScript;
     MonsterActSate monsterAct;
     MonsterState myState;
@@ -129,7 +129,7 @@ public class PathFinding : MonoBehaviour
             Debug.Log("MapScript Null");
             mapMakeScript = GameManager.instance.transform.GetComponent<MapMake>();
         }
-        map = mapMakeScript.map;
+        map = mapMakeScript.TileMap;
         Node[,] parents = new Node[mapMakeScript.ySize, mapMakeScript.xSize];
         PriorityQueue<Node> q = new PriorityQueue<Node>();
         Node start = new Node();
@@ -166,13 +166,13 @@ public class PathFinding : MonoBehaviour
                 closePos.x = now.x + dx[i];
                 closePos.y = now.y + dy[i];
                 int f = (int)(Vector2.Distance(Dest, closePos) * 10) + cost[i];//((int)Math.Abs(Dest.x - closePos.x) + (int)Math.Abs(Dest.y - closePos.y)) * 10 + cost[i];//
-                if (closePos.x < 0 || closePos.y < 0 || closePos.x > map.GetLength(1) - 1 || closePos.y > map.GetLength(0) - 1)
+                if (!map.ContainsKey(closePos))
                     continue;
                 if (closed[(int)closePos.y, (int)closePos.x])
                     continue;
                 if (f > open[(int)closePos.y, (int)closePos.x])
                     continue;
-                if (mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.tile && mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.door && mapMakeScript.map[(int)closePos.y, (int)closePos.x] != TileType.player)
+                if (mapMakeScript.TileMap[closePos] != TileType.tile && mapMakeScript.TileMap[closePos] != TileType.door && mapMakeScript.TileMap[closePos] != TileType.player)
                     continue;
                 Node next = new Node()
                 {

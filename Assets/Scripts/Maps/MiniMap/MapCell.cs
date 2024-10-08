@@ -4,17 +4,16 @@ using UnityEngine;
 using UnityEngine.UI;
 public class MapCell : MonoBehaviour
 {
-    [SerializeField]int thisx;
-    [SerializeField]int thisy;
+    [SerializeField]Vector2 myPos;
     public int tileLayer;
-    TileType tileType;
+    public TileType tileType;
     Image mapCell;
     Image upperOBJ;
     // Start is called before the first frame update
     void Start()
     {
         SetMapCell();
-        SetUpperOBJ();
+
     }
 
     // Update is called once per frame
@@ -26,14 +25,10 @@ public class MapCell : MonoBehaviour
     {
         mapCell = transform.GetComponent<Image>();
     }
-    public void SetUpperOBJ()
+
+    public void SetPosition(Vector2 pos)
     {
-        upperOBJ = gameObject.transform.GetChild(0).transform.GetComponent<Image>();
-    }
-    public void SetPosition(int x, int y)
-    {
-        thisx = x;
-        thisy = y;
+        myPos = pos;
     }
     public void SetTilePosition(TileType tile)
     {
@@ -45,47 +40,24 @@ public class MapCell : MonoBehaviour
         {
             case 6:
                 {
-                    UnSeenTile();
-                    //UnSeen
+                    //UnSeenTile();
                     break;
                 }
             case 7:
                 {
-                    SeenTile();
+                    //SeenTile();
                     //Seen
                     break;
                 }
             case 8:
                 {
-                    //Insight
+                    tileType = GameManager.instance.mapScript.TileMap[myPos];
                     ChangeToType();
                     break;
                 }
             default:
                 break;
         }
-    }
-    void UpperOBJColorChange()
-    {
-        switch (tileType)
-        {
-            case TileType.monster:
-                upperOBJ.color = Color.red;
-                break;
-            case TileType.player:
-                upperOBJ.color = Color.green;
-                break;
-            case TileType.item:
-                upperOBJ.color = Color.green;
-                break;
-            default:
-                break;
-        }
-    }
-    void UpperOBJColorRemove()
-    {
-        Color color = new Color(0,0,0,0);
-        upperOBJ.color = color;
     }
     void UnSeenTile()
     {
@@ -94,7 +66,11 @@ public class MapCell : MonoBehaviour
     
     void SeenTile()
     {
-        //갱신하지않음
+        if(tileType == TileType.monster)
+        {
+            tileType = GameManager.instance.mapScript.TileMap[myPos];
+            ChangeToLayer();
+        }
     }
     void ChangeToType()
     {
@@ -113,13 +89,15 @@ public class MapCell : MonoBehaviour
                 mapCell.color = Color.yellow;
                 break;
             case TileType.monster:
+                mapCell.color = Color.red;
+                Debug.Log("monsterColor");
                 //UpperOBJColorChange();
                 break;
             case TileType.player:
-                //UpperOBJColorChange();
+                mapCell.color = Color.green;
                 break;
             case TileType.item:
-                //UpperOBJColorChange();
+                mapCell.color = Color.blue;
                 break;
             default:
                 break;

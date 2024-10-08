@@ -9,7 +9,7 @@ public class ItemManager
     public DataManager dataManager;
     public Dictionary<string, EquipItem> EquipScripts = new Dictionary<string, EquipItem>();
     public Dictionary<string, ConsumItem> ConsumScripts = new Dictionary<string, ConsumItem>();
-
+    
     T GetRandomType<T>() where T : Enum
     {
         Array value = Enum.GetValues(typeof(T));
@@ -17,10 +17,131 @@ public class ItemManager
     }
 
 
+    public void ItemFactiry()
+    {
+        var type = GetRandomType<ItemType>();
+        int index = 0;
+        string itemType;
+        int maxRate;
+        int rate;
+        int tier;
+        if(dataManager== null)
+        {
+            dataManager = GameManager.instance.dataManager;
+        }
+
+        dataManager.consumData = GameManager.instance.csvReader.Read("ConsumItemData");
+        
+        dataManager.equipMentsData = GameManager.instance.csvReader.Read("EquipItemData");
+        switch (type)
+        {
+            case ItemType.Consumable:
+                List<int>rates = GameManager.instance.dataManager.tierRates[type.ToString()];
+                maxRate = rates[rates.Count-1];//마지막 티어까지의 확률중 마지막값(마지막 티어의 값)을 가져옴
+                rate = UnityEngine.Random.Range(0,maxRate);
+                tier = GetTierByRate(rate,rates);
+                index = UnityEngine.Random.Range(0,GameManager.instance.dataManager.consymIndexBytier[tier].Count-1);
+                Debug.Log($"Before index : {index}");
+                index = GameManager.instance.dataManager.consymIndexBytier[tier][index];
+                Debug.Log($"After index {index}");
+                Debug.Log(dataManager.consumData[index]);
+                itemType = (dataManager.consumData[index]["type"]).ToString();
+                Debug.Log($"itemType : {itemType}");
+                var consumscript = ConsumScripts[itemType];
+                ConsumType consumType;
+                if(Enum.TryParse(itemType, out consumType))
+                {
+                    GameObject go = new GameObject();
+                    Consumable consum = go.AddComponent<Consumable>();
+                    consum.myInfo = consumscript.Clone(consumType);
+                    dataManager.SetItempData(index,consum.myInfo);
+                    go.name = consum.myInfo.name;
+                    AddItemComponents(go);
+                    Debug.Log($"Consum ItemMake Succese item name : {go.name}");
+                }
+                else
+                {
+                    Debug.Log("Type Parse Error");
+                }
+
+                break;
+            case ItemType.Equipment:
+                rates = GameManager.instance.dataManager.tierRates[type.ToString()];
+                maxRate = rates[rates.Count-1];
+                rate = UnityEngine.Random.Range(0, maxRate);
+                tier = GetTierByRate(rate, rates);
+                index = UnityEngine.Random.Range(0, GameManager.instance.dataManager.equipIndexBytier[tier].Count-1);
+                Debug.Log($"Before index : {index}");
+                index = GameManager.instance.dataManager.equipIndexBytier[tier][index];
+                Debug.Log($"After index {index}");
+                itemType = (dataManager.equipMentsData[index]["type"]).ToString();
+                Debug.Log($"itemType : {itemType}");
+                var equipscript = EquipScripts[itemType];
+                
+                EquipType equipType;
+                if (Enum.TryParse(itemType, out equipType))
+                {
+                    GameObject go = new GameObject();
+                    EquipMents equip = go.AddComponent<EquipMents>();
+                    equip.myInfo = equipscript.Clone(equipType);
+                    dataManager.SetItempData(index, equip.myInfo);
+                    go.name = equip.myInfo.name;
+                    AddItemComponents(go);
+                    Debug.Log($"equip ItemMake Succese{go.name}");
+                }
+                else
+                {
+                    Debug.Log("Type Parse Error");
+                }
+                
+                break;
+            default:
+                break;
+        }
+        
+
+    }
+
+    public void AddItemComponents(GameObject go)
+    {
+        SpriteRenderer sprender;
+        BoxCollider2D collider;
+        sprender = go.AddComponent<SpriteRenderer>();
+        collider = go.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+        go.transform.tag = "Item";
+    }
+
+
+    public int GetTierByRate(int rate,List<int> tiers)
+    {
+        int tier = 1;
+        for(int i = 1; i < tiers.Count; i++)
+        {
+            if (rate >= tiers[i] && i>tier)
+            {
+                tier = i;
+            }
+            else
+            {
+                Debug.Log($"tier : {tier}");
+                break;
+            }
+        }
+        if(tier == 0)
+        {
+            Debug.Log("tier is 0 tier Error!!");
+        }
+        return tier;
+    }
+    /*
     public void ItemFactory()
     {
         GameObject go = new GameObject();
         var (itemType,consum, equip) = GetItemKind();
+
+        
+
         if(dataManager == null)
         {
             dataManager = GameManager.instance.dataManager;
@@ -51,7 +172,7 @@ public class ItemManager
         }
 
     }
-
+    */
     public (ItemType? itemYype, ConsumType? consumableType , EquipType? equipType) GetItemKind()
     {
         ItemType? itemType = GetRandomType<ItemType>();
@@ -81,6 +202,7 @@ public class ItemManager
 
     public void InitiateItem()
     {
+        Debug.Log("InitiateItem");
         Weapon weapon = new Weapon();
         Shield shiled = new Shield();
         Helm helm = new Helm();
@@ -89,36 +211,14 @@ public class ItemManager
         Glove glove = new Glove();
         Shoose shoose = new Shoose();
         Ring ring = new Ring();
+        
         Potion potion = new Potion();
         Book Book = new Book();
         Scroll scroll = new Scroll();
         Evoke evoke = new Evoke();
         Food food = new Food();
-    }
-    /*
-    public void AddKeysScripts()
-    {
-        var types = Enum.GetValues(typeof(EquipType));
-        foreach(EquipType type in types)
-        {
-            EquipScripts.Add(type, null);
-            Debug.Log(type.ToString());
-        }
-        
-    }
-    private void ResisterEquipItems()
-    {
-        var equipScripts = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(EquipItem)) && !t.IsAbstract);
-
-        foreach (var scripts in equipScripts) 
-        { 
-            
-        
-        
-        
-        }
 
 
     }
-    */
+
 }

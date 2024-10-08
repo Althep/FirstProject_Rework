@@ -36,9 +36,12 @@ public class MonsterActSate : MonoBehaviour
         
         Vector2 now = this.transform.position;
         Vector2 MoveTo = myState.nextPos - now;
-        float maxDistance = SetMoveDistance(MoveTo);
-        mapScript.TileInfoSwap(now, myState.nextPos, mapScript.monsterPosList, mapScript.tilePosList, TileType.monster);
-        this.transform.position = myState.nextPos;
+        if (mapScript.TileMap[myState.nextPos] == TileType.tile || mapScript.TileMap[myState.nextPos] == TileType.monster)
+        {
+            float maxDistance = SetMoveDistance(MoveTo);
+            mapScript.EntityMove(now, myState.nextPos, TileType.monster);
+            this.transform.position = myState.nextPos;
+        }
     }
     IEnumerator SlideMove()
     {
@@ -98,7 +101,7 @@ public class MonsterActSate : MonoBehaviour
             {
                 continue;
             }
-            if(mapScript.map[((int)nowPos.y+dy[i]), ((int)nowPos.x + dx[i])] == TileType.tile)
+            if(mapScript.TileMap[new Vector2(((int)nowPos.y+dy[i]), ((int)nowPos.x + dx[i]))] == TileType.tile)
             {
                 tiles.Add(new Vector2(nowPos.x + dx[i], nowPos.y + dy[i]));
             }

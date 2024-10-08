@@ -29,31 +29,37 @@ public class MonsterManager : MonoBehaviour
     public void AddMonsterSpawnFunction()
     {
         MonsterCountInitiate();
-        //MonsterInitiate();
+        MonsterInitiate();
     }
 
     void MonsterCountInitiate()
     {
-        monsterSpawnPoint = 1;
+        monsterSpawnPoint = 10;
     }
     public void MonsterInitiate()
     {
         for (int i = 0; i < monsterSpawnPoint; i++)
         {
-            GameObject go = new GameObject();
             int randomIndex;
             randomIndex = Random.Range(0, mapScript.tilePosList.Count);
-            //go.AddComponent<MonsterState>();
-            //go.transform.position = mapScript.tilePosList[randomIndex];
-            //GameManager.instance.dataManager.SetMonsterData(0, go.transform.GetComponent<MonsterState>());
-            
-            go = Instantiate(monsterPrefab, mapScript.tilePosList[randomIndex], Quaternion.identity);
-            mapScript.TileInfoChange(mapScript.tilePosList[randomIndex], TileType.monster, tileList, mapScript.monsterPosList);
-            
-            monsterList.Add(go);
-            go.name = i.ToString();
-            GameManager.instance.dataManager.SetMonsterData(1, go.transform.GetComponent<MonsterState>());
-            go.name = go.transform.GetComponent<MonsterState>().name;
+            Vector2 randomPos = mapScript.tilePosList[randomIndex];
+            if (mapScript.TileMap[randomPos] == TileType.tile)
+            {
+                GameObject go = Instantiate(monsterPrefab, mapScript.tilePosList[randomIndex], Quaternion.identity);
+                Debug.Log(GameManager.instance.mapScript.TileMap[randomPos]);
+                mapScript.TileTypeChange(randomPos, TileType.monster);
+                //mapScript.TileMap[mapScript.tilePosList[randomIndex]] = TileType.monster;
+                //mapScript.miniMap.mapData[randomPos] = TileType.monster;
+                monsterList.Add(go);
+                go.name = i.ToString();
+                mapScript.tilePosList.Remove(randomPos);
+                Debug.Log($"monster name : {go.name}");
+            }
+            else
+            {
+                mapScript.tilePosList.Remove(randomPos);
+                Debug.Log("Monster Spqawn Tiletype Error");
+            }
             //SetRandomIndex();
         }
         //TurnManager.instance.monsterStateList.Add()
@@ -64,7 +70,7 @@ public class MonsterManager : MonoBehaviour
         int randomIndex;
         randomIndex = Random.Range(0, mapScript.tilePosList.Count);
         go = Instantiate(monsterPrefab, mapScript.tilePosList[randomIndex], Quaternion.identity);
-        mapScript.TileInfoChange(mapScript.tilePosList[randomIndex], TileType.monster, tileList, mapScript.monsterPosList);
+        mapScript.TileTypeChange(mapScript.tilePosList[randomIndex], TileType.monster);
         monsterList.Add(go);
     }
     void SetMonsterData()

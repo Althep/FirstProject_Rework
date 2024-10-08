@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class MiniMapPanel : MonoBehaviour
 {
 
-    public MapCell[,] mapCells;
-    public TileType[,] mapData;
+    public Dictionary<Vector2,MapCell>  mapCells;
+    public Dictionary<Vector2, TileType> mapData;
     public static MiniMapPanel instance;
     void Start()
     {
@@ -27,28 +27,32 @@ public class MiniMapPanel : MonoBehaviour
     public void SetCellPosition()
     {
         int count = 0;
-        for (int y = 0; y < mapData.GetLength(0); y++)
+
+        foreach (Vector2 pos in mapData.Keys.ToList())
         {
-            for(int x = 0; x < mapData.GetLength(1); x++)
-            {
-                MapCell mapCell = transform.GetChild(count).transform.GetComponent<MapCell>();
-                mapCell.SetPosition(x,y);
-                mapCells[y, x] = mapCell;
-                mapCells[y, x].SetTilePosition(mapData[y, x]);
-                count++;
-            }
+            MapCell mapCell = transform.GetChild(count).transform.GetComponent<MapCell>();
+            Vector2 transePos = new Vector2(pos.y, pos.x);
+            mapCell.SetPosition(transePos);
+            mapCells[transePos] = mapCell;
+            mapCells[transePos].SetTilePosition(mapData[pos]);
+            count++;
         }
+
     }
 
-    
-    public void CellColorChange(int y, int x,int layer)
+    public void CellColorChange(Vector2 pos, int layer)
     {
-        if(y>=0 && y<mapData.GetLength(0) && x>=0 && x< mapData.GetLength(1))
+        if(mapData == null)
         {
-            mapCells[y, x].tileLayer = layer;
-            mapCells[y, x].ChangeToLayer();
+            mapData = GameManager.instance.mapScript.TileMap;
+        }
+        if (mapData.ContainsKey(pos))
+        {
+            mapCells[pos].tileLayer = layer;
+            mapCells[pos].ChangeToLayer();
 
         }
 
     }
+
 }

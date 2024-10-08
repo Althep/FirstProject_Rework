@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public enum TileType
 {
     tile,
@@ -15,7 +15,7 @@ public enum TileType
 public class MapMake : MonoBehaviour
 {
     // Start is called before the first frame update
-    public TileType[,] map;
+    //public TileType[,] map;
     public int xSize;
     public int ySize;
     //int minMapSize=30;
@@ -23,9 +23,9 @@ public class MapMake : MonoBehaviour
     int dividingMin = 80;
     int dividingMax = 120;
     int maxCount = 5;
-    
+
     MonsterManager monsterManager;
-    [SerializeField]MiniMapPanel miniMap;
+    public MiniMapPanel miniMap;
 
     public GameObject tilePrefab;
     public GameObject wallPrefab;
@@ -37,26 +37,23 @@ public class MapMake : MonoBehaviour
     public Dictionary<Vector2, TileType> LivingEntityMap = new Dictionary<Vector2, TileType>();
 
     public List<Vector2> tilePosList = new List<Vector2>();
-    public List<Vector2> monsterPosList = new List<Vector2>();
-    public List<Vector2> wallPosList = new List<Vector2>();
     public List<Vector2> upStaires = new List<Vector2>();
     public List<Vector2> downStaires = new List<Vector2>();
-    public List<Vector2> doorPosList = new List<Vector2>();
-    public List<Vector2> playerPos = new List<Vector2>();
+
     private void Awake()
     {
         monsterManager = this.transform.GetComponent<MonsterManager>();
     }
     void Start()
     {
-        
+
     }
 
     void Update()
     {
-        
+
     }
-    
+
     public void MapGenerate()
     {
         MapInitiate();
@@ -68,39 +65,38 @@ public class MapMake : MonoBehaviour
     }
     void ObjectInstantiate()
     {
-        for(int j = 0; j < map.GetLength(0);j++)
+        foreach (Vector2 pos in TileMap.Keys)
         {
-            for(int i = 0; i < map.GetLength(1); i++)
+            Instantiate(tilePrefab, pos, Quaternion.identity);
+
+            switch (TileMap[pos])
             {
-                Instantiate(tilePrefab, new Vector3(i,j,1), Quaternion.identity);
-                switch (map[j,i])
-                {
-                    case TileType.tile:
-                        break;
-                    case TileType.wall:
-                        Instantiate(wallPrefab, new Vector3(i, j,0), Quaternion.identity);
-                        break;
-                    case TileType.door:
-                        Instantiate(doorPrefab, new Vector3(i, j,0), Quaternion.identity);
-                        break;
-                    case TileType.stair:
-                        break;
-                    case TileType.monster:
-                        break;
-                    case TileType.player:
-                        break;
-                    default:
-                        break;
-                }
+                case TileType.tile:
+                    break;
+                case TileType.wall:
+                    Instantiate(wallPrefab, pos, Quaternion.identity);
+                    break;
+                case TileType.door:
+                    Instantiate(doorPrefab, pos, Quaternion.identity);
+                    break;
+                case TileType.stair:
+                    break;
+                case TileType.monster:
+                    break;
+                case TileType.player:
+                    break;
+                default:
+                    break;
             }
         }
-        for(int i =0; i < upStaires.Count; i++)
+        for (int i = 0; i < upStaires.Count; i++)
         {
             GameObject go = Instantiate(upStairPrefab, upStaires[i], Quaternion.identity);
             go.transform.GetComponent<Stair>().stairNumber = i;
-            go =Instantiate(downStairPrefab, downStaires[i], Quaternion.identity);
+            go = Instantiate(downStairPrefab, downStaires[i], Quaternion.identity);
             go.transform.GetComponent<Stair>().stairNumber = i;
         }
+        /*
         for(int i = -1; i <=map.GetLength(0); i++)
         {
             Instantiate(wallPrefab, new Vector2(-1,i), Quaternion.identity);
@@ -111,49 +107,56 @@ public class MapMake : MonoBehaviour
             Instantiate(wallPrefab, new Vector2(i,-1), Quaternion.identity);
             Instantiate(wallPrefab, new Vector2( i, map.GetLength(0)), Quaternion.identity);
         }
+        */
     }
     public void MapInitiate()
     {
         //RandomSize(minMapSize, maxMapSize);
         xSize = 32;
         ySize = 32;
-        map = new TileType[ySize,xSize];
-        for(int y = 0; y < ySize; y++)
+        TileMap = new Dictionary<Vector2, TileType>();
+        for (int x = 0; x < xSize; x++)
         {
-            for(int x = 0; x < xSize; x++)
+            for (int y = 0; y < ySize; y++)
             {
-                map[y, x] = TileType.tile;
+                Vector2 newPos = new Vector2(x, y);
+                TileMap.Add(newPos, TileType.tile);
             }
         }
         //맵크기 초기화
-        miniMap = GameObject.Find("Canvas").transform.GetChild(2).transform.GetComponent<MiniMapPanel>();
+        //miniMap = GameObject.Find("Canvas").transform.GetChild(2).transform.GetComponent<MiniMapPanel>();
+        miniMap = GameObject.Find("MiniMap").transform.GetComponent<MiniMapPanel>();
     }
-    void RandomSize(int min,int max)
+    void RandomSize(int min, int max)
     {
-        ySize = UnityEngine.Random.Range(min,max+1);
+        ySize = UnityEngine.Random.Range(min, max + 1);
         xSize = UnityEngine.Random.Range(min, max + 1);
     }
+
     void MiniMapMaping()
     {
-        miniMap.mapData = map;
-        miniMap.mapCells = new MapCell[ySize,xSize];
+        miniMap.mapData = TileMap;
+        miniMap.mapCells = new Dictionary<Vector2, MapCell>();
         miniMap.SetCellPosition();
     }
-    void MapDivide(int startX,int startY,int endX,int endY,int count)
-    {
-        if (count < maxCount&&endX-startX>5 && endY-startY>5)
+
+    void MapDivide(int startX, int startY, int endX, int endY, int count)
+    {//재귀함수로 맵 나누기
+        if (count < maxCount && endX - startX > 5 && endY - startY > 5)
         {
             if ((endX - startX) > (endY - startY))
             {
                 count++;
-                int divided = ((startX + endX) * UnityEngine.Random.Range(dividingMin, dividingMax))/200;
+                int divided = ((startX + endX) * UnityEngine.Random.Range(dividingMin, dividingMax)) / 200;
                 divided = RerollDivied(startX, endX, divided);
                 for (int y = startY; y < endY; y++)
                 {
-                    map[y, divided] = TileType.wall;
+                    Vector2 Pos = new Vector2(divided, y);
+                    TileMap[Pos] = TileType.wall;
                 }
-                int door = UnityEngine.Random.Range(startY,endY);
-                TileInfoChange(new Vector2(divided, door), TileType.door,wallPosList,doorPosList);
+                int door = UnityEngine.Random.Range(startY, endY);
+                Vector2 doorPos = new Vector2(divided, door);
+                TileMap[doorPos] = TileType.door;
                 if (divided - startX > 3)
                 {
                     MapDivide(startX, startY, divided, endY, count);
@@ -166,15 +169,17 @@ public class MapMake : MonoBehaviour
             else
             {
                 count++;
-                int divided = ((startY + endY) * UnityEngine.Random.Range(dividingMin, dividingMax))/200;
+                int divided = ((startY + endY) * UnityEngine.Random.Range(dividingMin, dividingMax)) / 200;
                 divided = RerollDivied(startY, endY, divided);
                 for (int x = startX; x < endX; x++)
                 {
-                    map[divided, x] = TileType.wall;
+                    Vector2 pos = new Vector2(x, divided);
+                    TileMap[pos] = TileType.wall;
                 }
                 int door = UnityEngine.Random.Range(startX, endX);
-                TileInfoChange(new Vector2(door,divided), TileType.door,wallPosList,doorPosList);
-                if (divided - startY>3)
+                Vector2 doorPos = new Vector2(door, divided);
+                TileMap[doorPos] = TileType.wall;
+                if (divided - startY > 3)
                 {
                     MapDivide(startX, startY, endX, divided, count);
                 }
@@ -187,7 +192,7 @@ public class MapMake : MonoBehaviour
     }//BSP
     int RerollDivied(int start, int end, int divide)
     {
-        if (start >= divide || end <= divide||start+1==divide||end-1==divide)
+        if (start >= divide || end <= divide || start + 1 == divide || end - 1 == divide)
         {
             return (start + end) / 2;
         }
@@ -199,61 +204,59 @@ public class MapMake : MonoBehaviour
     void TwistingDungeon()
     {
         int constant;
-        for(int y= 0; y<ySize;y++)
-            for(int x = 0; x < xSize; x++)
+        foreach (Vector2 pos in TileMap.Keys.ToList())
+        {
+            switch (TileMap[pos])
             {
-                switch (map[y,x])
-                {
-                    case TileType.tile:
-                        constant = 10;
-                        Vector2 Pos = new Vector2();
-                        if (UnityEngine.Random.Range(0, 100) < constant)
+                case TileType.tile:
+                    constant = 10;
+                    if (UnityEngine.Random.Range(0, 100) < constant)
+                    {
+                        TileMap[pos] = TileType.wall;
+                        if (tilePosList.Contains(pos))
                         {
-                            map[y, x] = TileType.wall;
-                            Pos.x = x;
-                            Pos.y = y;
-                            TileInfoChange(Pos, TileType.wall, tilePosList, wallPosList);
+                            tilePosList.Remove(pos);
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (!tilePosList.Contains(pos))
                         {
-                            Pos.x = x;
-                            Pos.y = y;
-                            tilePosList.Add(Pos);
+                            tilePosList.Add(pos);
                         }
-                        break;
-                    case TileType.wall:
-                        constant = 30;
-                        if (UnityEngine.Random.Range(0, 100) < constant)
+                        
+                    }
+                    break;
+                case TileType.wall:
+                    constant = 30;
+                    if (UnityEngine.Random.Range(0, 100) < constant)
+                    {
+                        TileMap[pos] = TileType.tile;
+                        if (!tilePosList.Contains(pos))
                         {
-                            map[y, x] = TileType.tile;
-                            Pos.x = x;
-                            Pos.y = y;
-                            TileInfoChange(Pos, TileType.tile, wallPosList, tilePosList);
+                            tilePosList.Add(pos);
                         }
-                        else
-                        {
-                            Pos.x = x;
-                            Pos.y = y;
-                            wallPosList.Add(Pos);
-                        }
-                        break;
-                    case TileType.door:
-                        break;
-                    case TileType.stair:
-                        break;
-                    case TileType.monster:
-                        break;
-                    case TileType.player:
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                case TileType.door:
+                    break;
+                case TileType.stair:
+                    break;
+                case TileType.monster:
+                    break;
+                case TileType.player:
+                    break;
+                default:
+                    break;
             }
+        }
+
     }
+    /*
     public void TileInfoChange(Vector2 changePos,TileType tileType,List<Vector2> origin,List<Vector2> change)
     {
         //생성때에만 사용
-        map[(int)changePos.y, (int)changePos.x] = tileType;
+        TileMap[changePos] = tileType;
         
         if (origin.Contains(changePos))
         {
@@ -262,36 +265,35 @@ public class MapMake : MonoBehaviour
         if (!change.Contains(changePos))
         {
             change.Add(changePos);
+            map[(int)changePos.y, (int)changePos.x] = tileType;
         }
     }
-    public void TileInfoSwap(Vector2 originPos,Vector2 nextPos,List<Vector2> originList,List<Vector2> nextList,TileType nextTileType)
+    */
+    public void EntityMove(Vector2 originPos, Vector2 nextPos, TileType myType)
     {
-        TileType temp = map[(int)nextPos.y, (int)nextPos.x];
-        map[(int)originPos.y, (int)originPos.x] = temp;
-        map[(int)nextPos.y, (int)nextPos.x] = nextTileType;
-        if (originList.Contains(originPos))
+        TileMap[originPos] = TileType.tile;
+        TileMap[nextPos] = myType;
+    }
+    public void TileTypeChange(Vector2 pos, TileType myType)
+    {
+        TileMap[pos] = myType;
+        if (tilePosList.Contains(pos))
         {
-            originList.Remove(originPos);
+            tilePosList.Remove(pos);
         }
-        if (nextList.Contains(nextPos))
-        {
-            nextList.Remove(nextPos);
-        }
-        originList.Add(nextPos);
-        nextList.Add(originPos);
     }
     public void MakeStairPos()
     {
-        for(int i =0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
-            int temp = UnityEngine.Random.Range(0,tilePosList.Count);
+            int temp = UnityEngine.Random.Range(0, tilePosList.Count);
             upStaires.Add(tilePosList[temp]);
             tilePosList.Remove(tilePosList[temp]);
             temp = UnityEngine.Random.Range(0, tilePosList.Count);
             downStaires.Add(tilePosList[temp]);
             tilePosList.Remove(tilePosList[temp]);
         }
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
             tilePosList.Add(upStaires[i]);
             tilePosList.Add(downStaires[i]);
@@ -300,7 +302,7 @@ public class MapMake : MonoBehaviour
     void SetPlayer()
     {
         int temp = Random.Range(0, downStaires.Count);
-        
+
     }
     bool IsInSize(Vector2 Pos)
     {

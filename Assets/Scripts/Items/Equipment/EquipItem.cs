@@ -65,6 +65,7 @@ public class EquipItem : ItemBase
 
 }
 
+
 public class Weapon : EquipItem
 {
     public int damage;
@@ -82,12 +83,12 @@ public class Weapon : EquipItem
 public class Defensive : EquipItem
 {
     public int defense;
-    
+
 }
 
 public class Shield : Defensive
 {
-    
+
     public int blockRate;
     /*
     public Shield()
