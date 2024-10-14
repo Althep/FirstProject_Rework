@@ -42,6 +42,9 @@ public class InputManager : MonoBehaviour
 
     KeyCode inputKey;
 
+
+
+
     void Start()
     {
         playerObj = GameManager.instance.playerObj;
@@ -268,7 +271,10 @@ public class InputManager : MonoBehaviour
             uiManager.AddUIListUpDate(uiObj);
         }
     }
-
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        
+    }
     #endregion
 
 }

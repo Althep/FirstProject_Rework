@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     
     public GameObject playerObj;
     public GameObject playerPrefab;
+    public PlayerState playerState;
 
     List<int> visitedFloor = new List<int>();
     
@@ -22,7 +23,9 @@ public class GameManager : MonoBehaviour
     public UIManager UIManager = new UIManager();
     public DataManager dataManager = new DataManager();
     public ItemManager item = new ItemManager();
-    
+    public LogUI log;
+
+    public Sprite baseSprite;
     private void Awake()
     {
         SetInstance();
@@ -41,7 +44,7 @@ public class GameManager : MonoBehaviour
         dataManager.ReadDataByTiers();
         dataManager.NormalDist(equipTest);
         dataManager.NormalDist(consumTest);
-        item.ItemFactiry();
+        //item.ItemFactiry();
 
         
         
@@ -55,7 +58,8 @@ public class GameManager : MonoBehaviour
     {
         if (playerObj == null)
         {
-            Instantiate(playerPrefab);
+            playerObj = Instantiate(playerPrefab);
+            playerState = playerObj.transform.GetComponent<PlayerState>();
         }
     }
     public void SetPlayerNextFloor()
@@ -83,7 +87,15 @@ public class GameManager : MonoBehaviour
         {
             dataManager = new DataManager();
         }
-        mapScript = this.gameObject.transform.GetComponent<MapMake>();
+        if(mapScript == null)
+        {
+            mapScript = this.gameObject.transform.GetComponent<MapMake>();
+        }
+        
+        if(log == null)
+        {
+            log = GameObject.Find("LogUI").gameObject.transform.GetComponent<LogUI>() ;
+        }
     }
     void AddFloor()
     {

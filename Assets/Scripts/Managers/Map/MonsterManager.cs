@@ -53,7 +53,7 @@ public class MonsterManager : MonoBehaviour
                 monsterList.Add(go);
                 go.name = i.ToString();
                 mapScript.tilePosList.Remove(randomPos);
-                Debug.Log($"monster name : {go.name}");
+                //Debug.Log($"monster name : {go.name}");
             }
             else
             {

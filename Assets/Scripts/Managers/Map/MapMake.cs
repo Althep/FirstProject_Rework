@@ -74,7 +74,7 @@ public class MapMake : MonoBehaviour
                 case TileType.tile:
                     break;
                 case TileType.wall:
-                    Instantiate(wallPrefab, pos, Quaternion.identity);
+                    Instantiate(wallPrefab, new Vector3(pos.x,pos.y,-1), Quaternion.identity);
                     break;
                 case TileType.door:
                     Instantiate(doorPrefab, pos, Quaternion.identity);

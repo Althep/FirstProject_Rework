@@ -15,6 +15,7 @@ public enum ConsumType
 public class ConsumItem : ItemBase
 {
     public ConsumType _consumType;
+    public int itemCount;
     public string function;
 
     public ConsumItem()
@@ -30,7 +31,7 @@ public class ConsumItem : ItemBase
         if (!GameManager.instance.item.ConsumScripts.ContainsKey(name))
         {
             GameManager.instance.item.ConsumScripts.Add(name, this);
-            Debug.Log($"regist  : {name}");
+            //Debug.Log($"regist  : {name}");
         }
     }
     public virtual ConsumItem Clone(ConsumType type)

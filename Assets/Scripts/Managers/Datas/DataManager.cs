@@ -163,7 +163,7 @@ public class DataManager
     }
     public void SetEquipData<T>(int index, T itemData) where T : EquipItem
     {
-        string type = typeof(ItemData).ToString();
+        string type = typeof(T).ToString();
         itemData.name = equipMentsData[index]["name"].ToString();
         itemData.index = Convert.ToInt32(equipMentsData[index]["index"]);
         itemData.weight = Convert.ToInt32(equipMentsData[index]["weight"]);
@@ -202,7 +202,7 @@ public class DataManager
     }
     public void SetConsumData<T>(int index, T itemData) where T : ConsumItem
     {
-        string gear = typeof(ItemData).ToString();
+        string gear = typeof(T).ToString();
         itemData.index = index;
         itemData.name = (consumData[index]["name"]).ToString();
         itemData.weight = Convert.ToInt32(consumData[index]["weight"]);
@@ -226,12 +226,6 @@ public class DataManager
             default:
                 break;
         }
-
-    }
-
-    public void SetBasicItemData(ItemData iteam)
-    {
-
 
     }
 
@@ -307,7 +301,7 @@ public class DataManager
                         ratetemp += rateList[i - 2];
                     }
                     rateList.Add(ratetemp);
-                    Debug.Log($" tier : {i}, Value : {rateValue} ,  converted : {ratetemp}");
+                    //Debug.Log($" tier : {i}, Value : {rateValue} ,  converted : {ratetemp}");
 
                 }
                 break;
@@ -324,7 +318,7 @@ public class DataManager
                         ratetemp += rateList[i - 2];
                     }
                     rateList.Add(ratetemp);
-                    Debug.Log($" tier : {i}, Value : {rateValue} ,  converted : {ratetemp}");
+                    //Debug.Log($" tier : {i}, Value : {rateValue} ,  converted : {ratetemp}");
 
                 }
                 break;

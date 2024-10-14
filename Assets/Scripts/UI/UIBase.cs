@@ -40,7 +40,7 @@ public class UIBase : MonoBehaviour
         }
     }
 
-    void SetPosition()
+    protected virtual void SetPosition()
     {
         Vector2 myPos = new Vector2(Screen.width / 2, Screen.height / 2);
 

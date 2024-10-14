@@ -35,9 +35,9 @@ public class EventManager : MonoBehaviour
         if (GameManager.instance != null)
         {
             gameManager.OnMapGenerate.AddListener(mapMakeScript.MapGenerate);
-            //gameManager.dataManager.ReadMonsterData();
             gameManager.OnMapGenerate.AddListener(monsterManager.AddMonsterSpawnFunction);
             gameManager.OnMapGenerate.AddListener(gameManager.SetPlayerNextFloor);
+            gameManager.OnMapGenerate.AddListener(gameManager.item.MakeItems);
         }
         else
         {

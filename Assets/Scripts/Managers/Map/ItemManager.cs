@@ -9,13 +9,28 @@ public class ItemManager
     public DataManager dataManager;
     public Dictionary<string, EquipItem> EquipScripts = new Dictionary<string, EquipItem>();
     public Dictionary<string, ConsumItem> ConsumScripts = new Dictionary<string, ConsumItem>();
-    
+    public List<Vector2> ItemPosList = new List<Vector2>();
+    public int itemSpawnCount;
     T GetRandomType<T>() where T : Enum
     {
         Array value = Enum.GetValues(typeof(T));
         return (T)value.GetValue(UnityEngine.Random.Range(0, value.Length));
     }
 
+    public void MakeItems()
+    {
+        SetItemSpawnCount();
+        for(int i = 0; i<itemSpawnCount; i++)
+        {
+            ItemFactiry();
+        }
+
+    }
+
+    public void SetItemSpawnCount()
+    {
+        itemSpawnCount = 10;
+    }
 
     public void ItemFactiry()
     {
@@ -25,17 +40,37 @@ public class ItemManager
         int maxRate;
         int rate;
         int tier;
+        int randomPosIndex;
+        Vector2 randomPos;
+        randomPosIndex = UnityEngine.Random.Range(0, GameManager.instance.mapScript.tilePosList.Count);
+        if (randomPosIndex > 0)
+        {
+            randomPos = GameManager.instance.mapScript.tilePosList[randomPosIndex];
+            Debug.Log($"RandomPos Index : {randomPosIndex}, RandomPos {randomPos.x}, {randomPos.y}");
+            ItemPosList.Add(randomPos);
+        }
+        else
+        {
+            Debug.Log("itemFactory Index Error");
+            return;
+        }
         if(dataManager== null)
         {
             dataManager = GameManager.instance.dataManager;
         }
+        if(dataManager.consumData == null)
+        {
+            dataManager.consumData = GameManager.instance.csvReader.Read("ConsumItemData");
+        }
+        if(dataManager.equipMentsData == null)
+        {
+            dataManager.equipMentsData = GameManager.instance.csvReader.Read("EquipItemData");
+        }
 
-        dataManager.consumData = GameManager.instance.csvReader.Read("ConsumItemData");
-        
-        dataManager.equipMentsData = GameManager.instance.csvReader.Read("EquipItemData");
         switch (type)
         {
             case ItemType.Consumable:
+                
                 List<int>rates = GameManager.instance.dataManager.tierRates[type.ToString()];
                 maxRate = rates[rates.Count-1];//마지막 티어까지의 확률중 마지막값(마지막 티어의 값)을 가져옴
                 rate = UnityEngine.Random.Range(0,maxRate);
@@ -49,6 +84,7 @@ public class ItemManager
                 Debug.Log($"itemType : {itemType}");
                 var consumscript = ConsumScripts[itemType];
                 ConsumType consumType;
+
                 if(Enum.TryParse(itemType, out consumType))
                 {
                     GameObject go = new GameObject();
@@ -58,6 +94,8 @@ public class ItemManager
                     go.name = consum.myInfo.name;
                     AddItemComponents(go);
                     Debug.Log($"Consum ItemMake Succese item name : {go.name}");
+                    go.transform.position = new Vector3(randomPos.x,randomPos.y,-1);
+                    SetItemImage(go, go.name);
                 }
                 else
                 {
@@ -77,8 +115,8 @@ public class ItemManager
                 itemType = (dataManager.equipMentsData[index]["type"]).ToString();
                 Debug.Log($"itemType : {itemType}");
                 var equipscript = EquipScripts[itemType];
-                
                 EquipType equipType;
+
                 if (Enum.TryParse(itemType, out equipType))
                 {
                     GameObject go = new GameObject();
@@ -88,6 +126,8 @@ public class ItemManager
                     go.name = equip.myInfo.name;
                     AddItemComponents(go);
                     Debug.Log($"equip ItemMake Succese{go.name}");
+                    go.transform.position = new Vector3(randomPos.x, randomPos.y, -1);
+                    SetItemImage(go, go.name);
                 }
                 else
                 {
@@ -133,6 +173,14 @@ public class ItemManager
             Debug.Log("tier is 0 tier Error!!");
         }
         return tier;
+    }
+
+    public void SetItemImage(GameObject go,string name)
+    {
+        SpriteRenderer sprite = go.transform.GetComponent<SpriteRenderer>();
+        go.AddComponent<SpriteRenderer>();
+        sprite = go.transform.GetComponent<SpriteRenderer>();
+        sprite.sprite = GameManager.instance.baseSprite;
     }
     /*
     public void ItemFactory()

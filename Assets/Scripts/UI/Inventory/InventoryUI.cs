@@ -8,9 +8,9 @@ public class InventoryUI : UIBase
 
     GameObject playerOBJ;
     ItemInventory playerInven;
-    public GameObject inventorySlot;
-    
-
+    public GameObject SlotPrefab;
+    List<GameObject> slotList = new List<GameObject>();
+    List<ItemSlot> slotScripts = new List<ItemSlot>();
     protected override void Start()
     {
         setKey = KeyCode.I;
@@ -23,7 +23,23 @@ public class InventoryUI : UIBase
     {
         
     }
-
+    private void OnEnable()
+    {
+        
+    }
+    void InstantSlot()
+    {
+        if (slotList.Count < playerInven.Inventory.Count)
+        {
+            for(int i = 0; i < playerInven.Inventory.Count - slotList.Count; i++)
+            {
+                GameObject go =Instantiate(SlotPrefab);
+                slotList.Add(go);
+                go.transform.SetParent(this.transform);
+                slotScripts.Add(go.transform.GetComponent<ItemSlot>());
+            }
+        }
+    }
 
     void SetPlayerOBJ()
     {
@@ -34,7 +50,10 @@ public class InventoryUI : UIBase
 
     public void OpenInventory()
     {
-
+        for(int i = 0; i < playerInven.Inventory.Count; i++)
+        {
+            slotScripts[i].SetItemName(i);
+        }
     }
 
     void MakeInventorySlot()

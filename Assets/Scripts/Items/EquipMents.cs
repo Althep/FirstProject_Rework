@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquipMents : MonoBehaviour
+public class EquipMents : Item
 {
-    public EquipItem myInfo;
+
 }

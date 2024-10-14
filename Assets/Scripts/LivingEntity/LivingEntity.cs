@@ -47,6 +47,7 @@ public class LivingEntity : MonoBehaviour
         myState.currntHp -= damage;
         IsDead();
         SetHpBarValue();
+        GameManager.instance.log.Damaged(this.gameObject, hpSlider.value);
     }
     void SetCanvas()
     {
@@ -70,6 +71,7 @@ public class LivingEntity : MonoBehaviour
     void SetHpBarValue()
     {
         hpSlider.value = myState.currntHp / myState.maxHp;
+        
     }
     public virtual void Attack(LivingEntity target)
     {
@@ -77,7 +79,7 @@ public class LivingEntity : MonoBehaviour
     }
     protected virtual void IsDead()
     {
-        
+        GameManager.instance.log.DeadLog(this.gameObject);
     }
     protected virtual void OnMove()
     {
