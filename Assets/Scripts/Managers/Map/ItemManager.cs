@@ -4,12 +4,18 @@ using UnityEngine;
 using System;
 using System.Reflection;
 using System.Linq;
+using Newtonsoft.Json;
+
+[System.Serializable]
 public class ItemManager
 {
+    [JsonProperty]
     public DataManager dataManager;
     public Dictionary<string, EquipItem> EquipScripts = new Dictionary<string, EquipItem>();
     public Dictionary<string, ConsumItem> ConsumScripts = new Dictionary<string, ConsumItem>();
-    public List<Vector2> ItemPosList = new List<Vector2>();
+    public Dictionary<Vector2, Item> ItemPosList = new Dictionary<Vector2, Item>();
+    public Dictionary<Vector2, ItemBase> itemSave = new Dictionary<Vector2, ItemBase>();
+    //public List<Vector2> ItemPosList = new List<Vector2>();
     public int itemSpawnCount;
     T GetRandomType<T>() where T : Enum
     {
@@ -47,7 +53,7 @@ public class ItemManager
         {
             randomPos = GameManager.instance.mapScript.tilePosList[randomPosIndex];
             Debug.Log($"RandomPos Index : {randomPosIndex}, RandomPos {randomPos.x}, {randomPos.y}");
-            ItemPosList.Add(randomPos);
+            
         }
         else
         {
@@ -95,6 +101,7 @@ public class ItemManager
                     AddItemComponents(go);
                     Debug.Log($"Consum ItemMake Succese item name : {go.name}");
                     go.transform.position = new Vector3(randomPos.x,randomPos.y,-1);
+                    ItemPosList.Add(randomPos, consum);
                     SetItemImage(go, go.name);
                 }
                 else
@@ -127,6 +134,7 @@ public class ItemManager
                     AddItemComponents(go);
                     Debug.Log($"equip ItemMake Succese{go.name}");
                     go.transform.position = new Vector3(randomPos.x, randomPos.y, -1);
+                    ItemPosList.Add(randomPos, equip);
                     SetItemImage(go, go.name);
                 }
                 else
@@ -149,7 +157,10 @@ public class ItemManager
         sprender = go.AddComponent<SpriteRenderer>();
         collider = go.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
+        collider.size = new Vector2(1, 1);
         go.transform.tag = "Item";
+        go.AddComponent<FogOfWar>();
+        go.gameObject.layer = 6;
     }
 
 
@@ -178,7 +189,6 @@ public class ItemManager
     public void SetItemImage(GameObject go,string name)
     {
         SpriteRenderer sprite = go.transform.GetComponent<SpriteRenderer>();
-        go.AddComponent<SpriteRenderer>();
         sprite = go.transform.GetComponent<SpriteRenderer>();
         sprite.sprite = GameManager.instance.baseSprite;
     }

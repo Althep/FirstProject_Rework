@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+
 
 public class PlayerState : LivingEntity
 {
@@ -10,10 +12,12 @@ public class PlayerState : LivingEntity
     public ItemInventory myInventory = new ItemInventory();
     public MagicInventory myMagic = new MagicInventory();
 
+    
     private void Awake()
     {
         inputManager = GameManager.instance.transform.GetComponent<InputManager>();
         PlayerInstantiate();
+        name = "Player";
     }
     private void Start()
     {
@@ -36,6 +40,10 @@ public class PlayerState : LivingEntity
         else
         {
             Destroy(this.gameObject);
+        }
+        if(inputManager == null)
+        {
+            inputManager = GameManager.instance.transform.GetComponent<InputManager>();
         }
     }
     public override void Attack(LivingEntity target)

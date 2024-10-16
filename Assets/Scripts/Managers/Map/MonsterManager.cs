@@ -9,6 +9,7 @@ public class MonsterManager : MonoBehaviour
     MapMake mapScript;
     public List<GameObject> monsterList = new List<GameObject>();
     List<Vector2> tileList;
+    public Dictionary<Vector2, EntityState> monsterSaveData = new Dictionary<Vector2, EntityState>();
     // Start is called before the first frame update
     private void OnEnable()
     {
@@ -24,7 +25,7 @@ public class MonsterManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
     public void AddMonsterSpawnFunction()
     {
@@ -78,4 +79,6 @@ public class MonsterManager : MonoBehaviour
 
     }
     
+
+
 }

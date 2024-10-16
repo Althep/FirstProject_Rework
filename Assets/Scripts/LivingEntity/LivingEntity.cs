@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Newtonsoft.Json;
 
+[System.Serializable]
 public struct EntityState
 {
-    
+    [JsonProperty]
     public int def;
     public int maxHp;
     public int currntHp;
@@ -17,18 +19,32 @@ public struct EntityState
     public int turn;
     public int oldTurn;
     public int damage;
+    public float attackRange;
+    public int index;
+    public int exp;
+    public int awakingRate;
+    public int leftTurnPoint;
+    public string State;
+    public string distance;
 }
-
+[System.Serializable]
 public class LivingEntity : MonoBehaviour
 {
+    [JsonProperty]
+
+    [JsonIgnore]
+    GameObject hpSliderObj;
+    [JsonIgnore]
+    Slider hpSlider;
+    [JsonIgnore]
+    GameObject myCanvasObj;
+
     public EntityState myState;
     
     public MoveState moveState;
     public int lastDamaged;
     
-    GameObject hpSliderObj;
-    Slider hpSlider;
-    GameObject myCanvasObj;
+    
 
     private void Awake()
     {

@@ -18,27 +18,36 @@ public class InventoryUI : UIBase
         base.Start();
     }
 
+    private void Awake()
+    {
+        InstantSlot();
+    }
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     private void OnEnable()
     {
-        
+
+        OpenInventory();
     }
     void InstantSlot()
     {
-        if (slotList.Count < playerInven.Inventory.Count)
+        if (playerInven == null)
         {
-            for(int i = 0; i < playerInven.Inventory.Count - slotList.Count; i++)
-            {
-                GameObject go =Instantiate(SlotPrefab);
-                slotList.Add(go);
-                go.transform.SetParent(this.transform);
-                slotScripts.Add(go.transform.GetComponent<ItemSlot>());
-            }
+            playerInven = GameManager.instance.playerState.myInventory;
         }
+
+        for (int i = slotList.Count; i < 40; i++)
+        {
+            GameObject go = Instantiate(SlotPrefab);
+            slotList.Add(go);
+            go.transform.SetParent(this.transform);
+            slotScripts.Add(go.transform.GetComponent<ItemSlot>());
+        }
+
+
     }
 
     void SetPlayerOBJ()
@@ -50,15 +59,17 @@ public class InventoryUI : UIBase
 
     public void OpenInventory()
     {
-        for(int i = 0; i < playerInven.Inventory.Count; i++)
+        for (int i = 0; i < playerInven.Inventory.Count; i++)
         {
+
             slotScripts[i].SetItemName(i);
+
         }
     }
 
     void MakeInventorySlot()
     {
-        
+
 
     }
 

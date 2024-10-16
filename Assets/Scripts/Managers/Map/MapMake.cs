@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Newtonsoft.Json;
 public enum TileType
 {
     tile,
@@ -12,8 +13,10 @@ public enum TileType
     player,
     item
 }
+[System.Serializable]
 public class MapMake : MonoBehaviour
 {
+    [JsonProperty]
     // Start is called before the first frame update
     //public TileType[,] map;
     public int xSize;
@@ -313,4 +316,5 @@ public class MapMake : MonoBehaviour
         }
         return temp;
     }
+
 }

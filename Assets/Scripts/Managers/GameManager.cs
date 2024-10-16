@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Newtonsoft.Json;
 public class GameManager : MonoBehaviour
 {
     public int floor;
@@ -19,10 +20,12 @@ public class GameManager : MonoBehaviour
     
     public MapMake mapScript;
     public InputManager inputManager;
+    public MonsterManager monsterManager;
     public CSVReader csvReader = new CSVReader();
     public UIManager UIManager = new UIManager();
     public DataManager dataManager = new DataManager();
     public ItemManager item = new ItemManager();
+    public SaveManager save = new SaveManager();
     public LogUI log;
 
     public Sprite baseSprite;
@@ -45,7 +48,7 @@ public class GameManager : MonoBehaviour
         dataManager.NormalDist(equipTest);
         dataManager.NormalDist(consumTest);
         //item.ItemFactiry();
-
+        save.MapSave();
         
         
     }
@@ -95,6 +98,15 @@ public class GameManager : MonoBehaviour
         if(log == null)
         {
             log = GameObject.Find("LogUI").gameObject.transform.GetComponent<LogUI>() ;
+        }
+
+        if(save.saveDirectory == null)
+        {
+            save.saveDirectory = Application.persistentDataPath;
+        }
+        if(monsterManager == null)
+        {
+            monsterManager = this.gameObject.transform.GetComponent<MonsterManager>();
         }
     }
     void AddFloor()

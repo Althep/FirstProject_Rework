@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Newtonsoft.Json;
 public enum ItemType
 {
     Consumable,
@@ -9,9 +10,10 @@ public enum ItemType
 }
 
 
-
+[System.Serializable]
 public class ItemBase
 {
+    [JsonProperty]
     //public int _index;
     public int index; //{ get { return _index; } }
 

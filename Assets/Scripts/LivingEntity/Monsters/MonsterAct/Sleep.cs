@@ -13,7 +13,7 @@ public class Sleep : MonsterActSate
     public override void CollideStart()
     {
         int temp = Random.Range(0, 100);
-        if (temp <= myState.awakingRate)
+        if (temp <= myState.myState.awakingRate)
         {
             myState.myActState = this.gameObject.transform.GetComponent<Chase>();
         }

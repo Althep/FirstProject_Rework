@@ -193,7 +193,7 @@ public class PathFinding : MonoBehaviour
     {
         while (LastNode.x != (int)this.gameObject.transform.position.x || LastNode.y != (int)this.gameObject.transform.position.y)
         {
-            if (Vector2.Distance(this.gameObject.transform.position, GameManager.instance.playerObj.transform.position) <= myState.attackRange)
+            if (Vector2.Distance(this.gameObject.transform.position, GameManager.instance.playerObj.transform.position) <= myState.myState.attackRange)
             {
                 LastNode = parents[LastNode.y, LastNode.x];
                 path.Add(LastNode);

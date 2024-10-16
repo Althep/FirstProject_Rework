@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
-
+using Newtonsoft.Json;
 public class ItemInventory//<T> where T : ItemBase
 {
+    [JsonProperty]
     public List<Item> Inventory = new List<Item>();
-
+    public List<ItemBase> invenSave = new List<ItemBase>();
 
     public void GetEquipItem(Item item)
     {
         Inventory.Add(item);
+        Debug.Log(item.name);
+        Debug.Log($"ItemCount = {Inventory.Count}");
     }
 
     public void GetConsumItem(Item item)
@@ -19,6 +22,7 @@ public class ItemInventory//<T> where T : ItemBase
         if (IsSame(item))
         {
             AddSameItem(item);
+            Debug.Log(item.name);
         }
         else
         {
@@ -46,6 +50,7 @@ public class ItemInventory//<T> where T : ItemBase
             }
         }
     }
+
     /*
     internal void GetEquipItem<T>(Item<T> item) where T : ItemBase
     {

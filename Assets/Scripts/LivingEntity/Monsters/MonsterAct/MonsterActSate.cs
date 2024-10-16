@@ -65,7 +65,7 @@ public class MonsterActSate : MonoBehaviour
     {
         Debug.Log("Attack");
         LivingEntity targetEntity;
-        if (Vector2.Distance(this.transform.position, myState.target.transform.position) <= myState.attackRange)
+        if (Vector2.Distance(this.transform.position, myState.target.transform.position) <= myState.myState.attackRange)
         {
             targetEntity = myState.target.transform.GetComponent<LivingEntity>();
             targetEntity.Damaged(myState.myState.damage);

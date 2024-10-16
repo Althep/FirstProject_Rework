@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
+using Newtonsoft.Json;
 enum MosnsterType
 {
     anumal,
@@ -11,22 +11,20 @@ enum MosnsterType
 public class MonsterState : LivingEntity
 {
 
-    public int index;
+    
+    [JsonIgnore]
     public Vector2 oldPlayerPos;
+    [JsonIgnore]
     public Vector2 nextPos;
+    [JsonIgnore]
     public GameObject target;
+    [JsonIgnore]
     public List<Node> path;
-    public int exp;
+    [JsonIgnore]
     public MonsterActSate myActState;
-    public float attackRange = 1.42f;
-    public int awakingRate;
-    public int leftTurnPoint;
-
-    public string State;
-
+    [JsonIgnore]
     PlayerState playerState;
-
-    public string distance;
+    
 
     private void Start()
     {
@@ -36,9 +34,8 @@ public class MonsterState : LivingEntity
         myState.base_AttackSpeed = 10;
         myState.maxHp = 10;
         myState.currntHp = myState.maxHp;
-        attackRange = 1.42f;
+        myState.attackRange = 1.42f;
         SetSpeed();
-        
         playerState = GameManager.instance.playerObj.transform.GetComponent<PlayerState>();
         EventManager.Instance.OnPlayerMove.AddListener(OnPlayerMove);
     }
@@ -46,11 +43,11 @@ public class MonsterState : LivingEntity
     private void Update()
     {
         //ShowState();
-        distance = Vector2.Distance(target.transform.position, this.gameObject.transform.position).ToString();
+        myState.distance = Vector2.Distance(target.transform.position, this.gameObject.transform.position).ToString();
         CanvasSetActive();
-        if (leftTurnPoint != 0)
+        if (myState.leftTurnPoint != 0)
         {
-            Debug.Log(leftTurnPoint);
+            Debug.Log(myState.leftTurnPoint);
         }
         
     }
@@ -65,7 +62,7 @@ public class MonsterState : LivingEntity
     }
     void SetMoveState()
     {
-        if (myActState is Chase && Vector2.Distance(this.gameObject.transform.position, target.transform.position) <= attackRange)
+        if (myActState is Chase && Vector2.Distance(this.gameObject.transform.position, target.transform.position) <= myState.attackRange)
         {
             moveState = MoveState.attack;
         }
@@ -101,10 +98,10 @@ public class MonsterState : LivingEntity
                 Debug.Log("PlayerMoveStateError");
                 break;
             case MoveState.move:
-                leftTurnPoint += playerState.myState.moveSpeed;
+                myState.leftTurnPoint += playerState.myState.moveSpeed;
                 break;
             case MoveState.attack:
-                leftTurnPoint += playerState.myState.attackSpeed;
+                myState.leftTurnPoint += playerState.myState.attackSpeed;
                 break;
             default:
                 break;
@@ -119,12 +116,12 @@ public class MonsterState : LivingEntity
                 Debug.Log("Idle!");
                 break;
             case MoveState.move:
-                myState.turn = leftTurnPoint / myState.moveSpeed;
-                leftTurnPoint %= myState.moveSpeed;
+                myState.turn = myState.leftTurnPoint / myState.moveSpeed;
+                myState.leftTurnPoint %= myState.moveSpeed;
                 break;
             case MoveState.attack:
-                myState.turn = leftTurnPoint / myState.attackSpeed;
-                leftTurnPoint %= myState.attackSpeed;
+                myState.turn = myState.leftTurnPoint / myState.attackSpeed;
+                myState.leftTurnPoint %= myState.attackSpeed;
                 break;
             default:
                 break;
@@ -148,16 +145,16 @@ public class MonsterState : LivingEntity
         {
 
             case Chase:
-                State = "Chase";
+                myState.State = "Chase";
                 break;
             case Sleep:
-                State = "Sleep";
+                myState.State = "Sleep";
                 break;
             case Searching:
-                State = "Searching";
+                myState.State = "Searching";
                 break;
             case Rest:
-                State = "Rest";
+                myState.State = "Rest";
                 break;
             default:
                 break;

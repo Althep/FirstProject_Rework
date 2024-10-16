@@ -135,8 +135,8 @@ public class DataManager
         }
 
         monsterState.name = monsterData[index]["name"].ToString();
-        monsterState.index = Convert.ToInt32(monsterData[index]["index"]);
-        monsterState.exp = Convert.ToInt32(monsterData[index]["exp"]);
+        monsterState.myState.index = Convert.ToInt32(monsterData[index]["index"]);
+        monsterState.myState.exp = Convert.ToInt32(monsterData[index]["exp"]);
         monsterState.myState.maxHp = Convert.ToInt32(monsterData[index]["maxhp"]);
         monsterState.myState.currntHp = monsterState.myState.maxHp;
         monsterState.myState.damage = Convert.ToInt32(monsterData[index]["damage"]);
