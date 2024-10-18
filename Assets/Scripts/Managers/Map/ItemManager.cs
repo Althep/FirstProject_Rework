@@ -278,5 +278,20 @@ public class ItemManager
 
 
     }
+    public void LoadItemData()
+    {
+        ItemPosList.Clear();
 
+        foreach (Vector2 keys in itemSave.Keys)
+        {
+            GameObject go = new GameObject();
+            Item item = go.AddComponent<Item>();
+            AddItemComponents(go);
+            item.myInfo = itemSave[keys];
+            go.transform.position = keys;
+            go.layer = GameManager.instance.mapScript.objLayers[keys];
+            ItemPosList.Add(keys,item);
+            GameManager.instance.mapScript.mapObjects.Add(go);
+        }
+    }
 }

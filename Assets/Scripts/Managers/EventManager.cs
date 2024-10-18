@@ -13,7 +13,7 @@ public class EventManager : MonoBehaviour
 
     public UnityEvent OnPlayerMove;
     public UnityEvent OnMapGenerate;
-
+    public UnityEvent VisitedFloor;
 
     private void Awake()
     {
@@ -44,6 +44,7 @@ public class EventManager : MonoBehaviour
             Debug.Log("GameManager NullError");
         }
     }
+    
     void SetInstance()
     {
         if(Instance == null)

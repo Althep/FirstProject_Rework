@@ -129,8 +129,10 @@ public class InputManager : MonoBehaviour
                 case TileType.door:
                     InputMoveKey();
                     break;
-                case TileType.stair:
+                case TileType.upstair:
                     //Debug.Log("stair");
+                    break;
+                case TileType.downstair:
                     break;
                 case TileType.monster:
                     MakeCollider(next);

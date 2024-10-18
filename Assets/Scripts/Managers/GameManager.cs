@@ -11,12 +11,12 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     
     public UnityEvent OnMapGenerate;
-    
+    public UnityEvent VisitedFloor;
     public GameObject playerObj;
     public GameObject playerPrefab;
     public PlayerState playerState;
 
-    List<int> visitedFloor = new List<int>();
+    public List<int> visitedFloor = new List<int>();
     
     public MapMake mapScript;
     public InputManager inputManager;
@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         dataManager.NormalDist(consumTest);
         //item.ItemFactiry();
         save.MapSave();
-        
+        DontDestroyOnLoad(GameObject.Find("Canvas"));
         
     }
 
@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+
     public void InstantiatePlayerObj()
     {
         if (playerObj == null)

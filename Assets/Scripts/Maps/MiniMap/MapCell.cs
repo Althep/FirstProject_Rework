@@ -85,7 +85,10 @@ public class MapCell : MonoBehaviour
             case TileType.door:
                 mapCell.color = Color.cyan;
                 break;
-            case TileType.stair:
+            case TileType.upstair:
+                mapCell.color = Color.yellow;
+                break;
+            case TileType.downstair:
                 mapCell.color = Color.yellow;
                 break;
             case TileType.monster:

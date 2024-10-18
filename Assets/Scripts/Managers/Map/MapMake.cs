@@ -8,7 +8,8 @@ public enum TileType
     tile,
     wall,
     door,
-    stair,
+    upstair,
+    downstair,
     monster,
     player,
     item
@@ -42,7 +43,8 @@ public class MapMake : MonoBehaviour
     public List<Vector2> tilePosList = new List<Vector2>();
     public List<Vector2> upStaires = new List<Vector2>();
     public List<Vector2> downStaires = new List<Vector2>();
-
+    public List<GameObject> mapObjects = new List<GameObject>();
+    public Dictionary<Vector2, int> objLayers = new Dictionary<Vector2, int>();
     private void Awake()
     {
         monsterManager = this.transform.GetComponent<MonsterManager>();
@@ -65,24 +67,34 @@ public class MapMake : MonoBehaviour
         MakeStairPos();
         ObjectInstantiate();
         MiniMapMaping();
+        FloorAdd();
     }
     void ObjectInstantiate()
     {
         foreach (Vector2 pos in TileMap.Keys)
         {
-            Instantiate(tilePrefab, pos, Quaternion.identity);
+            GameObject tileObj = Instantiate(tilePrefab, pos, Quaternion.identity);
 
             switch (TileMap[pos])
             {
                 case TileType.tile:
+                    mapObjects.Add(tileObj);
                     break;
                 case TileType.wall:
-                    Instantiate(wallPrefab, new Vector3(pos.x,pos.y,-1), Quaternion.identity);
+                    mapObjects.Add(Instantiate(wallPrefab, new Vector3(pos.x,pos.y,-1), Quaternion.identity));
                     break;
                 case TileType.door:
-                    Instantiate(doorPrefab, pos, Quaternion.identity);
+                    mapObjects.Add(Instantiate(doorPrefab, pos, Quaternion.identity));
                     break;
-                case TileType.stair:
+                case TileType.upstair:
+                    GameObject go = Instantiate(upStairPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
+                    mapObjects.Add(go);
+                    go.transform.GetComponent<Stair>().stairType = StairType.upStair;
+                    break;
+                case TileType.downstair:
+                    go = Instantiate(downStairPrefab,new Vector3(pos.x,pos.y,-1),Quaternion.identity);
+                    mapObjects.Add(go);
+                    go.transform.GetComponent<Stair>().stairType = StairType.downStair;
                     break;
                 case TileType.monster:
                     break;
@@ -96,8 +108,12 @@ public class MapMake : MonoBehaviour
         {
             GameObject go = Instantiate(upStairPrefab, upStaires[i], Quaternion.identity);
             go.transform.GetComponent<Stair>().stairNumber = i;
+            mapObjects.Add(go);
+            TileMap[upStaires[i]] = TileType.upstair;
             go = Instantiate(downStairPrefab, downStaires[i], Quaternion.identity);
             go.transform.GetComponent<Stair>().stairNumber = i;
+            TileMap[downStaires[i]] = TileType.downstair;
+            mapObjects.Add(go);
         }
         /*
         for(int i = -1; i <=map.GetLength(0); i++)
@@ -243,7 +259,9 @@ public class MapMake : MonoBehaviour
                     break;
                 case TileType.door:
                     break;
-                case TileType.stair:
+                case TileType.upstair:
+                    break;
+                case TileType.downstair:
                     break;
                 case TileType.monster:
                     break;
@@ -316,5 +334,56 @@ public class MapMake : MonoBehaviour
         }
         return temp;
     }
+    void FloorAdd()
+    {
+        if (!GameManager.instance.visitedFloor.Contains(GameManager.instance.floor))
+        {
+            GameManager.instance.visitedFloor.Add(GameManager.instance.floor);
+        }
+    }
 
+    public void LoadMapAtData()
+    {
+        mapObjects.Clear();
+        foreach(Vector2 keys in TileMap.Keys)
+        {
+            GameObject tile = Instantiate(tilePrefab,keys,Quaternion.identity);
+            tile.layer = objLayers[keys];
+            switch (TileMap[keys])
+            {
+                case TileType.tile:
+                    mapObjects.Add(tile);
+                    break;
+                case TileType.wall:
+                    GameObject go = Instantiate(wallPrefab, keys, Quaternion.identity);
+                    go.layer = objLayers[keys];
+                    mapObjects.Add(go);
+                    break;
+                case TileType.door:
+                    go = Instantiate(doorPrefab, keys, Quaternion.identity);
+                    go.layer = objLayers[keys];
+                    mapObjects.Add(go);
+                    break;
+                case TileType.upstair:
+                    go = Instantiate(upStairPrefab, keys, Quaternion.identity);
+                    go.layer = objLayers[keys];
+                    mapObjects.Add(go);
+                    break;
+                case TileType.downstair:
+                    go = Instantiate(downStairPrefab, keys, Quaternion.identity);
+                    go.layer = objLayers[keys];
+                    mapObjects.Add(go);
+                    break;
+                case TileType.monster:
+                    break;
+                case TileType.player:
+                    break;
+                case TileType.item:
+                    break;
+                default:
+                    break;
+            }
+            
+        }
+    }
 }

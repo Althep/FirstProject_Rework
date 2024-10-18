@@ -67,19 +67,56 @@ public class SaveManager
             itemManager = GameManager.instance.item;
         }
     }
+    public void SaveMap()
+    {
+        MapSave();
+        ItemSave();
+        MonsterSave();
+    }
+    public void LoadData()
+    {
+        MapLoad();
+        ItemLoad();
+        MonsterLoad();
 
+    }
+    public void LoadMap()
+    {
+        LoadData();
+        GameManager.instance.mapScript.LoadMapAtData();
+        GameManager.instance.monsterManager.LoadMonsterData();
+        GameManager.instance.item.LoadItemData();
+    }
     public void MapSave()
     {
         string fileName = GameManager.instance.floor + "_Floor_MapData";
         JsonSave<Dictionary<Vector2, TileType>>(GameManager.instance.mapScript.TileMap, fileName);
         Debug.Log("map save");
+        LayerSave();
+    }
+
+    public void LayerSave()
+    {
+        string fileName = GameManager.instance.floor + "_Floor_LayerData";
+        for (int i = 0; i < GameManager.instance.mapScript.mapObjects.Count; i++)
+        {
+            Vector2 pos = GameManager.instance.mapScript.mapObjects[i].transform.position;
+            int layer = GameManager.instance.mapScript.mapObjects[i].gameObject.layer;
+            GameManager.instance.mapScript.objLayers.Add(pos, layer);
+        }
+        JsonSave<Dictionary<Vector2, int>>(GameManager.instance.mapScript.objLayers, fileName);
     }
     public void MapLoad()
     {
         string fileName = GameManager.instance.floor + "_Floor_MapData";
         mapScript.TileMap = LoadFile<Dictionary<Vector2, TileType>>(fileName);
+        LayerLoad();
     }
-
+    public void LayerLoad()
+    {
+        string fileName = GameManager.instance.floor + "_Floor_LayerData";
+        mapScript.objLayers = LoadFile<Dictionary<Vector2, int>>(fileName);
+    }
 
     public void ItemSave()
     {
@@ -133,4 +170,8 @@ public class SaveManager
         ItemInventory playerInven = GameManager.instance.playerState.myInventory;
         playerInven.invenSave = LoadFile<List<ItemBase>>(fileName);
     }
+
+    
+
+    
 }

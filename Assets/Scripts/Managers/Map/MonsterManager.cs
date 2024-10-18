@@ -74,9 +74,16 @@ public class MonsterManager : MonoBehaviour
         mapScript.TileTypeChange(mapScript.tilePosList[randomIndex], TileType.monster);
         monsterList.Add(go);
     }
-    void SetMonsterData()
+    public void LoadMonsterData()
     {
-
+        monsterList.Clear();
+        foreach (Vector2 keys in monsterSaveData.Keys)
+        {
+            GameObject go = Instantiate(monsterPrefab, keys, Quaternion.identity);
+            go.transform.GetComponent<MonsterState>().myState = monsterSaveData[keys];
+            monsterList.Add(go);
+            go.name = go.transform.GetComponent<MonsterState>().name;
+        }
     }
     
 
