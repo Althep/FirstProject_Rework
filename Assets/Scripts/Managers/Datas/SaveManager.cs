@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.IO;
+
 public class SaveManager
 {
     public string saveDirectory;
@@ -38,7 +41,6 @@ public class SaveManager
     {
         File.WriteAllText(filePath,JsonData);
         Filenames.Add(filePath);
-        Debug.Log(filePath);
     }
     public T LoadFile<T>(string fileName)
     {
@@ -100,7 +102,7 @@ public class SaveManager
         Initalize();
         MapSave();
         StairSave();
-        ItemSave();
+        ItemDataToJson();
         MonsterSave();
     }
     public void LoadData()
@@ -108,8 +110,8 @@ public class SaveManager
         Initalize();
         MapLoad();
         StairLoad();
-        //ItemLoad();
-        //MonsterLoad();
+        itemJsonConver();
+        MonsterLoad();
         
     }
     public void LoadMap()
@@ -117,7 +119,7 @@ public class SaveManager
         LoadData();
         GameManager.instance.mapScript.LoadMapAtData();
         GameManager.instance.monsterManager.LoadMonsterData();
-        GameManager.instance.item.LoadItemData();
+        //GameManager.instance.item.LoadItemData();
         
     }
     public void MapSave()
@@ -137,9 +139,7 @@ public class SaveManager
             
         }
         mapScript.mapData.saveData = mapScript.mapSaveData;
-        Debug.Log($" Map Save Data Amount : {mapScript.mapSaveData.Count}!!!!");
         JsonSave<MapSaveDataWrapper>(GameManager.instance.mapScript.mapData, fileName);
-        Debug.Log("map save");
         LayerSave();
     }
 
@@ -178,7 +178,6 @@ public class SaveManager
             mapScript.stairList.Add(stairWrapped);
         }
         mapScript.stairSaveData.saveData = mapScript.stairList;
-        Debug.Log($"Stair List Count : {mapScript.stairList.Count}");
         JsonSave<StairDataWrapper>(GameManager.instance.mapScript.stairSaveData, fileName);
     }
 
@@ -232,7 +231,7 @@ public class SaveManager
         mapScript.layerData = LoadFile<LayerDataWrapper>(fileName);
         mapScript.LayerSaveData = mapScript.layerData.saveData;
     }
-
+    /*
     public void ItemSave()
     {
         Initalize();
@@ -242,7 +241,7 @@ public class SaveManager
 
         foreach(Vector2 key in itemManager.ItemPosList.Keys)
         {
-            ItemWrapper itemWrapper = new ItemWrapper() { pos = key,itemBase = itemManager.ItemPosList[key].myInfo };
+            ItemWrapper itemWrapper = new ItemWrapper(key, itemManager.ItemPosList[key].myInfo);
             itemManager.ItemSaveData.Add(itemWrapper);
         }
         itemManager.wrappedData.saveData = itemManager.ItemSaveData;
@@ -259,9 +258,152 @@ public class SaveManager
         itemManager.ItemSaveData = itemManager.wrappedData.saveData;
         for(int i = 0; i < itemManager.ItemSaveData.Count; i++)
         {
-            itemManager.ItemPosList[itemManager.ItemSaveData[i].pos].myInfo = itemManager.ItemSaveData[i].itemBase;
+            //itemManager.ItemPosList.[itemManager.ItemSaveData[i].pos].myInfo = itemManager.ItemSaveData[i].itemBase;//디버그 KeyNotFoundException: The given key '(9.00, 17.00)' was not present in the dictionary.
+
         }
     }
+    */
+    
+    public void ItemDataToJson()//ItemDataWrapper data)
+    {
+        if (saveDirectory == null)
+        {
+            saveDirectory = Application.persistentDataPath;
+        }
+        string path;
+        string fileName = GameManager.instance.floor + "_Floor_ItemData";
+        string jsonData;
+        path = Path.Combine(saveDirectory, fileName);
+        itemManager.wrappedData.equipSaved.Clear();
+        itemManager.wrappedData.consumSaved.Clear();
+        
+        foreach(Vector2 key in itemManager.ItemPosList.Keys)
+        {
+            switch (itemManager.ItemPosList[key].myInfo)
+            {
+                case EquipItem equip:
+                    EquipWrapper equipWrapper = new EquipWrapper() {posx=(int)key.x,posy = (int)key.y,itemBase = equip };
+                    itemManager.wrappedData.equipSaved.Add(equipWrapper);
+                    break;
+                case ConsumItem consum:
+                    ConsumWrapper consumWrapper = new ConsumWrapper() { posx = (int)key.x, posy = (int)key.y, itemBase = consum };
+                    itemManager.wrappedData.consumSaved.Add(consumWrapper);
+                    break;
+                default:
+                    break;
+            }
+        }
+        jsonData = JsonConvert.SerializeObject(itemManager.wrappedData,Formatting.Indented, new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.Auto });
+        File.WriteAllText(path,jsonData);
+        //return JsonUtility.ToJson(data);
+
+    }
+    public void itemJsonConver()
+    {
+        if (saveDirectory == null)
+        {
+            saveDirectory = Application.persistentDataPath;
+        }
+        string path;
+        string fileName = GameManager.instance.floor + "_Floor_ItemData";
+        string jsonData;
+        path = Path.Combine(saveDirectory, fileName);
+        if(itemManager == null)
+        {
+            itemManager = GameManager.instance.item;
+        }
+
+        // 항상 wrappedData를 초기화해주기
+        if (itemManager.wrappedData == null)
+        {
+            itemManager.wrappedData = new ItemDataWrapper();
+        }
+        if (itemManager.wrappedData.equipSaved == null)
+        {
+            itemManager.wrappedData.equipSaved = new List<EquipWrapper>();
+        }
+        if (itemManager.wrappedData.consumSaved == null)
+        {
+            itemManager.wrappedData.consumSaved = new List<ConsumWrapper>();
+        }
+
+        itemManager.wrappedData.equipSaved.Clear();
+        itemManager.wrappedData.consumSaved.Clear();
+        itemManager.ItemPosList.Clear();
+        itemManager.itemBaseList.Clear();
+        if (File.Exists(path))
+        {
+            try
+            {
+                jsonData = File.ReadAllText(path);
+                var deserializedData = JsonConvert.DeserializeObject<ItemDataWrapper>(jsonData, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+                // 역직렬화된 데이터를 현재 wrappedData에 추가
+                if (deserializedData != null)
+                {
+                    itemManager.wrappedData.equipSaved.AddRange(deserializedData.equipSaved);
+                    itemManager.wrappedData.consumSaved.AddRange(deserializedData.consumSaved);
+                }
+
+                foreach (var item in itemManager.wrappedData.equipSaved)
+                {
+                    if (item.itemBase == null)
+                    {
+                        Debug.LogError("itemBase is null in equipSaved");
+                    }
+                }
+                foreach (var item in itemManager.wrappedData.consumSaved)
+                {
+                    if (item.itemBase == null)
+                    {
+                        Debug.LogError("itemBase is null in consumSaved");
+                    }
+                }
+
+                Debug.Log("Wrapped Data Read");
+                Debug.Log(jsonData);
+            }
+            catch (Exception ex)
+            {
+                Debug.Log($"File path is wrong or Deserialize Error: {ex.Message}");
+            }
+        }
+        else
+        {
+            Debug.Log("File does not exist");
+        }
+
+        Debug.Log($"itemManager.equipSaved.Count: {itemManager.wrappedData.equipSaved.Count}");
+        Debug.Log($"itemManager.consumSaved.Count: {itemManager.wrappedData.consumSaved.Count}");
+
+        for (int i = 0; i < itemManager.wrappedData.equipSaved.Count; i++)
+        {
+            Debug.Log($"---------------{itemManager.wrappedData.equipSaved[i].itemBase.GetType()}------------");
+        }
+        for (int i = 0; i < itemManager.wrappedData.consumSaved.Count; i++)
+        {
+            Debug.Log($"---------------{itemManager.wrappedData.consumSaved[i].itemBase.GetType()}------------");
+        }
+
+        foreach(EquipWrapper data in itemManager.wrappedData.equipSaved)
+        {
+            Vector2 vector = new Vector2() { x= data.posx, y=data.posy};
+            ItemBase item = new ItemBase();
+            item = data.itemBase;
+            itemManager.itemBaseList.Add(vector,item);
+        }
+        foreach(ConsumWrapper data in itemManager.wrappedData.consumSaved)
+        {
+            Vector2 vector = new Vector2() { x = data.posx, y = data.posy };
+            ItemBase item = new ItemBase();
+            item = data.itemBase;
+            itemManager.itemBaseList.Add(vector, item);
+            
+        }
+        itemManager.LoadItemData();
+    }
+
+
 
 
     public void MonsterSave()
@@ -279,9 +421,7 @@ public class SaveManager
             }
         }
         monsterManager.wrappedData.saveData = monsterManager.monsterSaveData;
-        Debug.Log($"monster Wrapped Data save Data Count :  {monsterManager.wrappedData.saveData.Count}");
         JsonSave<MonsterDataWrapper>(monsterManager.wrappedData, fileName);
-        Debug.Log("MonsterDataSave");
     }
     public void MonsterLoad()
     {

@@ -13,7 +13,7 @@ public enum EquipType
     Shoose,
     Ring
 }
-
+[System.Serializable]
 public class EquipItem : ItemBase
 {
     public EquipType _equipType;

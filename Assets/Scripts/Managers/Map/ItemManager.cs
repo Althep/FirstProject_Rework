@@ -5,16 +5,46 @@ using System;
 using System.Reflection;
 using System.Linq;
 using Newtonsoft.Json;
+/*
 [System.Serializable]
 public class ItemWrapper
 {
-    public Vector2 pos;
+    public int posx;
+    public int posy;
     public ItemBase itemBase;
-}
+    public string itemType;
+    public ItemWrapper(Vector2 positon, ItemBase item)
+    {
+        posx =(int) positon.x;
+        posy = (int)positon.y;
+        itemBase = item;
+        itemType = item.GetType().AssemblyQualifiedName;
+    }
+}*/
+[System.Serializable]
+public class ConsumWrapper//래핑함수에 생성자가 있을경우 역직렬화에 문제가 생길 수 있음
+{
+    public int posx;
+    public int posy;
+    public ConsumItem itemBase;
+    public string itemType;
+    
 
+}
+[System.Serializable]
+public class EquipWrapper
+{
+    public int posx;
+    public int posy;
+    public EquipItem itemBase;
+    public string itemType;
+    
+}
+[System.Serializable]
 public class ItemDataWrapper
 {
-    public List<ItemWrapper> saveData = new List<ItemWrapper>();
+    public List<ConsumWrapper> consumSaved = new List<ConsumWrapper>();
+    public List<EquipWrapper> equipSaved = new List<EquipWrapper>();
 }
 
 [System.Serializable]
@@ -25,7 +55,8 @@ public class ItemManager
     public Dictionary<string, EquipItem> EquipScripts = new Dictionary<string, EquipItem>();
     public Dictionary<string, ConsumItem> ConsumScripts = new Dictionary<string, ConsumItem>();
     public Dictionary<Vector2, Item> ItemPosList = new Dictionary<Vector2, Item>();
-    public List<ItemWrapper> ItemSaveData = new List<ItemWrapper>();
+    public Dictionary<Vector2, ItemBase> itemBaseList = new Dictionary<Vector2, ItemBase>();
+    //public List<ItemWrapper> ItemSaveData = new List<ItemWrapper>();
     public ItemDataWrapper wrappedData = new ItemDataWrapper();
     //public Dictionary<Vector2, ItemBase> itemSave = new Dictionary<Vector2, ItemBase>();
     //public List<Vector2> ItemPosList = new List<Vector2>();
@@ -103,7 +134,7 @@ public class ItemManager
                 if(Enum.TryParse(itemType, out consumType))
                 {
                     GameObject go = new GameObject();
-                    Consumable consum = go.AddComponent<Consumable>();
+                    Item consum = go.AddComponent<Item>();
                     consum.myInfo = consumscript.Clone(consumType);
                     dataManager.SetItempData(index,consum.myInfo);
                     go.name = consum.myInfo.name;
@@ -132,7 +163,7 @@ public class ItemManager
                 if (Enum.TryParse(itemType, out equipType))
                 {
                     GameObject go = new GameObject();
-                    EquipMents equip = go.AddComponent<EquipMents>();
+                    Item equip = go.AddComponent<Item>();
                     equip.myInfo = equipscript.Clone(equipType);
                     dataManager.SetItempData(index, equip.myInfo);
                     go.name = equip.myInfo.name;
@@ -157,8 +188,6 @@ public class ItemManager
             default:
                 break;
         }
-        
-
     }
 
     public void AddItemComponents(GameObject go)
@@ -168,14 +197,14 @@ public class ItemManager
         sprender = go.AddComponent<SpriteRenderer>();
         collider = go.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
-        collider.size = new Vector2(1, 1);
+        collider.size = new Vector2(0.5f, 0.5f);
         go.transform.tag = "Item";
         go.AddComponent<FogOfWar>();
         go.gameObject.layer = 6;
     }
 
 
-    public int GetTierByRate(int rate,List<int> tiers)
+    public int GetTierByRate(int rate,List<int> tiers)//Todo
     {
         int tier = 1;
         for(int i = 1; i < tiers.Count; i++)
@@ -186,7 +215,6 @@ public class ItemManager
             }
             else
             {
-                Debug.Log($"tier : {tier}");
                 break;
             }
         }
@@ -290,33 +318,18 @@ public class ItemManager
     }
     public void LoadItemData()
     {
-        ItemPosList.Clear();
-
-        for(int i = 0; i < ItemSaveData.Count; i++)
+        
+        foreach(Vector2 pos in itemBaseList.Keys)
         {
             GameObject go = new GameObject();
+            go.transform.position = pos;
+            go.transform.position = new Vector3() {x=go.transform.position.x,y=go.transform.position.y,z=-1 };
             Item item = go.AddComponent<Item>();
             AddItemComponents(go);
-            item.myInfo = ItemSaveData[i].itemBase;
-            go.transform.position = ItemSaveData[i].pos;
-            go.layer = GameManager.instance.mapScript.objLayers[go.transform.position];
-            ItemPosList.Add(ItemSaveData[i].pos, item);
-            GameManager.instance.mapScript.mapObjects.Add(go);
+            item.myInfo = itemBaseList[pos];
+            go.name = item.myInfo.name;
+            ItemPosList[pos] = item;
+            SetItemImage(go, go.name);
         }
-        /*
-        foreach (Vector2 keys in itemSave.Keys)
-        {
-            GameObject go = new GameObject();
-            Item item = go.AddComponent<Item>();
-            AddItemComponents(go);
-            item.myInfo = itemSave[keys];
-            Vector2 vector = new Vector2();
-            vector.x = keys.x;
-            vector.y = keys.y;
-            go.transform.position = vector;
-            go.layer = GameManager.instance.mapScript.objLayers[keys];
-            ItemPosList.Add(vector, item);
-            GameManager.instance.mapScript.mapObjects.Add(go);
-        }*/
     }
 }

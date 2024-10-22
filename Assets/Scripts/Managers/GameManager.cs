@@ -67,7 +67,8 @@ public class GameManager : MonoBehaviour
     }
     public void MapDataReset()
     {
-        item.ItemSaveData.Clear();
+        item.wrappedData.equipSaved.Clear();
+        item.wrappedData.consumSaved.Clear();
         mapScript.mapSaveData.Clear();
         mapScript.OriginMap.Clear();
         mapScript.mapObjects.Clear();
@@ -112,9 +113,7 @@ public class GameManager : MonoBehaviour
                     if (mapScript.downStaires[value] == stairNumber)
                     {
                         genPos = value;
-                        Debug.Log($"SetPlayerNextFloor gen position : {genPos} stairType : {stairType} downStair number : {mapScript.downStaires[value]}");
                     }
-                    Debug.Log($"count {mapScript.downStaires.Count}  {stairType}");
                 }
                 break;
             case StairType.downStair:
@@ -123,9 +122,7 @@ public class GameManager : MonoBehaviour
                     if (mapScript.upStaires[value] == stairNumber)
                     {
                         genPos = value;
-                        Debug.Log($"SetPlayerNextFloor gen position : {genPos} stairType : {stairType} UpStair number : {mapScript.upStaires[value]}");
                     }
-                    Debug.Log($"count {mapScript.upStaires.Count}  {stairType}"); ;
                 }
                 break;
             default:
@@ -133,7 +130,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
         genPos.z--;
-        Debug.Log($"Player Gen Pos : {genPos}");
         playerObj.transform.position = genPos;
     }
     void SetInstance()
@@ -218,8 +214,6 @@ public class GameManager : MonoBehaviour
         //MapDataReset();
         if (visitedFloor.Contains(floor))
         {
-
-            Debug.Log($"floor : {floor}");
             save.LoadMap();
         }
         else

@@ -445,11 +445,15 @@ public class MapMake : MonoBehaviour
                 case TileType.upstair:
                     go = Instantiate(upStairPrefab, new Vector3(keys.x, keys.y, -1), Quaternion.identity);
                     go.layer = objLayers[keys];
+                    go.transform.GetComponent<Stair>().stairNumber = upStaires[keys];
+                    go.transform.GetComponent<Stair>().stairType = StairType.upStair;
                     mapObjects.Add(go);
                     break;
                 case TileType.downstair:
                     go = Instantiate(downStairPrefab, new Vector3(keys.x, keys.y, -1), Quaternion.identity);
                     go.layer = objLayers[keys];
+                    go.transform.GetComponent<Stair>().stairNumber = downStaires[keys];
+                    go.transform.GetComponent<Stair>().stairType = StairType.downStair;
                     mapObjects.Add(go);
                     break;
                 case TileType.monster:
