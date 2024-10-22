@@ -29,6 +29,10 @@ public class UIBase : MonoBehaviour
             Debug.Log(myObj.name + "isn't set");
             return;
         }
+        else if (inputManager.UIKeyCodeToObj.ContainsKey(setKey))
+        {
+            Debug.Log($"Already Added in {setKey}, GameObject {this.gameObject}");
+        }
         else
         {
             inputManager.UIKeyCodeToObj.Add(setKey, this.gameObject);

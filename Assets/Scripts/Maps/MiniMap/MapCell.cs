@@ -93,7 +93,6 @@ public class MapCell : MonoBehaviour
                 break;
             case TileType.monster:
                 mapCell.color = Color.red;
-                Debug.Log("monsterColor");
                 //UpperOBJColorChange();
                 break;
             case TileType.player:

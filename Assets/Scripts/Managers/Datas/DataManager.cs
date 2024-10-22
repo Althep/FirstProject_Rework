@@ -284,7 +284,6 @@ public class DataManager
                         ratetemp += rateList[i - 2];
                     }
                     rateList.Add(ratetemp);
-                    Debug.Log($" tier : {i}, Value : {rateValue} ,  converted : {ratetemp}");
 
                 }
                 break;
@@ -301,7 +300,6 @@ public class DataManager
                         ratetemp += rateList[i - 2];
                     }
                     rateList.Add(ratetemp);
-                    //Debug.Log($" tier : {i}, Value : {rateValue} ,  converted : {ratetemp}");
 
                 }
                 break;
@@ -318,7 +316,6 @@ public class DataManager
                         ratetemp += rateList[i - 2];
                     }
                     rateList.Add(ratetemp);
-                    //Debug.Log($" tier : {i}, Value : {rateValue} ,  converted : {ratetemp}");
 
                 }
                 break;

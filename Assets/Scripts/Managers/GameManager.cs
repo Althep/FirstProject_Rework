@@ -3,21 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
+[SerializeField]
+
 public class GameManager : MonoBehaviour
 {
-    public int floor;
+    public int floor=1;
     public int stairNumber=0;
-    
+    public string nextScene;
+
     public static GameManager instance;
     
     public UnityEvent OnMapGenerate;
-    public UnityEvent VisitedFloor;
+    public UnityEvent OnVisitedFloor;
+
     public GameObject playerObj;
     public GameObject playerPrefab;
     public PlayerState playerState;
 
     public List<int> visitedFloor = new List<int>();
-    
+
+    public GameObject canvas;
+
     public MapMake mapScript;
     public InputManager inputManager;
     public MonsterManager monsterManager;
@@ -29,6 +36,8 @@ public class GameManager : MonoBehaviour
     public LogUI log;
 
     public Sprite baseSprite;
+    public StairType stairType =StairType.downStair;
+
     private void Awake()
     {
         SetInstance();
@@ -39,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        floor = 1;
+        visitedFloor.Add(floor);
         //item.AddKeysScripts();
         item.InitiateItem();
         EquipItem equipTest = new EquipItem();
@@ -48,17 +57,41 @@ public class GameManager : MonoBehaviour
         dataManager.NormalDist(equipTest);
         dataManager.NormalDist(consumTest);
         //item.ItemFactiry();
-        save.MapSave();
-        DontDestroyOnLoad(GameObject.Find("Canvas"));
         
+        SceneManager.sceneLoaded += StairFunction;
     }
 
     void Update()
     {
         
     }
-
-
+    public void MapDataReset()
+    {
+        item.ItemSaveData.Clear();
+        mapScript.mapSaveData.Clear();
+        mapScript.OriginMap.Clear();
+        mapScript.mapObjects.Clear();
+        monsterManager.monsterList.Clear();
+    }
+    public void StairFunction(Scene scene,LoadSceneMode mode)
+    {
+        
+        switch (stairType)
+        {
+            case StairType.upStair:
+                floor-=1;
+                break;
+            case StairType.downStair:
+                floor+=1;
+                break;
+            default:
+                break;
+        }
+        FloorChange();
+        SetPlayerNextFloor();
+    }
+   
+ 
     public void InstantiatePlayerObj()
     {
         if (playerObj == null)
@@ -66,11 +99,41 @@ public class GameManager : MonoBehaviour
             playerObj = Instantiate(playerPrefab);
             playerState = playerObj.transform.GetComponent<PlayerState>();
         }
+       
     }
     public void SetPlayerNextFloor()
     {
-        Vector3 genPos = mapScript.upStaires[this.stairNumber];
+        Vector3 genPos = new Vector3();
+        switch (stairType)
+        {
+            case StairType.upStair:
+                foreach (Vector2 value in mapScript.downStaires.Keys)
+                {
+                    if (mapScript.downStaires[value] == stairNumber)
+                    {
+                        genPos = value;
+                        Debug.Log($"SetPlayerNextFloor gen position : {genPos} stairType : {stairType} downStair number : {mapScript.downStaires[value]}");
+                    }
+                    Debug.Log($"count {mapScript.downStaires.Count}  {stairType}");
+                }
+                break;
+            case StairType.downStair:
+                foreach (Vector2 value in mapScript.upStaires.Keys)
+                {
+                    if (mapScript.upStaires[value] == stairNumber)
+                    {
+                        genPos = value;
+                        Debug.Log($"SetPlayerNextFloor gen position : {genPos} stairType : {stairType} UpStair number : {mapScript.upStaires[value]}");
+                    }
+                    Debug.Log($"count {mapScript.upStaires.Count}  {stairType}"); ;
+                }
+                break;
+            default:
+                Debug.Log("StairType Error");
+                break;
+        }
         genPos.z--;
+        Debug.Log($"Player Gen Pos : {genPos}");
         playerObj.transform.position = genPos;
     }
     void SetInstance()
@@ -83,6 +146,15 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
+        }
+        if(canvas == null)
+        {
+            canvas = GameObject.Find("Canvas").gameObject;
+            DontDestroyOnLoad(canvas);
+        }
+        else
+        {
+            Destroy(GameObject.Find("Canvas").gameObject);
         }
         if(csvReader == null)
         {
@@ -111,14 +183,7 @@ public class GameManager : MonoBehaviour
             monsterManager = this.gameObject.transform.GetComponent<MonsterManager>();
         }
     }
-    void AddFloor()
-    {
-        floor++;
-        if (!visitedFloor.Contains(floor))
-        {
-            visitedFloor.Add(floor);
-        }
-    }
+    
     void SetInputManager()
     {
         inputManager = transform.GetComponent<InputManager>();
@@ -130,6 +195,39 @@ public class GameManager : MonoBehaviour
         dataManager.consumData = csvReader.Read("ConsumItemData");
 
     }
-    
+
+
+    public void FloorChange()
+    {
+        
+        switch (stairType)
+        {
+            case StairType.upStair:
+                SetMap();
+                break;
+            case StairType.downStair:
+                SetMap();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void SetMap()
+    {
+        //MapDataReset();
+        if (visitedFloor.Contains(floor))
+        {
+
+            Debug.Log($"floor : {floor}");
+            save.LoadMap();
+        }
+        else
+        {
+            visitedFloor.Add(floor);
+            OnMapGenerate.Invoke();
+        }
+
+    }
 
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Newtonsoft.Json;
+[SerializeField]
+[System.Serializable]
 public enum TileType
 {
     tile,
@@ -13,6 +15,39 @@ public enum TileType
     monster,
     player,
     item
+}
+[System.Serializable]
+public class MapWrapper
+{
+    public Vector2 pos;
+    public TileType tileType;
+}
+[System.Serializable]
+public class LayerWrapper
+{
+    public Vector2 pos;
+    public int layer;
+}
+[System.Serializable]
+public class StairWrapper
+{
+    public Vector2 pos;
+    public StairType stairType;
+    public int stairNumber;
+}
+[System.Serializable]
+public class StairDataWrapper
+{
+    public List<StairWrapper> saveData;
+}
+[System.Serializable]
+public class MapSaveDataWrapper
+{
+    public List<MapWrapper> saveData;
+}
+public class LayerDataWrapper
+{
+    public List<LayerWrapper> saveData;
 }
 [System.Serializable]
 public class MapMake : MonoBehaviour
@@ -38,13 +73,25 @@ public class MapMake : MonoBehaviour
     public GameObject downStairPrefab;
 
     public Dictionary<Vector2, TileType> TileMap = new Dictionary<Vector2, TileType>();
-    public Dictionary<Vector2, TileType> LivingEntityMap = new Dictionary<Vector2, TileType>();
+    public Dictionary<Vector2, TileType> OriginMap = new Dictionary<Vector2, TileType>();
+    public Dictionary<Vector2, GameObject> MapObj = new Dictionary<Vector2, GameObject>();
+    public Dictionary<Vector2, int> objLayers = new Dictionary<Vector2, int>();
+    public List<StairWrapper> stairList = new List<StairWrapper>();
+    public StairDataWrapper stairSaveData = new StairDataWrapper();
+
+    public List<MapWrapper> mapSaveData = new List<MapWrapper>();
+    public MapSaveDataWrapper mapData = new MapSaveDataWrapper();
+
+    public List<LayerWrapper> LayerSaveData = new List<LayerWrapper>();
+    public LayerDataWrapper layerData = new LayerDataWrapper();
 
     public List<Vector2> tilePosList = new List<Vector2>();
-    public List<Vector2> upStaires = new List<Vector2>();
-    public List<Vector2> downStaires = new List<Vector2>();
+
+    public Dictionary<Vector2,int> upStaires = new Dictionary<Vector2, int>();
+    public Dictionary<Vector2, int> downStaires = new Dictionary<Vector2, int>();
+
     public List<GameObject> mapObjects = new List<GameObject>();
-    public Dictionary<Vector2, int> objLayers = new Dictionary<Vector2, int>();
+    
     private void Awake()
     {
         monsterManager = this.transform.GetComponent<MonsterManager>();
@@ -68,42 +115,55 @@ public class MapMake : MonoBehaviour
         ObjectInstantiate();
         MiniMapMaping();
         FloorAdd();
+
     }
     void ObjectInstantiate()
     {
+        OriginMap.Clear();
+        mapObjects.Clear();
         foreach (Vector2 pos in TileMap.Keys)
         {
             GameObject tileObj = Instantiate(tilePrefab, pos, Quaternion.identity);
-
+            
             switch (TileMap[pos])
             {
                 case TileType.tile:
                     mapObjects.Add(tileObj);
+                    OriginMap[pos] =TileType.tile;
                     break;
                 case TileType.wall:
                     mapObjects.Add(Instantiate(wallPrefab, new Vector3(pos.x,pos.y,-1), Quaternion.identity));
+                    OriginMap[pos] = TileType.wall;
                     break;
                 case TileType.door:
                     mapObjects.Add(Instantiate(doorPrefab, pos, Quaternion.identity));
+                    OriginMap[pos] = TileType.door;
                     break;
                 case TileType.upstair:
                     GameObject go = Instantiate(upStairPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
                     mapObjects.Add(go);
+                    OriginMap[pos] = TileType.upstair;
+                    go.transform.GetComponent<Stair>().stairNumber = upStaires[pos];
                     go.transform.GetComponent<Stair>().stairType = StairType.upStair;
                     break;
                 case TileType.downstair:
                     go = Instantiate(downStairPrefab,new Vector3(pos.x,pos.y,-1),Quaternion.identity);
                     mapObjects.Add(go);
+                    go.transform.GetComponent<Stair>().stairNumber = downStaires[pos];
                     go.transform.GetComponent<Stair>().stairType = StairType.downStair;
+                    OriginMap[pos] = TileType.downstair;
                     break;
                 case TileType.monster:
+                    OriginMap[pos] = TileType.tile;
                     break;
                 case TileType.player:
+                    OriginMap[pos] = TileType.tile;
                     break;
                 default:
                     break;
             }
         }
+        /*
         for (int i = 0; i < upStaires.Count; i++)
         {
             GameObject go = Instantiate(upStairPrefab, upStaires[i], Quaternion.identity);
@@ -115,6 +175,7 @@ public class MapMake : MonoBehaviour
             TileMap[downStaires[i]] = TileType.downstair;
             mapObjects.Add(go);
         }
+        */
         /*
         for(int i = -1; i <=map.GetLength(0); i++)
         {
@@ -292,7 +353,8 @@ public class MapMake : MonoBehaviour
     */
     public void EntityMove(Vector2 originPos, Vector2 nextPos, TileType myType)
     {
-        TileMap[originPos] = TileType.tile;
+        
+        TileMap[originPos] = OriginMap[originPos];
         TileMap[nextPos] = myType;
     }
     public void TileTypeChange(Vector2 pos, TileType myType)
@@ -305,19 +367,27 @@ public class MapMake : MonoBehaviour
     }
     public void MakeStairPos()
     {
+        upStaires.Clear();
+        downStaires.Clear();
         for (int i = 0; i < 3; i++)
         {
             int temp = UnityEngine.Random.Range(0, tilePosList.Count);
-            upStaires.Add(tilePosList[temp]);
+            upStaires.Add(tilePosList[temp],i);
+            TileMap[tilePosList[temp]] = TileType.upstair;
             tilePosList.Remove(tilePosList[temp]);
+
             temp = UnityEngine.Random.Range(0, tilePosList.Count);
-            downStaires.Add(tilePosList[temp]);
+            downStaires.Add(tilePosList[temp],i);
+            TileMap[tilePosList[temp]] = TileType.downstair;
             tilePosList.Remove(tilePosList[temp]);
         }
-        for (int i = 0; i < 3; i++)
+        foreach (Vector2 value in upStaires.Keys)
         {
-            tilePosList.Add(upStaires[i]);
-            tilePosList.Add(downStaires[i]);
+            tilePosList.Add(value);
+        }
+        foreach(Vector2 value in downStaires.Keys)
+        {
+            tilePosList.Add(value);
         }
     }
     void SetPlayer()
@@ -341,11 +411,19 @@ public class MapMake : MonoBehaviour
             GameManager.instance.visitedFloor.Add(GameManager.instance.floor);
         }
     }
-
+    public void ObjectLayerLoad()
+    {
+        objLayers.Clear();
+        for(int i = 0; i < LayerSaveData.Count; i++)
+        {
+            objLayers[LayerSaveData[i].pos] = LayerSaveData[i].layer;
+        }
+    }
     public void LoadMapAtData()
     {
         mapObjects.Clear();
-        foreach(Vector2 keys in TileMap.Keys)
+        ObjectLayerLoad();
+        foreach (Vector2 keys in TileMap.Keys)
         {
             GameObject tile = Instantiate(tilePrefab,keys,Quaternion.identity);
             tile.layer = objLayers[keys];
@@ -355,22 +433,22 @@ public class MapMake : MonoBehaviour
                     mapObjects.Add(tile);
                     break;
                 case TileType.wall:
-                    GameObject go = Instantiate(wallPrefab, keys, Quaternion.identity);
+                    GameObject go = Instantiate(wallPrefab, new Vector3(keys.x,keys.y,-1), Quaternion.identity);
                     go.layer = objLayers[keys];
                     mapObjects.Add(go);
                     break;
                 case TileType.door:
-                    go = Instantiate(doorPrefab, keys, Quaternion.identity);
+                    go = Instantiate(doorPrefab, new Vector3(keys.x, keys.y, -1), Quaternion.identity);
                     go.layer = objLayers[keys];
                     mapObjects.Add(go);
                     break;
                 case TileType.upstair:
-                    go = Instantiate(upStairPrefab, keys, Quaternion.identity);
+                    go = Instantiate(upStairPrefab, new Vector3(keys.x, keys.y, -1), Quaternion.identity);
                     go.layer = objLayers[keys];
                     mapObjects.Add(go);
                     break;
                 case TileType.downstair:
-                    go = Instantiate(downStairPrefab, keys, Quaternion.identity);
+                    go = Instantiate(downStairPrefab, new Vector3(keys.x, keys.y, -1), Quaternion.identity);
                     go.layer = objLayers[keys];
                     mapObjects.Add(go);
                     break;

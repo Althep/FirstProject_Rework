@@ -114,9 +114,8 @@ public class InputManager : MonoBehaviour
         int nextx = (int)(playerObj.transform.position.x + moveDirection.x);
         Vector2 next = new Vector2(nextx, nexty);
         
-        if (IsInSize())
+        if (IsInSize()&&mapScript.TileMap!=null)
         {
-            Debug.Log($"Next Pos Data : {mapScript.TileMap[next]}");
             switch (mapScript.TileMap[next])
             {
                 case TileType.tile:
@@ -130,9 +129,10 @@ public class InputManager : MonoBehaviour
                     InputMoveKey();
                     break;
                 case TileType.upstair:
-                    //Debug.Log("stair");
+                    InputMoveKey();
                     break;
                 case TileType.downstair:
+                    InputMoveKey();
                     break;
                 case TileType.monster:
                     MakeCollider(next);

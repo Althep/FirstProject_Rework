@@ -5,6 +5,17 @@ using System;
 using System.Reflection;
 using System.Linq;
 using Newtonsoft.Json;
+[System.Serializable]
+public class ItemWrapper
+{
+    public Vector2 pos;
+    public ItemBase itemBase;
+}
+
+public class ItemDataWrapper
+{
+    public List<ItemWrapper> saveData = new List<ItemWrapper>();
+}
 
 [System.Serializable]
 public class ItemManager
@@ -14,7 +25,9 @@ public class ItemManager
     public Dictionary<string, EquipItem> EquipScripts = new Dictionary<string, EquipItem>();
     public Dictionary<string, ConsumItem> ConsumScripts = new Dictionary<string, ConsumItem>();
     public Dictionary<Vector2, Item> ItemPosList = new Dictionary<Vector2, Item>();
-    public Dictionary<Vector2, ItemBase> itemSave = new Dictionary<Vector2, ItemBase>();
+    public List<ItemWrapper> ItemSaveData = new List<ItemWrapper>();
+    public ItemDataWrapper wrappedData = new ItemDataWrapper();
+    //public Dictionary<Vector2, ItemBase> itemSave = new Dictionary<Vector2, ItemBase>();
     //public List<Vector2> ItemPosList = new List<Vector2>();
     public int itemSpawnCount;
     T GetRandomType<T>() where T : Enum
@@ -52,7 +65,6 @@ public class ItemManager
         if (randomPosIndex > 0)
         {
             randomPos = GameManager.instance.mapScript.tilePosList[randomPosIndex];
-            Debug.Log($"RandomPos Index : {randomPosIndex}, RandomPos {randomPos.x}, {randomPos.y}");
             
         }
         else
@@ -82,12 +94,9 @@ public class ItemManager
                 rate = UnityEngine.Random.Range(0,maxRate);
                 tier = GetTierByRate(rate,rates);
                 index = UnityEngine.Random.Range(0,GameManager.instance.dataManager.consymIndexBytier[tier].Count-1);
-                Debug.Log($"Before index : {index}");
                 index = GameManager.instance.dataManager.consymIndexBytier[tier][index];
-                Debug.Log($"After index {index}");
                 Debug.Log(dataManager.consumData[index]);
                 itemType = (dataManager.consumData[index]["type"]).ToString();
-                Debug.Log($"itemType : {itemType}");
                 var consumscript = ConsumScripts[itemType];
                 ConsumType consumType;
 
@@ -99,9 +108,8 @@ public class ItemManager
                     dataManager.SetItempData(index,consum.myInfo);
                     go.name = consum.myInfo.name;
                     AddItemComponents(go);
-                    Debug.Log($"Consum ItemMake Succese item name : {go.name}");
                     go.transform.position = new Vector3(randomPos.x,randomPos.y,-1);
-                    ItemPosList.Add(randomPos, consum);
+                    ItemPosList[randomPos] = consum;
                     SetItemImage(go, go.name);
                 }
                 else
@@ -116,11 +124,8 @@ public class ItemManager
                 rate = UnityEngine.Random.Range(0, maxRate);
                 tier = GetTierByRate(rate, rates);
                 index = UnityEngine.Random.Range(0, GameManager.instance.dataManager.equipIndexBytier[tier].Count-1);
-                Debug.Log($"Before index : {index}");
                 index = GameManager.instance.dataManager.equipIndexBytier[tier][index];
-                Debug.Log($"After index {index}");
                 itemType = (dataManager.equipMentsData[index]["type"]).ToString();
-                Debug.Log($"itemType : {itemType}");
                 var equipscript = EquipScripts[itemType];
                 EquipType equipType;
 
@@ -132,9 +137,15 @@ public class ItemManager
                     dataManager.SetItempData(index, equip.myInfo);
                     go.name = equip.myInfo.name;
                     AddItemComponents(go);
-                    Debug.Log($"equip ItemMake Succese{go.name}");
                     go.transform.position = new Vector3(randomPos.x, randomPos.y, -1);
-                    ItemPosList.Add(randomPos, equip);
+                    if (!ItemPosList.ContainsKey(randomPos))
+                    {
+                        ItemPosList.Add(randomPos, equip);
+                    }
+                    else
+                    {
+                        Debug.Log("itemPosition Same");
+                    }
                     SetItemImage(go, go.name);
                 }
                 else
@@ -260,7 +271,6 @@ public class ItemManager
 
     public void InitiateItem()
     {
-        Debug.Log("InitiateItem");
         Weapon weapon = new Weapon();
         Shield shiled = new Shield();
         Helm helm = new Helm();
@@ -282,16 +292,31 @@ public class ItemManager
     {
         ItemPosList.Clear();
 
+        for(int i = 0; i < ItemSaveData.Count; i++)
+        {
+            GameObject go = new GameObject();
+            Item item = go.AddComponent<Item>();
+            AddItemComponents(go);
+            item.myInfo = ItemSaveData[i].itemBase;
+            go.transform.position = ItemSaveData[i].pos;
+            go.layer = GameManager.instance.mapScript.objLayers[go.transform.position];
+            ItemPosList.Add(ItemSaveData[i].pos, item);
+            GameManager.instance.mapScript.mapObjects.Add(go);
+        }
+        /*
         foreach (Vector2 keys in itemSave.Keys)
         {
             GameObject go = new GameObject();
             Item item = go.AddComponent<Item>();
             AddItemComponents(go);
             item.myInfo = itemSave[keys];
-            go.transform.position = keys;
+            Vector2 vector = new Vector2();
+            vector.x = keys.x;
+            vector.y = keys.y;
+            go.transform.position = vector;
             go.layer = GameManager.instance.mapScript.objLayers[keys];
-            ItemPosList.Add(keys,item);
+            ItemPosList.Add(vector, item);
             GameManager.instance.mapScript.mapObjects.Add(go);
-        }
+        }*/
     }
 }

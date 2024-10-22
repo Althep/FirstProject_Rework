@@ -54,7 +54,6 @@ public class Item : MonoBehaviour
         if (collision.transform.tag == "Player" && collision is BoxCollider2D) // 플레이어의 시야를 구현하는 CircleCollder 때문에 시야의 아이템이 모두 습득되는 문제 발생 콜라이더 판정 필요해 넣음
         {
             canGet = true;
-            Debug.Log("playerIn");
         }
     }
 
@@ -62,7 +61,6 @@ public class Item : MonoBehaviour
     {
         if (collision.transform.tag == "Player")
         {
-            Debug.Log("playerOut");
             canGet = false;
         }
     }

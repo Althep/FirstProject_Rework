@@ -1,7 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
+public class MonsterWrapper
+{
+    public Vector2 pos;
+    public EntityState myState;
+}
+[System.Serializable]
+public class MonsterDataWrapper
+{
+    public List<MonsterWrapper> saveData = new List<MonsterWrapper>();
+}
 public class MonsterManager : MonoBehaviour
 {
     int monsterSpawnPoint;
@@ -9,7 +19,9 @@ public class MonsterManager : MonoBehaviour
     MapMake mapScript;
     public List<GameObject> monsterList = new List<GameObject>();
     List<Vector2> tileList;
-    public Dictionary<Vector2, EntityState> monsterSaveData = new Dictionary<Vector2, EntityState>();
+    //public Dictionary<Vector2, EntityState> monsterSaveData = new Dictionary<Vector2, EntityState>();
+    public List<MonsterWrapper> monsterSaveData = new List<MonsterWrapper>();
+    public MonsterDataWrapper wrappedData = new MonsterDataWrapper();
     // Start is called before the first frame update
     private void OnEnable()
     {
@@ -39,6 +51,7 @@ public class MonsterManager : MonoBehaviour
     }
     public void MonsterInitiate()
     {
+        monsterList.Clear();
         for (int i = 0; i < monsterSpawnPoint; i++)
         {
             int randomIndex;
@@ -47,7 +60,6 @@ public class MonsterManager : MonoBehaviour
             if (mapScript.TileMap[randomPos] == TileType.tile)
             {
                 GameObject go = Instantiate(monsterPrefab, mapScript.tilePosList[randomIndex], Quaternion.identity);
-                Debug.Log(GameManager.instance.mapScript.TileMap[randomPos]);
                 mapScript.TileTypeChange(randomPos, TileType.monster);
                 //mapScript.TileMap[mapScript.tilePosList[randomIndex]] = TileType.monster;
                 //mapScript.miniMap.mapData[randomPos] = TileType.monster;
@@ -77,6 +89,15 @@ public class MonsterManager : MonoBehaviour
     public void LoadMonsterData()
     {
         monsterList.Clear();
+
+        for(int i = 0; i < monsterSaveData.Count; i++)
+        {
+            GameObject go = Instantiate(monsterPrefab, monsterSaveData[i].pos, Quaternion.identity);
+            go.transform.GetComponent<MonsterState>().myState = monsterSaveData[i].myState;
+            monsterList.Add(go);
+            go.name = go.transform.GetComponent<MonsterState>().name;
+        }
+        /*
         foreach (Vector2 keys in monsterSaveData.Keys)
         {
             GameObject go = Instantiate(monsterPrefab, keys, Quaternion.identity);
@@ -84,6 +105,7 @@ public class MonsterManager : MonoBehaviour
             monsterList.Add(go);
             go.name = go.transform.GetComponent<MonsterState>().name;
         }
+        */
     }
     
 

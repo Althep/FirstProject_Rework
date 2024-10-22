@@ -11,13 +11,14 @@ public enum StairType
 public class Stair : MonoBehaviour
 {
     public int stairNumber;
-    bool CanUse;
+    [SerializeField]bool CanUse;
     public StairType stairType;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L)&&CanUse)
+        if (Input.GetKeyUp(KeyCode.L)&&CanUse)
         {
+            CanUse = false;
             SceneChange();
         }
     }
@@ -26,30 +27,22 @@ public class Stair : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().name == "Scene2")
         {
-            SceneManager.LoadScene("Scene1");
-            FloorChange();
+            GameManager.instance.stairNumber = stairNumber;
+            GameManager.instance.stairType = stairType;
+            GameManager.instance.nextScene = "Scene1";
+
         }
         else if(SceneManager.GetActiveScene().name == "Scene1")
         {
-            SceneManager.LoadScene("Scene2");
-            FloorChange();
+            GameManager.instance.stairNumber = stairNumber;
+            GameManager.instance.stairType = stairType;
+            GameManager.instance.nextScene = "Scene2";
         }
+        GameManager.instance.save.SaveMap();
+        SceneManager.LoadScene(GameManager.instance.nextScene);
     }
 
-    void FloorChange()
-    {
-        switch (stairType)
-        {
-            case StairType.upStair:
-                GameManager.instance.floor++;
-                break;
-            case StairType.downStair:
-                GameManager.instance.floor--;
-                break;
-            default:
-                break;
-        }
-    }
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Player"&& collision is BoxCollider2D)
