@@ -34,6 +34,30 @@ public class EquipItem : ItemBase
             GameManager.instance.item.EquipScripts.Add(name, this);
         }
     }
+    public override void Use(LivingEntity entity)
+    {
+        Debug.Log("ItemUse");
+        if (entity.equips.ContainsKey(_equipType))
+        {
+            UnEquip(entity);
+            AddValue(entity);
+        }
+        else
+        {
+            AddValue(entity);
+        }
+    }
+    public virtual void AddValue(LivingEntity entity)
+    {
+
+    }
+    public virtual void UnEquip(LivingEntity entity)
+    {
+        if (entity.equips.ContainsKey(_equipType))
+        {
+            entity.equips.Remove(_equipType);
+        }
+    }
 
     public virtual EquipItem Clone(EquipType type)
     {
@@ -70,6 +94,22 @@ public class Weapon : EquipItem
 {
     public int damage;
     public int attackSpeed;
+
+
+    public override void AddValue(LivingEntity entity)
+    {
+        entity.myState.damage += damage;
+        entity.equips.Add(_equipType, this);
+    }
+
+    public override void UnEquip(LivingEntity entity)
+    {
+        if (entity.equips.ContainsKey(_equipType))
+        {
+            entity.equips.Remove(_equipType);
+            entity.myState.damage -= damage;
+        }
+    }
     /*
     public Weapon()
     {
@@ -84,32 +124,46 @@ public class Defensive : EquipItem
 {
     public int defense;
 
+    public override void AddValue(LivingEntity entity)
+    {
+        entity.myState.def += defense;
+        entity.equips.Add(_equipType, this);
+    }
+    public override void UnEquip(LivingEntity entity)
+    {
+        if (entity.equips.ContainsKey(_equipType))
+        {
+            entity.equips.Remove(_equipType);
+            entity.myState.def -= defense;
+        }
+    }
 }
 
 public class Shield : Defensive
 {
 
     public int blockRate;
-    /*
-    public Shield()
-    { 
-        _equipType = EquipType.Shield;
-        Register();
-    }
-    */
 
+    public override void AddValue(LivingEntity entity)
+    {
+        entity.myState.def += defense;
+        entity.myState.blockRate += blockRate;
+        entity.equips.Add(_equipType, this);
+    }
+    public override void UnEquip(LivingEntity entity)
+    {
+        if (entity.equips.ContainsKey(_equipType))
+        {
+            entity.equips.Remove(_equipType);
+            entity.myState.def -= defense;
+            entity.myState.blockRate -= blockRate;
+        }
+    }
 }
 
 public class Helm : Defensive
 {
-    /*
-    public Helm()
-    {
-        _equipType = EquipType.Helm;
-        Register();
-
-    }
-    */
+    
 }
 public class Armor : Defensive
 {

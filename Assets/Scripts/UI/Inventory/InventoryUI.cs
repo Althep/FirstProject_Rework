@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using UnityEngine.Events;
+using System;
 public class InventoryUI : UIBase
 {
     // Start is called before the first frame update
@@ -10,7 +12,7 @@ public class InventoryUI : UIBase
     ItemInventory playerInven;
     public GameObject SlotPrefab;
     List<GameObject> slotList = new List<GameObject>();
-    List<ItemSlot> slotScripts = new List<ItemSlot>();
+    public List<ItemSlot> slotScripts = new List<ItemSlot>();
     protected override void Start()
     {
         setKey = KeyCode.I;
@@ -29,8 +31,11 @@ public class InventoryUI : UIBase
     }
     private void OnEnable()
     {
-
-        OpenInventory();
+        OpenInventory(0);
+    }
+    private void OnDisable()
+    {
+        CloseInventory();
     }
     void InstantSlot()
     {
@@ -44,7 +49,9 @@ public class InventoryUI : UIBase
             GameObject go = Instantiate(SlotPrefab);
             slotList.Add(go);
             go.transform.SetParent(this.transform);
-            slotScripts.Add(go.transform.GetComponent<ItemSlot>());
+            ItemSlot slotScrip = go.transform.GetComponent<ItemSlot>();
+            slotScrip.slotNumber = i;
+            slotScripts.Add(slotScrip);
         }
 
 
@@ -57,20 +64,43 @@ public class InventoryUI : UIBase
     }
 
 
-    public void OpenInventory()
+    public void OpenInventory(int start)
+    {
+        for (int i = start; i < playerInven.Inventory.Count; i++)
+        {
+            slotScripts[i].slotItem = playerInven.Inventory[i];
+            if (playerInven.Inventory[i] == null)
+            {
+                slotScripts[i].slotItem = null;
+                slotScripts[i].itemImage.sprite = null;
+                slotScripts[i].tmp.text = null;
+            }
+            //slotScripts[i].inventoryButton.onClick.RemoveAllListeners();
+            slotScripts[i].SetSlot(i);
+            slotScripts[i].invenUI = this;
+        }
+    }
+    public void CloseInventory()
     {
         for (int i = 0; i < playerInven.Inventory.Count; i++)
         {
-
-            slotScripts[i].SetItemName(i);
-
+            Button button = slotScripts[i].gameObject.transform.GetComponent<Button>();
+            Image image = slotScripts[i].gameObject.transform.GetComponent<Image>();
+            slotScripts[i].itemImage = null;
+            if (button.onClick != null)
+            {
+                button.onClick.RemoveAllListeners();
+            }
+            image.sprite = null;
         }
     }
-
-    void MakeInventorySlot()
+    public void RemoveLastIndex()
     {
-
-
+        int index = playerInven.Inventory.Count;
+        slotScripts[index].itemImage.sprite = null;
+        slotScripts[index].slotItem = null;
+        slotScripts[index].tmp.text = null;
+        slotScripts[index].slotImage.color = Color.white;
     }
 
 }

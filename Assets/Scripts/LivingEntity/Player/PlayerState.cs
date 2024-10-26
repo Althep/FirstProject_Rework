@@ -9,7 +9,6 @@ public class PlayerState : LivingEntity
     public GameObject player;
     public InputManager inputManager;
 
-    public ItemInventory myInventory = new ItemInventory();
     public MagicInventory myMagic = new MagicInventory();
 
     
@@ -18,13 +17,17 @@ public class PlayerState : LivingEntity
         inputManager = GameManager.instance.transform.GetComponent<InputManager>();
         PlayerInstantiate();
         name = "Player";
+        SetCanvas();
     }
     private void Start()
     {
+        myState.damage = 3;
         myState.base_AttackSpeed = 10;
         myState.base_MoveSpeed = 10;
         myState.moveSpeed = myState.base_MoveSpeed;
         myState.attackSpeed = myState.base_AttackSpeed;
+        myState.maxHp = 20;
+        myState.currntHp = 20;
     }
     private void FixedUpdate()
     {

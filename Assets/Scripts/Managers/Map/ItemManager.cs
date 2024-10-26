@@ -141,7 +141,7 @@ public class ItemManager
                     AddItemComponents(go);
                     go.transform.position = new Vector3(randomPos.x,randomPos.y,-1);
                     ItemPosList[randomPos] = consum;
-                    SetItemImage(go, go.name);
+                    SetItemImage(go);
                 }
                 else
                 {
@@ -177,7 +177,7 @@ public class ItemManager
                     {
                         Debug.Log("itemPosition Same");
                     }
-                    SetItemImage(go, go.name);
+                    SetItemImage(go);
                 }
                 else
                 {
@@ -225,11 +225,23 @@ public class ItemManager
         return tier;
     }
 
-    public void SetItemImage(GameObject go,string name)
+    public void SetItemImage(GameObject go)
     {
-        SpriteRenderer sprite = go.transform.GetComponent<SpriteRenderer>();
-        sprite = go.transform.GetComponent<SpriteRenderer>();
-        sprite.sprite = GameManager.instance.baseSprite;
+        ItemBase itemInfo = go.transform.GetComponent<Item>().myInfo;
+        Sprite sprite = null;
+        if (dataManager.GetItemImage(itemInfo.name) != null)
+        {
+            sprite = dataManager.GetItemImage(itemInfo.name);
+        }
+        SpriteRenderer targetSp = go.transform.GetComponent<SpriteRenderer>();
+        if(sprite != null)
+        {
+            targetSp.sprite = sprite;
+        }
+        else
+        {
+            targetSp.sprite = GameManager.instance.baseSprite;
+        }
     }
     /*
     public void ItemFactory()
@@ -307,7 +319,6 @@ public class ItemManager
         Glove glove = new Glove();
         Shoose shoose = new Shoose();
         Ring ring = new Ring();
-        
         Potion potion = new Potion();
         Book Book = new Book();
         Scroll scroll = new Scroll();
@@ -329,7 +340,7 @@ public class ItemManager
             item.myInfo = itemBaseList[pos];
             go.name = item.myInfo.name;
             ItemPosList[pos] = item;
-            SetItemImage(go, go.name);
+            SetItemImage(go);
         }
     }
 }

@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public ItemManager item = new ItemManager();
     public SaveManager save = new SaveManager();
     public LogUI log;
+    public TurnManager turnManager;
 
     public Sprite baseSprite;
     public StairType stairType =StairType.downStair;
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
         InstantiatePlayerObj();
         SetInputManager();
         DataRead();
+        dataManager.LoadAssetBundle();
     }
 
     void Start()
@@ -54,8 +56,7 @@ public class GameManager : MonoBehaviour
         EquipItem equipTest = new EquipItem();
         ConsumItem consumTest = new ConsumItem();
         dataManager.ReadDataByTiers();
-        dataManager.NormalDist(equipTest);
-        dataManager.NormalDist(consumTest);
+        dataManager.NormalDist();
         //item.ItemFactiry();
         
         SceneManager.sceneLoaded += StairFunction;
@@ -88,6 +89,7 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
+        //monsterManager.monsterPos.Clear();
         FloorChange();
         SetPlayerNextFloor();
     }
@@ -177,6 +179,12 @@ public class GameManager : MonoBehaviour
         if(monsterManager == null)
         {
             monsterManager = this.gameObject.transform.GetComponent<MonsterManager>();
+        }
+        dataManager.consumFunction.SetFunctions();
+
+        if(turnManager == null) 
+        {
+            turnManager = this.gameObject.transform.GetComponent<TurnManager>();
         }
     }
     

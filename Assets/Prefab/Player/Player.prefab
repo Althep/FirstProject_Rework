@@ -668,6 +668,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9eb983b71731914d97fb3e6d104dd91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myState:
+    name: 
+    def: 0
+    maxHp: 0
+    currntHp: 0
+    isDead: 0
+    base_AttackSpeed: 0
+    base_MoveSpeed: 0
+    attackSpeed: 0
+    moveSpeed: 0
+    turn: 0
+    oldTurn: 0
+    damage: 0
+    attackRange: 0
+    index: 0
+    exp: 0
+    awakingRate: 0
+    leftTurnPoint: 0
+    State: 
+    distance: 
   moveState: 0
   lastDamaged: 0
   player: {fileID: 0}

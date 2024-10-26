@@ -7,17 +7,17 @@ using Newtonsoft.Json;
 public class ItemInventory//<T> where T : ItemBase
 {
     [JsonProperty]
-    public List<Item> Inventory = new List<Item>();
+    public List<ItemBase> Inventory = new List<ItemBase>();
     public List<ItemBase> invenSave = new List<ItemBase>();
 
-    public void GetEquipItem(Item item)
+    public void GetEquipItem(ItemBase item)
     {
         Inventory.Add(item);
         Debug.Log(item.name);
         Debug.Log($"ItemCount = {Inventory.Count}");
     }
 
-    public void GetConsumItem(Item item)
+    public void GetConsumItem(ItemBase item)
     {
         if (IsSame(item))
         {
@@ -27,23 +27,23 @@ public class ItemInventory//<T> where T : ItemBase
         else
         {
             Inventory.Add(item);
-            if(item.myInfo is ConsumItem consum)
+            if(item is ConsumItem consum)
             {
                 consum.itemCount++;
             }
         }
     }
     
-    bool IsSame(Item item)//소모품 이름 확인
+    bool IsSame(ItemBase item)//소모품 이름 확인
     {
-        return Inventory.Any(i => i.myInfo.name == item.myInfo.name);
+        return Inventory.Any(i => i.name == item.name);
     }
 
-    void AddSameItem(Item item)//소모품 갯수++
+    void AddSameItem(ItemBase item)//소모품 갯수++
     {
         foreach (var value in Inventory)
         {
-            if(value.myInfo is ConsumItem consumable && value.myInfo.name == item.myInfo.name)
+            if(value is ConsumItem consumable && value.name == item.name)
             {
                 consumable.itemCount++;
                 break;

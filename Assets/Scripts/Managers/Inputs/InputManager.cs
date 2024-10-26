@@ -217,12 +217,13 @@ public class InputManager : MonoBehaviour
         }
         StartCoroutine("WaitInputTime");
 
-        playerState.moveState = MoveState.idle;
+        
 
     }
     IEnumerator WaitInputTime()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
+        playerState.moveState = MoveState.idle;
     }
 
     float SetMoveDistance(Vector2 moveDirection)

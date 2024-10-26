@@ -35,9 +35,13 @@ public class MonsterActSate : MonoBehaviour
     {
         
         Vector2 now = this.transform.position;
+        
         Vector2 MoveTo = myState.nextPos - now;
+        
         if (mapScript.TileMap[myState.nextPos] == TileType.tile || mapScript.TileMap[myState.nextPos] == TileType.monster)
         {
+            //GameManager.instance.monsterManager.monsterPos.Remove(now);
+            //GameManager.instance.monsterManager.monsterPos.Add(myState.nextPos, this.gameObject);
             float maxDistance = SetMoveDistance(MoveTo);
             mapScript.EntityMove(now, myState.nextPos, TileType.monster);
             this.transform.position = myState.nextPos;
@@ -82,7 +86,7 @@ public class MonsterActSate : MonoBehaviour
                 Move();
                 break;
             case MoveState.attack:
-                //Attack();
+                Attack();
                 break;
             default:
                 break;

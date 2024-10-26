@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 public class DataManager
 {
 
@@ -11,7 +12,7 @@ public class DataManager
     public Dictionary<string, List<object>> consumItemData { get { return _ConsumItemData; } }
 
 
-    public List<Dictionary<string,object>> equipMentsData;
+    public List<Dictionary<string, object>> equipMentsData;
     public List<Dictionary<string, object>> consumData;
     public List<Dictionary<string, object>> monsterData;
 
@@ -24,9 +25,17 @@ public class DataManager
     public Dictionary<int, List<int>> consymIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1부터 넣었음!
     public Dictionary<int, List<int>> monsterIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1부터 넣었음!
     public Dictionary<string, List<int>> tierRates = new Dictionary<string, List<int>>();
-   
 
-    
+    public Dictionary<string, Texture2D> monsterTexture = new Dictionary<string, Texture2D>();
+    public Dictionary<string, int> monsterTextureCount = new Dictionary<string, int>();
+
+    public ConsumFunction consumFunction = new ConsumFunction();
+    public Dictionary<string, Action<LivingEntity>> consumFunctions = new Dictionary<string, Action<LivingEntity>>();
+    AssetBundle monsterBundle;
+    AssetBundle itemBundle;
+    string bundlePath;
+
+
 
     public void ReadDataByTiers() // CSV읽고 티어별 인덱스 정렬
     {
@@ -50,7 +59,7 @@ public class DataManager
             }
         }
         path = "ConsumItemData";
-        
+
         consumData = GameManager.instance.csvReader.Read(path);
 
         for (int i = 0; i < consumData.Count; i++)
@@ -68,12 +77,12 @@ public class DataManager
                 consymIndexBytier[tier].Add(index);
             }
         }
-        
+
         path = "MonsterData";
 
         monsterData = GameManager.instance.csvReader.Read(path);
 
-        for(int i = 0; i < monsterData.Count; i++)
+        for (int i = 0; i < monsterData.Count; i++)
         {
             int tier = Convert.ToInt32(monsterData[i]["tier"]);
             int index = Convert.ToInt32(monsterData[i]["index"]);
@@ -88,7 +97,7 @@ public class DataManager
                 monsterIndexBytier[tier].Add(index);
             }
         }
-        
+
 
     }
 
@@ -134,7 +143,7 @@ public class DataManager
             return;
         }
 
-        monsterState.name = monsterData[index]["name"].ToString();
+        monsterState.myState.name = monsterData[index]["name"].ToString();
         monsterState.myState.index = Convert.ToInt32(monsterData[index]["index"]);
         monsterState.myState.exp = Convert.ToInt32(monsterData[index]["exp"]);
         monsterState.myState.maxHp = Convert.ToInt32(monsterData[index]["maxhp"]);
@@ -167,6 +176,14 @@ public class DataManager
         itemData.name = equipMentsData[index]["name"].ToString();
         itemData.index = Convert.ToInt32(equipMentsData[index]["index"]);
         itemData.weight = Convert.ToInt32(equipMentsData[index]["weight"]);
+        if(Enum.TryParse(equipMentsData[index]["type"].ToString(), out itemData._equipType))
+        {
+            Debug.Log("Convert Success");
+        }
+        else
+        {
+            Debug.Log("----------EquipTy-----------------");
+        }
         switch (itemData)
         {
             case Weapon weapon:
@@ -206,6 +223,7 @@ public class DataManager
         itemData.index = index;
         itemData.name = (consumData[index]["name"]).ToString();
         itemData.weight = Convert.ToInt32(consumData[index]["weight"]);
+        itemData.maintain = Convert.ToInt32(consumData[index]["maintain"]);
         switch (itemData)
         {
             case Potion potion:
@@ -230,38 +248,27 @@ public class DataManager
     }
 
 
-    public void NormalDist<T>(T script)
+    public void NormalDist()
     {
         float mu; // 평균
         float sigma; // 표준편차
         int floor = GameManager.instance.floor;
-        switch (script.GetType())
-        {
 
-            case Type t when t == typeof(EquipItem):
-                mu = Mathf.Log(floor, 3f);
-                sigma = Mathf.Log(floor + 1, 5) + 1f;
-                tierRates.Add("Equipment", MakeRate(mu, sigma, t));
-                break;
-            case Type t when t == typeof(ConsumItem):
-                mu = Mathf.Log(floor, 4f);
-                sigma = Mathf.Log(floor + 1, 4) + 1.07f;
-                tierRates.Add("Consumable", MakeRate(mu, sigma, t));
-                break;
-            case Type t when t == typeof(MonsterState):
-                mu = Mathf.Log(floor, 2f);//평균
-                sigma = Mathf.Log(floor + 1, 10);//표준편차
-                tierRates.Add("MonsterState", MakeRate(mu, sigma, t));
-                break;
-            default:
-                Debug.Log("ScriptType Error");
-                break;
-        }
+        mu = Mathf.Log(floor, 3f);
+        sigma = Mathf.Log(floor + 1, 5) + 1f;
+        tierRates.Add("Equipment", MakeRate(mu, sigma, "Equipment"));
 
+        mu = Mathf.Log(floor, 4f);
+        sigma = Mathf.Log(floor + 1, 4) + 1.07f;
+        tierRates.Add("Consumable", MakeRate(mu, sigma, "Consumable"));
+
+        mu = Mathf.Log(floor, 2f);//평균
+        sigma = Mathf.Log(floor + 1, 10);//표준편차
+        tierRates.Add("MonsterState", MakeRate(mu, sigma, "MonsterState"));
 
     }
 
-    public List<int> MakeRate(float mu, float sigma, Type type)
+    public List<int> MakeRate(float mu, float sigma, string type)
     {
         float temp;
         float temp1;
@@ -271,7 +278,7 @@ public class DataManager
 
         switch (type)
         {
-            case Type t when t == typeof(EquipItem):
+            case "Equipment":
                 for (int i = 1; i <= equipIndexBytier.Count; i++)
                 {
                     temp = 1 / (sigma * Mathf.Sqrt(2 * Mathf.PI));
@@ -287,7 +294,7 @@ public class DataManager
 
                 }
                 break;
-            case Type t when t == typeof(ConsumItem):
+            case "Consumable":
                 for (int i = 1; i <= consymIndexBytier.Count; i++)
                 {
                     temp = 1 / (sigma * Mathf.Sqrt(2 * Mathf.PI));
@@ -303,7 +310,7 @@ public class DataManager
 
                 }
                 break;
-            case Type t when t == typeof(MonsterState):
+            case "MonsterState":
                 for (int i = 1; i <= monsterIndexBytier.Count; i++)
                 {
                     temp = 1 / (sigma * Mathf.Sqrt(2 * Mathf.PI));
@@ -325,12 +332,45 @@ public class DataManager
         }
 
 
-        
+
         return rateList;
     }
 
 
-
+    public void LoadAssetBundle()
+    {
+        bundlePath = "./AssetBundle/monster";
+        monsterBundle = AssetBundle.LoadFromFile(bundlePath);
+        bundlePath = "./AssetBundle/item";
+        itemBundle = AssetBundle.LoadFromFile(bundlePath);
+        /*bundlePath = "./Bundle/item";
+        itemBundle = AssetBundle.LoadFromFile(bundlePath);*/
+        if (monsterBundle == null)
+        {
+            Debug.LogError($"Failed to load AssetBundle {monsterBundle}");
+        }
+        //monsterBundle.Unload(false);
+    }
+    public Texture2D GetMonsterImage(string imageName)
+    {
+        Texture2D texture = monsterBundle.LoadAsset<Texture2D>(imageName);
+        //monsterBundle.Unload(false);
+        return texture;
+    }
+    public Sprite GetItemImage(string imageName)
+    {
+        Texture2D texture = itemBundle.LoadAsset<Texture2D>(imageName);
+        if (texture == null)
+        {
+            Debug.Log("spriteError");
+            return null;
+        }
+        else
+        {
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            return sprite;
+        }
+    }
 
     /*
       public void NormalDist(string kind)

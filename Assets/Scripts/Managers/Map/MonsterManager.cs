@@ -22,6 +22,8 @@ public class MonsterManager : MonoBehaviour
     //public Dictionary<Vector2, EntityState> monsterSaveData = new Dictionary<Vector2, EntityState>();
     public List<MonsterWrapper> monsterSaveData = new List<MonsterWrapper>();
     public MonsterDataWrapper wrappedData = new MonsterDataWrapper();
+    //public Dictionary<Vector2, GameObject> monsterPos = new Dictionary<Vector2, GameObject>();
+
     // Start is called before the first frame update
     private void OnEnable()
     {
@@ -57,15 +59,30 @@ public class MonsterManager : MonoBehaviour
             int randomIndex;
             randomIndex = Random.Range(0, mapScript.tilePosList.Count);
             Vector2 randomPos = mapScript.tilePosList[randomIndex];
+            int maxRate;
+            int rate;
+            int tier;
+            int index;
             if (mapScript.TileMap[randomPos] == TileType.tile)
             {
-                GameObject go = Instantiate(monsterPrefab, mapScript.tilePosList[randomIndex], Quaternion.identity);
+                GameObject go = Instantiate(monsterPrefab,new Vector3( mapScript.tilePosList[randomIndex].x, mapScript.tilePosList[randomIndex].y,-1), Quaternion.identity);
                 mapScript.TileTypeChange(randomPos, TileType.monster);
-                //mapScript.TileMap[mapScript.tilePosList[randomIndex]] = TileType.monster;
-                //mapScript.miniMap.mapData[randomPos] = TileType.monster;
                 monsterList.Add(go);
                 go.name = i.ToString();
                 mapScript.tilePosList.Remove(randomPos);
+                MonsterState monsterState = go.transform.GetComponent<MonsterState>();
+                List<int> rates = GameManager.instance.dataManager.tierRates[(monsterState.GetType()).ToString()];
+                maxRate = rates[rates.Count - 1];
+                rate = UnityEngine.Random.Range(0, maxRate);
+                tier = GetTierByRate(rate, rates);
+                index = UnityEngine.Random.Range(0, GameManager.instance.dataManager.monsterIndexBytier[tier].Count - 1);
+                index = GameManager.instance.dataManager.monsterIndexBytier[tier][index];
+                Debug.Log(GameManager.instance.dataManager.monsterData);
+                GameManager.instance.dataManager.SetMonsterData(index, monsterState);
+                go.name = go.transform.GetComponent<MonsterState>().myState.name;
+                SetMonsterImage(go);
+                
+                //monsterPos.Add(randomPos, go);
                 //Debug.Log($"monster name : {go.name}");
             }
             else
@@ -95,7 +112,9 @@ public class MonsterManager : MonoBehaviour
             GameObject go = Instantiate(monsterPrefab, monsterSaveData[i].pos, Quaternion.identity);
             go.transform.GetComponent<MonsterState>().myState = monsterSaveData[i].myState;
             monsterList.Add(go);
-            go.name = go.transform.GetComponent<MonsterState>().name;
+            go.name = go.transform.GetComponent<MonsterState>().myState.name;
+            SetMonsterImage(go);
+            //monsterPos.Add(monsterSaveData[i].pos, go);
         }
         /*
         foreach (Vector2 keys in monsterSaveData.Keys)
@@ -107,7 +126,35 @@ public class MonsterManager : MonoBehaviour
         }
         */
     }
-    
-
+    public int GetTierByRate(int rate, List<int> tiers)//Todo
+    {
+        int tier = 1;
+        for (int i = 1; i < tiers.Count; i++)
+        {
+            if (rate >= tiers[i] && i > tier)
+            {
+                tier = i;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (tier == 0)
+        {
+            Debug.Log("tier is 0 tier Error!!");
+        }
+        return tier;
+    }
+    public void SetMonsterImage(GameObject go)
+    {
+        MonsterState monsterState = go.transform.GetComponent<MonsterState>();
+        Texture2D texture = GameManager.instance.dataManager.GetMonsterImage(monsterState.myState.name);
+        if (texture != null)
+        {
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            go.transform.GetComponent<SpriteRenderer>().sprite = sprite;
+        }
+    }
 
 }

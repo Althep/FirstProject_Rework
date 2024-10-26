@@ -17,7 +17,7 @@ public class ConsumItem : ItemBase
     public ConsumType _consumType;
     public int itemCount;
     public string function;
-
+    public int maintain;
     public ConsumItem()
     {
         Register();
@@ -54,6 +54,23 @@ public class ConsumItem : ItemBase
                 return new Food();
         }
         throw new ArgumentException("Type Exception", nameof(type));
+    }
+    public override void Use(LivingEntity entity)
+    {
+        Debug.Log("ItemUse");
+        if (GameManager.instance.dataManager.consumFunctions.TryGetValue(function, out Action<LivingEntity> action))
+        {
+            action.Invoke(entity);
+            itemCount--;
+            if (itemCount <= 0)
+            {
+                entity.myInventory.Inventory.Remove(this);
+            }
+        }
+        else
+        {
+            Debug.Log("Function Cant find");
+        }
     }
 }
 

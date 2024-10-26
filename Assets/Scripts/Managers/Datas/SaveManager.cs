@@ -444,7 +444,7 @@ public class SaveManager
         ItemInventory playerInven = GameManager.instance.playerState.myInventory;
         for(int i = 0; i<playerInven.Inventory.Count; i++)
         {
-            playerInven.invenSave.Add(playerInven.Inventory[i].myInfo);
+            playerInven.invenSave.Add(playerInven.Inventory[i]);
         }
         JsonSave<List<ItemBase>>(playerInven.invenSave,fileName);
         Debug.Log("PlayerInventory Saved");

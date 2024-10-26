@@ -1,0 +1,38 @@
+ManifestFileVersion: 0
+CRC: 3058222827
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 6cc56a28ae553466dd7d5dbbec425b65
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2d8df09e698f722ada1caa03d3413830
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 6cc56a28ae553466dd7d5dbbec425b65
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Images/ItemImage/Belt.png
+- Assets/Images/ItemImage/Sword.png
+- Assets/Images/ItemImage/WoodenArmor.png
+- Assets/Images/ItemImage/Iron Helm.png
+- Assets/Images/ItemImage/Potion of Strength.png
+- Assets/Images/ItemImage/Bag.png
+- Assets/Images/ItemImage/Reipia a1.png
+- Assets/Images/ItemImage/Short Sword.png
+- Assets/Images/ItemImage/Katana a1.png
+- Assets/Images/ItemImage/Leather Armor.png
+- Assets/Images/ItemImage/Axe.png
+- Assets/Images/ItemImage/Potion of Healing.png
+- Assets/Images/ItemImage/Hat.png
+- Assets/Images/ItemImage/Wooden Shield.png
+- Assets/Images/ItemImage/Hammer.png
+- Assets/Images/ItemImage/Apple.png
+- Assets/Images/ItemImage/LeatherArmor.png
+Dependencies: []

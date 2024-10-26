@@ -8,9 +8,15 @@ using Newtonsoft.Json;
 public struct EntityState
 {
     [JsonProperty]
+    public string name;
     public int def;
     public int maxHp;
     public int currntHp;
+
+    public int str;
+    public int dex;
+    public int intel;
+
     public bool isDead;
     public int base_AttackSpeed;
     public int base_MoveSpeed;
@@ -23,7 +29,10 @@ public struct EntityState
     public int index;
     public int exp;
     public int awakingRate;
+    public int blockRate;
     public int leftTurnPoint;
+    public int maxMana;
+    public int currentMana;
     public string State;
     public string distance;
 }
@@ -39,8 +48,9 @@ public class LivingEntity : MonoBehaviour
     [JsonIgnore]
     GameObject myCanvasObj;
 
-    public EntityState myState;
-    
+    public EntityState myState = new EntityState();
+    public Dictionary<EquipType, EquipItem> equips = new Dictionary<EquipType, EquipItem>();
+    public ItemInventory myInventory = new ItemInventory();
     public MoveState moveState;
     public int lastDamaged;
     
@@ -49,6 +59,8 @@ public class LivingEntity : MonoBehaviour
     private void Awake()
     {
         SetCanvas();
+        myState.maxMana = 10;
+        myState.currentMana = myState.maxMana;
     }
     private void Start()
     {
@@ -60,16 +72,22 @@ public class LivingEntity : MonoBehaviour
     }
     public virtual void Damaged(int damage)
     {
+        damage -= myState.def;
+        if (damage < 0)
+        {
+            damage = 0;
+        }
         myState.currntHp -= damage;
         IsDead();
         SetHpBarValue();
         GameManager.instance.log.Damaged(this.gameObject, hpSlider.value);
     }
-    void SetCanvas()
+    protected void SetCanvas()
     {
-        myCanvasObj = this.gameObject.transform.GetChild(0).transform.gameObject;
+        myCanvasObj = this.gameObject.transform.GetChild(0).gameObject;
         hpSliderObj = myCanvasObj.transform.GetChild(0).gameObject;
         hpSlider = hpSliderObj.transform.GetComponent<Slider>();
+        Debug.Log($"mycavase {myCanvasObj}, hpOBJ :{hpSliderObj}, slider{hpSlider}");
     }
     protected void CanvasSetActive()
     {
@@ -86,8 +104,8 @@ public class LivingEntity : MonoBehaviour
     }
     void SetHpBarValue()
     {
-        hpSlider.value = myState.currntHp / myState.maxHp;
-        
+        Debug.Log($"CurrentHP:{myState.currntHp}, MaxHP:{myState.maxHp}");
+        hpSlider.value = (float)myState.currntHp/myState.maxHp;
     }
     public virtual void Attack(LivingEntity target)
     {
@@ -95,7 +113,8 @@ public class LivingEntity : MonoBehaviour
     }
     protected virtual void IsDead()
     {
-        GameManager.instance.log.DeadLog(this.gameObject);
+
+        
     }
     protected virtual void OnMove()
     {

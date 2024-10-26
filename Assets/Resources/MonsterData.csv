@@ -1,5 +1,5 @@
 ﻿index,name,type,damage,acc,def,maxhp,atkrange,moveSpeed,attackSpeed,exp,tier,damagetype,Poison,Fire,Ice,Magic,None
-0,Fox,animal,1,3,0,7,1.5,10,10,5,1,None,0,0,0,0,
-1,Slime,animal,4,2,0,20,1.5,15,10,20,1,None,0,0,0,0,
-2,Bat,animal,1,1,0,3,1.5,5,10,3,1,None,0,0,0,0,
-3,Rat,animal,3,4,0,4,1.5,10,10,4,1,None,0,0,0,0,
+0,Wasp,animal,1,3,0,7,1.5,10,10,5,1,None,0,0,0,0,
+1,Ghost,animal,4,2,0,20,1.5,15,10,20,1,None,0,0,0,0,
+2,Mushroom,animal,1,1,0,3,1.5,5,10,3,1,None,0,0,0,0,
+3,Slime,animal,3,4,0,4,1.5,10,10,4,1,None,0,0,0,0,

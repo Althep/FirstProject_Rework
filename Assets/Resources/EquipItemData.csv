@@ -9,13 +9,13 @@
 7,Steel Shield,12,Shield,,,30,15,3
 8,Tower Shield,15,Shield,,,35,20,4
 9,Magic Shield,8,Shield,,,25,18,5
-10,Leather Helm,2,Helm,,,5,,1
+10,Hat,2,Helm,,,5,,1
 11,Iron Helm,4,Helm,,,10,,2
 12,Steel Helm,5,Helm,,,15,,3
 13,Golden Helm,6,Helm,,,20,,4
 14,Dragon Helm,8,Helm,,,25,,5
 15,Leather Armor,8,Armor,,,20,,1
-16,Chainmail Armor,12,Armor,,,25,,2
+16,WoodenArmor,12,Armor,,,25,,2
 17,Plate Armor,15,Armor,,,35,,3
 18,Dragon Armor,18,Armor,,,40,,4
 19,Mythril Armor,10,Armor,,,30,,5
