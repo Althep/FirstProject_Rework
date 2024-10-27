@@ -78,6 +78,47 @@
         }
     }
 ```
+- 플레이어의 이동 전 매핑된 데이터를 바탕으로 해당 포지션의 오브젝트를 판단 후 공격/이동 판정 
+```
+public void OnkeyPlayerMove()
+    {
+        AxisInput();
+        int nexty = (int)(playerObj.transform.position.y + moveDirection.y);
+        int nextx = (int)(playerObj.transform.position.x + moveDirection.x);
+        Vector2 next = new Vector2(nextx, nexty);
+        
+        if (IsInSize()&&mapScript.TileMap!=null)
+        {
+            switch (mapScript.TileMap[next])
+            {
+                case TileType.tile:
+                    InputMoveKey();
+                    //Debug.Log("MovableTile");
+                    break;
+                case TileType.wall:
+                    //Debug.Log("Wall");
+                    break;
+                case TileType.door:
+                    InputMoveKey();
+                    break;
+                case TileType.upstair:
+                    InputMoveKey();
+                    break;
+                case TileType.downstair:
+                    InputMoveKey();
+                    break;
+                case TileType.monster:
+                    MakeCollider(next);
+                    //MoveState Attack으로 바꾼 후 Attack함수에서 실행 후 idle로 바꿀 필요 있음
+                    break;
+                case TileType.player:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+```
 - 맵 생성시에 맵 데이터를 딕셔너리로 저장 해 미니맵 구현
 ![스크린샷 2024-10-28 013308](https://github.com/user-attachments/assets/1f790833-e869-40a2-a8e5-798211ba63ec)
 -[Assets/Scripts/Maps/MiniMap/MiniMapPanel.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Maps/MiniMap/MiniMapPanel.cs)
