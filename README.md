@@ -119,7 +119,7 @@ public void OnkeyPlayerMove()
         }
     }
 ```
-- 맵 생성시에 맵 데이터를 딕셔너리로 저장 해 미니맵 구현
+- 맵 생성시에 맵 데이터를 딕셔너리로 저장 해 미니맵 구현 각 셀에 대한 타일데이터 삽입 후 셀의 색상 변경
 ![스크린샷 2024-10-28 013308](https://github.com/user-attachments/assets/1f790833-e869-40a2-a8e5-798211ba63ec)
 -[Assets/Scripts/Maps/MiniMap/MiniMapPanel.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Maps/MiniMap/MiniMapPanel.cs)
 - 무작위 함수로 몬스터와 아이템 절차적생성
