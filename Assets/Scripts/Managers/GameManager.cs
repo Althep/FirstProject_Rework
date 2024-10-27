@@ -41,11 +41,13 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        floor = 1;
+        stairType = StairType.downStair;
         SetInstance();
         InstantiatePlayerObj();
         SetInputManager();
         DataRead();
-        dataManager.LoadAssetBundle();
+        
     }
 
     void Start()
@@ -92,6 +94,7 @@ public class GameManager : MonoBehaviour
         //monsterManager.monsterPos.Clear();
         FloorChange();
         SetPlayerNextFloor();
+        
     }
    
  
@@ -144,6 +147,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
+            return;
         }
         if(canvas == null)
         {
@@ -186,6 +190,7 @@ public class GameManager : MonoBehaviour
         {
             turnManager = this.gameObject.transform.GetComponent<TurnManager>();
         }
+        dataManager.LoadAssetBundle();
     }
     
     void SetInputManager()
@@ -223,13 +228,15 @@ public class GameManager : MonoBehaviour
         if (visitedFloor.Contains(floor))
         {
             save.LoadMap();
+            mapScript.miniMap.UpDateMinimap();
         }
         else
         {
             visitedFloor.Add(floor);
             OnMapGenerate.Invoke();
+            mapScript.miniMap.MiniMapReset();
         }
-
+        
     }
 
 }

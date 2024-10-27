@@ -135,9 +135,12 @@ public class MonsterState : LivingEntity
         {
             myState.isDead = true;
             EventManager.Instance.OnPlayerMove.RemoveListener(this.OnPlayerMove);
+            playerState.exp += this.myState.exp;
+            EventManager.Instance.OnMonsterDead.Invoke();
         }
         if (myState.isDead)
         {
+
             GameManager.instance.monsterManager.monsterList.Remove(this.gameObject);
             GameManager.instance.mapScript.TileMap[this.gameObject.transform.position] = GameManager.instance.mapScript.OriginMap[this.gameObject.transform.position];
             Destroy(this.gameObject);

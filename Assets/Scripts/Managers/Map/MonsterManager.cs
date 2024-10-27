@@ -152,7 +152,7 @@ public class MonsterManager : MonoBehaviour
         Texture2D texture = GameManager.instance.dataManager.GetMonsterImage(monsterState.myState.name);
         if (texture != null)
         {
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.height*1.5f);
             go.transform.GetComponent<SpriteRenderer>().sprite = sprite;
         }
     }

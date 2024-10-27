@@ -13,6 +13,9 @@ public struct EntityState
     public int maxHp;
     public int currntHp;
 
+    public int maxMp;
+    public int currentMp;
+
     public int str;
     public int dex;
     public int intel;
@@ -27,6 +30,7 @@ public struct EntityState
     public int damage;
     public float attackRange;
     public int index;
+
     public int exp;
     public int awakingRate;
     public int blockRate;
@@ -105,7 +109,8 @@ public class LivingEntity : MonoBehaviour
     void SetHpBarValue()
     {
         Debug.Log($"CurrentHP:{myState.currntHp}, MaxHP:{myState.maxHp}");
-        hpSlider.value = (float)myState.currntHp/myState.maxHp;
+        hpSlider.maxValue = myState.maxHp;
+        hpSlider.value = myState.currntHp;
     }
     public virtual void Attack(LivingEntity target)
     {
@@ -124,5 +129,10 @@ public class LivingEntity : MonoBehaviour
     {
         myState.attackSpeed = myState.base_AttackSpeed;
         myState.moveSpeed = myState.base_MoveSpeed;
+    }
+    public virtual void SetHpbarValue()
+    {
+        hpSlider.maxValue = myState.maxHp;
+        hpSlider.value = myState.currntHp;
     }
 }

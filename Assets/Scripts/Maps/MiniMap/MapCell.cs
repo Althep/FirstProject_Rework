@@ -8,7 +8,6 @@ public class MapCell : MonoBehaviour
     public int tileLayer;
     public TileType tileType;
     Image mapCell;
-    Image upperOBJ;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +39,7 @@ public class MapCell : MonoBehaviour
         {
             case 6:
                 {
-                    //UnSeenTile();
+                    UnSeenTile();
                     break;
                 }
             case 7:

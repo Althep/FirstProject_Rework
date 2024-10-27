@@ -340,9 +340,17 @@ public class DataManager
     public void LoadAssetBundle()
     {
         bundlePath = "./AssetBundle/monster";
-        monsterBundle = AssetBundle.LoadFromFile(bundlePath);
+        if(monsterBundle == null)
+        {
+            monsterBundle = AssetBundle.LoadFromFile(bundlePath);
+        }
+        
         bundlePath = "./AssetBundle/item";
-        itemBundle = AssetBundle.LoadFromFile(bundlePath);
+        if(itemBundle == null)
+        {
+            itemBundle = AssetBundle.LoadFromFile(bundlePath);
+        }
+        
         /*bundlePath = "./Bundle/item";
         itemBundle = AssetBundle.LoadFromFile(bundlePath);*/
         if (monsterBundle == null)
@@ -367,7 +375,8 @@ public class DataManager
         }
         else
         {
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), texture.height*2);
+            
             return sprite;
         }
     }

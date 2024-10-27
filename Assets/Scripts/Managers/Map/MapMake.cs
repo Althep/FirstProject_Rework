@@ -74,7 +74,7 @@ public class MapMake : MonoBehaviour
 
     public Dictionary<Vector2, TileType> TileMap = new Dictionary<Vector2, TileType>();
     public Dictionary<Vector2, TileType> OriginMap = new Dictionary<Vector2, TileType>();
-    public Dictionary<Vector2, GameObject> MapObj = new Dictionary<Vector2, GameObject>();
+    //public Dictionary<Vector2, GameObject> MapObj = new Dictionary<Vector2, GameObject>();
     public Dictionary<Vector2, int> objLayers = new Dictionary<Vector2, int>();
     public List<StairWrapper> stairList = new List<StairWrapper>();
     public StairDataWrapper stairSaveData = new StairDataWrapper();
@@ -115,7 +115,7 @@ public class MapMake : MonoBehaviour
         ObjectInstantiate();
         MiniMapMaping();
         FloorAdd();
-
+        ObjLayersReset();
     }
     void ObjectInstantiate()
     {
@@ -132,15 +132,17 @@ public class MapMake : MonoBehaviour
                     OriginMap[pos] =TileType.tile;
                     break;
                 case TileType.wall:
-                    mapObjects.Add(Instantiate(wallPrefab, new Vector3(pos.x,pos.y,-1), Quaternion.identity));
+                    GameObject go = Instantiate(wallPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity); 
+                    mapObjects.Add(go);
                     OriginMap[pos] = TileType.wall;
                     break;
                 case TileType.door:
-                    mapObjects.Add(Instantiate(doorPrefab, pos, Quaternion.identity));
+                    go =Instantiate(doorPrefab, pos, Quaternion.identity);
                     OriginMap[pos] = TileType.door;
+                    mapObjects.Add(go);
                     break;
                 case TileType.upstair:
-                    GameObject go = Instantiate(upStairPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
+                    go = Instantiate(upStairPrefab, new Vector3(pos.x, pos.y, -1), Quaternion.identity);
                     mapObjects.Add(go);
                     OriginMap[pos] = TileType.upstair;
                     go.transform.GetComponent<Stair>().stairNumber = upStaires[pos];
@@ -163,6 +165,7 @@ public class MapMake : MonoBehaviour
                     break;
             }
         }
+        
         /*
         for (int i = 0; i < upStaires.Count; i++)
         {
@@ -390,11 +393,7 @@ public class MapMake : MonoBehaviour
             tilePosList.Add(value);
         }
     }
-    void SetPlayer()
-    {
-        int temp = Random.Range(0, downStaires.Count);
 
-    }
     bool IsInSize(Vector2 Pos)
     {
         bool temp = true;
@@ -417,6 +416,13 @@ public class MapMake : MonoBehaviour
         for(int i = 0; i < LayerSaveData.Count; i++)
         {
             objLayers[LayerSaveData[i].pos] = LayerSaveData[i].layer;
+        }
+    }
+    public void ObjLayersReset()
+    {
+        foreach(Vector2 key in objLayers.Keys)
+        {
+            objLayers[key] = 6;
         }
     }
     public void LoadMapAtData()

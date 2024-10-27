@@ -12,6 +12,10 @@ public class UIBase : MonoBehaviour
     RectTransform myTransform;
 
 
+
+
+
+
     protected virtual void Start()
     {
         myTransform = transform.GetComponent<RectTransform>();

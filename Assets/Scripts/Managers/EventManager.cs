@@ -13,6 +13,9 @@ public class EventManager : MonoBehaviour
 
     public UnityEvent OnPlayerMove;
     public UnityEvent OnMapGenerate;
+    public UnityEvent OnPlayerBattle;
+    public UnityEvent OnLevelUp;
+    public UnityEvent OnMonsterDead;
     public UnityEvent VisitedFloor;
 
     private void Awake()

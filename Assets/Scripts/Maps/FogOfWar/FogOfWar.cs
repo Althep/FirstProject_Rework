@@ -19,7 +19,7 @@ public class FogOfWar : MonoBehaviour
         player = GameManager.instance.playerObj;
         oldLayer = this.gameObject.layer;
         ChangeColorToLayer();
-        ShotRayCast();
+        //ShotRayCast();
         posx = (int)gameObject.transform.position.x;
         posy = (int)gameObject.transform.position.y;
     }
@@ -113,12 +113,10 @@ public class FogOfWar : MonoBehaviour
         if (collision.gameObject == player)
         {
             ShotRayCast();
-        }
-        if (oldLayer != this.gameObject.layer)
-        {
             ChangeColorToLayer();
             oldLayer = this.gameObject.layer;
         }
+        
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
@@ -131,23 +129,28 @@ public class FogOfWar : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (this.transform.tag == "Monster")
+        if(collision.gameObject == player)
         {
-            if (collision.gameObject == player && (myPos != new Vector2((int)this.transform.position.x,(int)this.transform.position.y) || TurnManager.instance.turn!=oldTurn))
+            if (this.transform.tag == "Monster")
             {
-                ShotRayCast();
-                ChangeColorToLayer();
-                oldTurn = TurnManager.instance.turn;
+                if (collision.gameObject == player && (myPos != new Vector2((int)this.transform.position.x, (int)this.transform.position.y) || TurnManager.instance.turn != oldTurn))
+                {
+                    ShotRayCast();
+                    ChangeColorToLayer();
+                    oldTurn = TurnManager.instance.turn;
+                }
+            }
+            else
+            {
+                if (collision.gameObject == player && (TurnManager.instance.turn != oldTurn))
+                {
+                    ShotRayCast();
+                    ChangeColorToLayer();
+                    oldTurn = TurnManager.instance.turn;
+                }
             }
         }
-        else
-        {
-            if (collision.gameObject == player && (TurnManager.instance.turn != oldTurn))
-            {
-                ShotRayCast();
-                ChangeColorToLayer();
-                oldTurn = TurnManager.instance.turn;
-            }
-        }
+        
+        
     }
 }

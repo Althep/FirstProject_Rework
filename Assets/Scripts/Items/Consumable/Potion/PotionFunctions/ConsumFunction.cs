@@ -46,6 +46,8 @@ public class HealingPotion : ConsumFunction
         {
             entity.myState.currntHp += 10;
         }
+        entity.SetHpbarValue();
+        EventManager.Instance.OnPlayerBattle.Invoke();
     }
 }
 
@@ -62,6 +64,7 @@ public class ManaPotion : ConsumFunction
             entity.myState.currentMana += 10;
 
         }
+        EventManager.Instance.OnPlayerBattle.Invoke();
     }
 }
 

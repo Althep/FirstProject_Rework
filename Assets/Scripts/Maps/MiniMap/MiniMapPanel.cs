@@ -37,9 +37,21 @@ public class MiniMapPanel : MonoBehaviour
             mapCells[transePos].SetTilePosition(mapData[pos]);
             count++;
         }
-
     }
-
+    public void UpDateMinimap()
+    {
+        MapMake mapScript = GameManager.instance.mapScript;
+        foreach(Vector2 pos in mapScript.objLayers.Keys)
+        {
+            if(mapCells[pos].tileLayer != mapScript.objLayers[pos])
+            {
+                mapCells[pos].tileLayer = mapScript.objLayers[pos];
+                CellColorChange(pos, mapScript.objLayers[pos]);
+            }
+            
+        }
+        Debug.Log("minimap Update");
+    }
     public void CellColorChange(Vector2 pos, int layer)
     {
         if(mapData == null)
@@ -48,11 +60,22 @@ public class MiniMapPanel : MonoBehaviour
         }
         if (mapData.ContainsKey(pos))
         {
+            if(layer == 7)
+            {
+                layer = 8;
+            }
             mapCells[pos].tileLayer = layer;
             mapCells[pos].ChangeToLayer();
 
         }
-
+    }
+    public void MiniMapReset()
+    {
+        foreach(Vector2 key in mapCells.Keys)
+        {
+            mapCells[key].tileLayer = 6;
+            CellColorChange(key,6);
+        }
     }
 
 }
