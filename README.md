@@ -238,4 +238,5 @@
 ## 5. 동영상
   - 전체[전체 영상](https://youtu.be/CEp-2PCvieM)
   - 아이템착용/해제[링크](https://youtu.be/EJgG0MmNVG0)
+    
   -맵 생성 저장/로드[링크](https://youtu.be/t9I72a2WuYk)
