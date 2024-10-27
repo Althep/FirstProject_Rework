@@ -217,25 +217,9 @@
   [Assets/Scripts/Maps/FogOfWar/FogOfWar.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Maps/FogOfWar/FogOfWar.cs)
 - UI 상속을 통해 위치 지정 및 단축키 할당, 맵핑
   [Assets/Scripts/UI/UIBase.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/UI/UIBase.cs)
-## 4. 남은 기능
-- 4-1 각 UI의 키코드를 게임오브젝트와 연결 한 딕셔너리를 이용 해 플레이어 편의로 단축키 변경
-
-이동키를 코드로 바꾸는것을 아직 찾지 못함, 지금 등록 해 둔 인벤토리와 마법관련 UI는 언제든 구현 가능 할 것같음
-
-- 4-2 마법 관련 기능
-
-  플레이어가 마법이나 아이템 투척등을 한다 하였을 때에 기존의 인풋으로 플레이어 대신 타겟위치를 설정하는 오브젝트와 그것을 움직이는 코드 필요
-  inputManager의 PlayerMoveState.Aiming 관련된 함수 작성 필요
-
-- 4-3 지속성 아이템 기능 모듈화
- 구현은 했으나 아직 모듈화 하는것이 익숙하지 않아 모듈화까지는 하지 못함 이를 모듈화 해 다른 포션 기능들도 빠르게 구현 할 수 있게 모듈화 필요
-
-- 4-3 메인, 게임오버씬
-  InputManager와 GameManager의 코드 변경 필요할것같음
-  던전이 구현되어있는 씬 이외의 씬은 다른 인풋매니저를 사용하는 방식으로 해결 가능 할것으로 생각됨
 
 
-## 5. 동영상
+## 4. 동영상
   - 전체[전체 영상](https://youtu.be/CEp-2PCvieM)
   - 아이템착용/해제[링크](https://youtu.be/EJgG0MmNVG0)  
   - 맵 생성 저장/로드[링크](https://youtu.be/t9I72a2WuYk)
