@@ -12,14 +12,18 @@
 - Unity 2022.3.21.f1
 - C#
 - window 10
+## 3. 프로젝트를 다시 만든이유
+- 1. 델리게이트나 이벤트 시스템등을 전혀 사용하지않아 사용 해보는 기회가 될것같았습니다.
+  2. 이전에 프로젝트를 만들어 본 결과 데이터 매핑을 하지 않아 A*를 적용하기 힘들었음 / 자료구조와 알고리즘을 배워서 적용 시킬만한 좋은 실습소재가 될것이라고 생각했습니다.
+  3. 에셋 번들 또한 사용하지 않았었음 / 포트폴리오 이기 때문에 공부하면서 적용시켜볼만것들을 공부하고 적용시키고 직접 차이를 보는게 좋았습니다.
+  4. 장비아이템의 착용 여부를 2진수로 판단 하는 등의 거의 코드 전체를 수정하는게 나을것같다는 판단과 반년동안 이전 회사에서 개인적으로 공부한것들을 해볼만한 기회가 된것같아 다시 만들게 되었습니다.
 
-
-## 3. 구현 기능
+## 4. 구현 기능
 - 유니티의 인풋 시스템을 바꿔 GetAxtis의 키를 각 숫자패드로 변경
 ![스크린샷 2024-10-28 010920](https://github.com/user-attachments/assets/bcc38295-4d5f-4af4-9529-5a563fba90c9)
 ![스크린샷 2024-10-28 010930](https://github.com/user-attachments/assets/48e48172-81cc-42be-8261-61b327804d9c)
     
-### 3-1 맵 관련
+### 4-1 맵 관련
 - 재귀와 이중 분할을 이용 한 무작위 맵 생성[Assets/Scripts/Managers/Map/MapMake.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Map/MapMake.cs)
 
  ```
@@ -154,7 +158,7 @@
         }
     }
  추후에는 각 ActState를 특정 함수를 상속하는 함수로 작성하는게 좋아보임
- ### 3-2 데이터관련[Assets/Scripts/Managers/Datas/DataManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Datas/DataManager.cs)
+ ### 4-2 데이터관련[Assets/Scripts/Managers/Datas/DataManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Datas/DataManager.cs)
  - 각 함수명들을 아이템의 정보에 포함, 딕셔너리로 불러오는 기능 ex) 회복포션
   ```
   public class HealingPotion : ConsumFunction
@@ -177,7 +181,7 @@
   } // 각 스탯을 Get, Set함수로 사용 해 Get,Set 함수에 이벤트를 넣는것이 더 좋아보임
 ```
  - 각 아이템 상속구조를 이용해 고유 필드 구현 ItemBase를 상속하는 ConsumItem, EquipItem 구현 후 이를 다시 상세히 나누는 방식 (Use 함수를 Override해 장비와 소모품의 기능 차별화)
-  ### 3-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
+  ### 4-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
   - 유니티 이벤트를 이용 해 플레이어 레벨업,피격 시 UI갱신
   - 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
   ```
@@ -208,7 +212,7 @@
 
   }
   ```
-  ### 3-5 기타
+  ### 4-5 기타
 - 플레이어의 인벤토리 구현, List<ItemBase> 이 정보를 바탕으로 인벤토리 UI 구현
   [Assets/Scripts/UI/Inventory/InventoryUI.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/UI/Inventory/InventoryUI.cs)
 - 딕셔너리를 이용 해 플레이어의 장비 확인 (이미 존재하는 키라면 데이터를 교체하는식)
@@ -219,7 +223,7 @@
   [Assets/Scripts/UI/UIBase.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/UI/UIBase.cs)
 
 
-## 4. 동영상
+## 5. 동영상
   - [전체 영상](https://youtu.be/CEp-2PCvieM)
   - [아이템착용/해제](https://youtu.be/EJgG0MmNVG0)  
   - [맵 생성 저장/로드](https://youtu.be/t9I72a2WuYk)
