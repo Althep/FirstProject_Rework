@@ -155,7 +155,7 @@
     }
  추후에는 각 ActState를 특정 함수를 상속하는 함수로 작성하는게 좋아보임
  ### 3-2 데이터관련[Assets/Scripts/Managers/Datas/DataManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Datas/DataManager.cs)
-- 각 함수명들을 아이템의 정보에 포함, 딕셔너리로 불러오는 기능 ex) 회복포션
+ - 각 함수명들을 아이템의 정보에 포함, 딕셔너리로 불러오는 기능 ex) 회복포션
   ```
   public class HealingPotion : ConsumFunction
   {
@@ -175,11 +175,11 @@
         EventManager.Instance.OnPlayerBattle.Invoke();
     }
   } // 각 스탯을 Get, Set함수로 사용 해 Get,Set 함수에 이벤트를 넣는것이 더 좋아보임
-
-- 각 아이템 상속구조를 이용해 고유 필드 구현 ItemBase를 상속하는 ConsumItem, EquipItem 구현 후 이를 다시 상세히 나누는 방식 (Use 함수를 Override해 장비와 소모품의 기능 차별화)
+```
+ - 각 아이템 상속구조를 이용해 고유 필드 구현 ItemBase를 상속하는 ConsumItem, EquipItem 구현 후 이를 다시 상세히 나누는 방식 (Use 함수를 Override해 장비와 소모품의 기능 차별화)
   ### 3-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
-- 유니티 이벤트를 이용 해 플레이어 레벨업,피격 시 UI갱신
-- 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
+  - 유니티 이벤트를 이용 해 플레이어 레벨업,피격 시 UI갱신
+  - 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
   ```
   public class StrengthPotion : MaintainPotion
   {
