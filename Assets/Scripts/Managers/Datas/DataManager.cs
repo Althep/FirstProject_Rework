@@ -21,9 +21,9 @@ public class DataManager
 
     Dictionary<string, Dictionary<string, List<object>>> allItems = new Dictionary<string, Dictionary<string, List<object>>>();
 
-    public Dictionary<int, List<int>> equipIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1ºÎÅÍ ³Ö¾úÀ½!
-    public Dictionary<int, List<int>> consymIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1ºÎÅÍ ³Ö¾úÀ½!
-    public Dictionary<int, List<int>> monsterIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1ºÎÅÍ ³Ö¾úÀ½!
+    public Dictionary<int, List<int>> equipIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1ë¶€í„° ë„£ì—ˆìŒ!
+    public Dictionary<int, List<int>> consymIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1ë¶€í„° ë„£ì—ˆìŒ!
+    public Dictionary<int, List<int>> monsterIndexBytier = new Dictionary<int, List<int>>(); // tier Rates index 1ë¶€í„° ë„£ì—ˆìŒ!
     public Dictionary<string, List<int>> tierRates = new Dictionary<string, List<int>>();
 
     public Dictionary<string, Texture2D> monsterTexture = new Dictionary<string, Texture2D>();
@@ -37,7 +37,7 @@ public class DataManager
 
 
 
-    public void ReadDataByTiers() // CSVÀĞ°í Æ¼¾îº° ÀÎµ¦½º Á¤·Ä
+    public void ReadDataByTiers() // CSVì½ê³  í‹°ì–´ë³„ ì¸ë±ìŠ¤ ì •ë ¬
     {
         string path = "EquipItemData";
 
@@ -136,7 +136,7 @@ public class DataManager
     }
     */
     public void SetMonsterData(int index, MonsterState monsterState)
-    {//¼öÁ¤ÇÊ¿ä
+    {
         if (monsterData == null)
         {
             Debug.Log("Monster DataError");
@@ -156,7 +156,7 @@ public class DataManager
 
     public void SetItempData(int index, ItemBase itemData)
     {
-        //°øÅëºÎºĞ
+        //ê³µí†µë¶€ë¶„
         switch (itemData)
         {
             case EquipItem equip:
@@ -250,8 +250,8 @@ public class DataManager
 
     public void NormalDist()
     {
-        float mu; // Æò±Õ
-        float sigma; // Ç¥ÁØÆíÂ÷
+        float mu; // í‰ê· 
+        float sigma; // í‘œì¤€í¸ì°¨
         int floor = GameManager.instance.floor;
 
         mu = Mathf.Log(floor, 3f);
@@ -262,8 +262,8 @@ public class DataManager
         sigma = Mathf.Log(floor + 1, 4) + 1.07f;
         tierRates.Add("Consumable", MakeRate(mu, sigma, "Consumable"));
 
-        mu = Mathf.Log(floor, 2f);//Æò±Õ
-        sigma = Mathf.Log(floor + 1, 10);//Ç¥ÁØÆíÂ÷
+        mu = Mathf.Log(floor, 2f);//í‰ê· 
+        sigma = Mathf.Log(floor + 1, 10);//í‘œì¤€í¸ì°¨
         tierRates.Add("MonsterState", MakeRate(mu, sigma, "MonsterState"));
 
     }
@@ -384,8 +384,8 @@ public class DataManager
     /*
       public void NormalDist(string kind)
     {
-        float mu;//Æò±Õ
-        float sigma;//Ç¥ÁØÆíÂ÷
+        float mu;//í‰ê· 
+        float sigma;//í‘œì¤€í¸ì°¨
         int floor;
         floor = GameManager.instance.nowFloor;
         if (kind == "equip")
@@ -396,8 +396,8 @@ public class DataManager
         }
         else if (kind == "monster")
         {
-            mu = Mathf.Log(floor, 2f);//Æò±Õ
-            sigma = Mathf.Log(floor + 1, 10);//Ç¥ÁØÆíÂ÷
+            mu = Mathf.Log(floor, 2f);//í‰ê· 
+            sigma = Mathf.Log(floor + 1, 10);//í‘œì¤€í¸ì°¨
             rateValuePrint(mu, sigma,kind);
         }
         else if( kind == "consum")
@@ -431,7 +431,7 @@ public class DataManager
         return tier;
     }
 
-    //Æ¼¾î¿Í Ãş°è¿¡ µû¶ó ÇÔ¼ö ±×·¡ÇÁ º¯È¯
+    //í‹°ì–´ì™€ ì¸µê³„ì— ë”°ë¼ í•¨ìˆ˜ ê·¸ë˜í”„ ë³€í™˜
     void rateValuePrint(float mu, float sigma, string kind)
     {
         float rateValue = 0;
