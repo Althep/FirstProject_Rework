@@ -14,8 +14,8 @@
 - window 10
 ## 3. 프로젝트를 다시 만든이유
 - 1. 델리게이트나 이벤트 시스템등을 전혀 사용하지않아 사용 해보는 기회가 될것같았습니다.
-  2. 이전에 프로젝트를 만들어 본 결과 데이터 매핑을 하지 않아 A*를 적용하기 힘들었음 / 자료구조와 알고리즘을 배워서 적용 시킬만한 좋은 실습소재가 될것이라고 생각했습니다.
-  3. 에셋 번들 또한 사용하지 않았었음 / 포트폴리오 이기 때문에 공부하면서 적용시켜볼만것들을 공부하고 적용시키고 직접 차이를 보는게 좋았습니다.
+  2. 이전에 프로젝트를 만들어 본 결과 데이터 매핑을 하지 않아 A*를 적용하기 힘들었고 자료구조와 알고리즘을 배워서 적용 시킬만한 좋은 실습소재가 될것이라고 생각했습니다.
+  3. 에셋 번들 또한 사용하지 않았었고 포트폴리오이니 공부하면서 적용시켜볼만것들을 공부하고 적용시키고 직접 차이를 보는게 좋았습니다.
   4. 장비아이템의 착용 여부를 2진수로 판단 하는 등의 거의 코드 전체를 수정하는게 나을것같다는 판단과 반년동안 이전 회사에서 개인적으로 공부한것들을 해볼만한 기회가 된것같아 다시 만들게 되었습니다.
 
 ## 4. 구현 기능
@@ -161,7 +161,7 @@
  ### 4-2 데이터관련[Assets/Scripts/Managers/Datas/DataManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Datas/DataManager.cs)
  - 각 함수명들을 아이템의 정보에 포함, 딕셔너리로 불러오는 기능 ex) 회복포션
   ```
-  public class HealingPotion : ConsumFunction
+  public class HealingPotion : ConsumeFunction
   {
 
     protected override void Myfunction(LivingEntity entity)
@@ -180,7 +180,7 @@
     }
   } // 각 스탯을 Get, Set함수로 사용 해 Get,Set 함수에 이벤트를 넣는것이 더 좋아보임
 ```
- - 각 아이템 상속구조를 이용해 고유 필드 구현 ItemBase를 상속하는 ConsumItem, EquipItem 구현 후 이를 다시 상세히 나누는 방식 (Use 함수를 Override해 장비와 소모품의 기능 차별화)
+ - 각 아이템 상속구조를 이용해 고유 필드 구현 ItemBase를 상속하는 ConsumeItem, EquipItem 구현 후 이를 다시 상세히 나누는 방식 (Use 함수를 Override해 장비와 소모품의 기능 차별화)
   ### 4-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
   - 유니티 이벤트를 이용 해 플레이어 레벨업,피격 시 UI갱신
   - 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
