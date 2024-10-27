@@ -202,10 +202,10 @@ public void OnkeyPlayerMove()
  ### 4-2 데이터관련[Assets/Scripts/Managers/Datas/DataManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Datas/DataManager.cs)
  - 각 함수명들을 아이템의 정보에 포함, 딕셔너리로 불러오는 기능 ex) 회복포션
   ```
-  public class HealingPotion : ConsumeFunction
-  {
+public class HealingPotion : ConsumeFunction
+{
 
-    protected override void Myfunction(LivingEntity entity)
+    protected override void ConsumeFunc(LivingEntity entity)
     {
 
         if (entity.myState.currntHp + 10 > entity.myState.maxHp)
@@ -219,7 +219,8 @@ public void OnkeyPlayerMove()
         entity.SetHpbarValue();
         EventManager.Instance.OnPlayerBattle.Invoke();
     }
-  } // 각 스탯을 Get, Set함수로 사용 해 Get,Set 함수에 이벤트를 넣는것이 더 좋아보임
+}
+ // 각 스탯을 Get, Set함수로 사용 해 Get,Set 함수에 이벤트를 넣는것이 더 좋아보임
 ```
  - 각 아이템 상속구조를 이용해 고유 필드 구현 ItemBase를 상속하는 ConsumeItem, EquipItem 구현 후 이를 다시 상세히 나누는 방식 (Use 함수를 Override해 장비와 소모품의 기능 차별화)
   ### 4-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
@@ -227,8 +228,8 @@ public void OnkeyPlayerMove()
   - 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
   ```
   public class StrengthPotion : MaintainPotion
-  {
-    protected override void Myfunction(LivingEntity entity)
+{
+    protected override void ConsumeFunc(LivingEntity entity)
     {
         maintain = 10;
         SetEndTurn();
@@ -251,7 +252,6 @@ public void OnkeyPlayerMove()
         
     }
 
-  }
   ```
   ### 4-5 기타
 - 플레이어의 인벤토리 구현, List<ItemBase> 이 정보를 바탕으로 인벤토리 UI 구현
