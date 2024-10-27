@@ -29,8 +29,9 @@ public class DataManager
     public Dictionary<string, Texture2D> monsterTexture = new Dictionary<string, Texture2D>();
     public Dictionary<string, int> monsterTextureCount = new Dictionary<string, int>();
 
-    public ConsumFunction consumFunction = new ConsumFunction();
+    public ConsumeFunction consumFunction = new ConsumeFunction();
     public Dictionary<string, Action<LivingEntity>> consumFunctions = new Dictionary<string, Action<LivingEntity>>();
+    public Dictionary<string, ConsumeFunction> ConsumFunctionScripts = new Dictionary<string, ConsumeFunction>();
     AssetBundle monsterBundle;
     AssetBundle itemBundle;
     string bundlePath;
@@ -162,8 +163,8 @@ public class DataManager
             case EquipItem equip:
                 SetEquipData<EquipItem>(index, equip);
                 break;
-            case ConsumItem consum:
-                SetConsumData<ConsumItem>(index, consum);
+            case ConsumeItem consum:
+                SetConsumData<ConsumeItem>(index, consum);
                 break;
             default:
                 break;
@@ -217,13 +218,16 @@ public class DataManager
         }
 
     }
-    public void SetConsumData<T>(int index, T itemData) where T : ConsumItem
+    public void SetConsumData<T>(int index, T itemData) where T : ConsumeItem
     {
         string gear = typeof(T).ToString();
+        string function = consumData[index]["function"].ToString();
         itemData.index = index;
         itemData.name = (consumData[index]["name"]).ToString();
         itemData.weight = Convert.ToInt32(consumData[index]["weight"]);
         itemData.maintain = Convert.ToInt32(consumData[index]["maintain"]);
+        ConsumFunctionScripts[function].amount = Convert.ToInt32(consumData[index]["amount"]);
+        ConsumFunctionScripts[function].maintain = Convert.ToInt32(consumData[index]["maintain"]);
         switch (itemData)
         {
             case Potion potion:

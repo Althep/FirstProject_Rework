@@ -37,7 +37,7 @@ public class Item : MonoBehaviour
             GameManager.instance.playerState.myInventory.GetEquipItem(myInfo);
             RemoveItem();
         }
-        else if(myInfo is ConsumItem)
+        else if(myInfo is ConsumeItem)
         {
             Item item = this;
             GameManager.instance.playerState.myInventory.GetConsumItem(myInfo);

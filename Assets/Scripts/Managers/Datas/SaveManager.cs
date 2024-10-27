@@ -285,7 +285,7 @@ public class SaveManager
                     EquipWrapper equipWrapper = new EquipWrapper() {posx=(int)key.x,posy = (int)key.y,itemBase = equip };
                     itemManager.wrappedData.equipSaved.Add(equipWrapper);
                     break;
-                case ConsumItem consum:
+                case ConsumeItem consum:
                     ConsumWrapper consumWrapper = new ConsumWrapper() { posx = (int)key.x, posy = (int)key.y, itemBase = consum };
                     itemManager.wrappedData.consumSaved.Add(consumWrapper);
                     break;

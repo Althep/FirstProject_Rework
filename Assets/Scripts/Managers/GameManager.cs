@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         //item.AddKeysScripts();
         item.InitiateItem();
         EquipItem equipTest = new EquipItem();
-        ConsumItem consumTest = new ConsumItem();
+        ConsumeItem consumTest = new ConsumeItem();
         dataManager.ReadDataByTiers();
         dataManager.NormalDist();
         //item.ItemFactiry();

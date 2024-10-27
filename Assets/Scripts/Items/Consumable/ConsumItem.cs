@@ -12,13 +12,13 @@ public enum ConsumType
 
 }
 
-public class ConsumItem : ItemBase
+public class ConsumeItem : ItemBase
 {
     public ConsumType _consumType;
     public int itemCount;
     public string function;
     public int maintain;
-    public ConsumItem()
+    public ConsumeItem()
     {
         Register();
     }
@@ -34,7 +34,7 @@ public class ConsumItem : ItemBase
             //Debug.Log($"regist  : {name}");
         }
     }
-    public virtual ConsumItem Clone(ConsumType type)
+    public virtual ConsumeItem Clone(ConsumType type)
     {
         if (_consumType != type)
         {
@@ -74,26 +74,26 @@ public class ConsumItem : ItemBase
     }
 }
 
-public class Potion : ConsumItem
+public class Potion : ConsumeItem
 {
 
 }
 
-public class Book: ConsumItem
+public class Book: ConsumeItem
 {
     
 }
 
-public class Scroll : ConsumItem
+public class Scroll : ConsumeItem
 {
 
 }
-public class Evoke : ConsumItem
+public class Evoke : ConsumeItem
 {
 
 }
 
-public class Food : ConsumItem
+public class Food : ConsumeItem
 {
 
 }

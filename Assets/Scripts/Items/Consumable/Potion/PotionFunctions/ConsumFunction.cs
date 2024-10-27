@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-public class ConsumFunction
+public class ConsumeFunction
 {
     protected LivingEntity targetEntity;
-    
+    public int amount;
+    public int maintain;
     
     protected virtual void AddMyFunction()
     {
         string functionName = this.GetType().ToString();
         if (!GameManager.instance.dataManager.consumFunctions.ContainsKey(functionName))
         {
-            GameManager.instance.dataManager.consumFunctions.Add(functionName, Myfunction);
+            GameManager.instance.dataManager.consumFunctions.Add(functionName, ConsumeFunc);
+            GameManager.instance.dataManager.ConsumFunctionScripts.Add(functionName, this);
         }
         
     }
-    protected virtual void Myfunction(LivingEntity entity)
+    protected virtual void ConsumeFunc(LivingEntity entity)
     {
 
     }
@@ -32,10 +34,10 @@ public class ConsumFunction
 
 }
 
-public class HealingPotion : ConsumFunction
+public class HealingPotion : ConsumeFunction
 {
 
-    protected override void Myfunction(LivingEntity entity)
+    protected override void ConsumeFunc(LivingEntity entity)
     {
 
         if (entity.myState.currntHp + 10 > entity.myState.maxHp)
@@ -51,9 +53,9 @@ public class HealingPotion : ConsumFunction
     }
 }
 
-public class ManaPotion : ConsumFunction
+public class ManaPotion : ConsumeFunction
 {
-    protected override void Myfunction(LivingEntity entity)
+    protected override void ConsumeFunc(LivingEntity entity)
     {
         if (entity.myState.currentMana + 10 > entity.myState.maxMana)
         {
@@ -69,12 +71,11 @@ public class ManaPotion : ConsumFunction
 }
 
 
-public class MaintainPotion : ConsumFunction
+public class MaintainPotion : ConsumeFunction
 {
 
     protected int startTurn;
     protected int endTurn;
-    protected int maintain;
 
     protected UnityAction _cashedAction;
     protected void SetEndTurn()
@@ -82,7 +83,7 @@ public class MaintainPotion : ConsumFunction
         startTurn = GameManager.instance.turnManager.turn;
         endTurn = startTurn + maintain;
     }
-    protected override void Myfunction(LivingEntity entity)
+    protected override void ConsumeFunc(LivingEntity entity)
     {
         SetEndTurn();
     }
@@ -115,7 +116,7 @@ public class MaintainPotion : ConsumFunction
 }
 public class StrengthPotion : MaintainPotion
 {
-    protected override void Myfunction(LivingEntity entity)
+    protected override void ConsumeFunc(LivingEntity entity)
     {
         maintain = 10;
         SetEndTurn();

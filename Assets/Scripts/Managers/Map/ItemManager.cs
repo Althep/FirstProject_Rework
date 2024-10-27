@@ -26,7 +26,7 @@ public class ConsumWrapper//래핑함수에 생성자가 있을경우 역직렬화에 문제가 생길 
 {
     public int posx;
     public int posy;
-    public ConsumItem itemBase;
+    public ConsumeItem itemBase;
     public string itemType;
     
 
@@ -53,7 +53,7 @@ public class ItemManager
     [JsonProperty]
     public DataManager dataManager;
     public Dictionary<string, EquipItem> EquipScripts = new Dictionary<string, EquipItem>();
-    public Dictionary<string, ConsumItem> ConsumScripts = new Dictionary<string, ConsumItem>();
+    public Dictionary<string, ConsumeItem> ConsumScripts = new Dictionary<string, ConsumeItem>();
     public Dictionary<Vector2, Item> ItemPosList = new Dictionary<Vector2, Item>();
     public Dictionary<Vector2, ItemBase> itemBaseList = new Dictionary<Vector2, ItemBase>();
     //public List<ItemWrapper> ItemSaveData = new List<ItemWrapper>();

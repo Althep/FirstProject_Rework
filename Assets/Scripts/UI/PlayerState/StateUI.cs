@@ -68,6 +68,7 @@ public class StateUI : UIBase
     {
         RectTransform myrect = this.transform.GetComponent<RectTransform>();
         Vector2 myPos = new Vector2(Screen.width - (myrect.rect.width / 2), 0);
+        myrect.anchoredPosition = myPos;
     }
 
     void SetPlayerData()

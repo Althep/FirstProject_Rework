@@ -52,7 +52,7 @@ public class ItemSlot : ButtonUI
         ItemBase item = GameManager.instance.playerState.myInventory.Inventory[index];
 
 
-        if (item is ConsumItem consum)
+        if (item is ConsumeItem consum)
         {
             Debug.Log(item.name);
             tmp.text = consum.name + $" : {consum.itemCount}";
@@ -93,7 +93,7 @@ public class ItemSlot : ButtonUI
             inventoryButton.onClick.AddListener(action);
 
         }
-        else if (slotItem is ConsumItem consum)
+        else if (slotItem is ConsumeItem consum)
         {
             action = IsConsum(consum);
             inventoryButton.onClick.AddListener(action);
@@ -140,7 +140,7 @@ public class ItemSlot : ButtonUI
             slotImage.color = Color.white;
         }
     }
-    public UnityAction IsConsum(ConsumItem consum)
+    public UnityAction IsConsum(ConsumeItem consum)
     {
         return () =>
         {
@@ -166,7 +166,7 @@ public class ItemSlot : ButtonUI
             }
         }
     }
-    public void ResetSlotData(ConsumItem consum)
+    public void ResetSlotData(ConsumeItem consum)
     {
         if(consum.itemCount <= 0)
         {

@@ -27,7 +27,7 @@ public class ItemInventory//<T> where T : ItemBase
         else
         {
             Inventory.Add(item);
-            if(item is ConsumItem consum)
+            if(item is ConsumeItem consum)
             {
                 consum.itemCount++;
             }
@@ -43,7 +43,7 @@ public class ItemInventory//<T> where T : ItemBase
     {
         foreach (var value in Inventory)
         {
-            if(value is ConsumItem consumable && value.name == item.name)
+            if(value is ConsumeItem consumable && value.name == item.name)
             {
                 consumable.itemCount++;
                 break;
