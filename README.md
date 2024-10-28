@@ -122,13 +122,22 @@ public void OnkeyPlayerMove()
 - 맵 생성시에 맵 데이터를 딕셔너리로 저장 해 미니맵 구현 각 셀에 대한 타일데이터 삽입 후 셀의 색상 변경
 ![스크린샷 2024-10-28 013308](https://github.com/user-attachments/assets/1f790833-e869-40a2-a8e5-798211ba63ec)
 -[Assets/Scripts/Maps/MiniMap/MiniMapPanel.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Maps/MiniMap/MiniMapPanel.cs)
-- 무작위 함수로 몬스터와 아이템 절차적생성
+- 층계에 따라 계산되어 각각의 티어 아이템 확률 차등 적용
+  
+- 만들어진 확률에 기반 해 무작위 함수로 몬스터와 아이템 절차적생성
 
     [Assets/Scripts/Managers/Map/ItemManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Map/ItemManager.cs)
 
+-아이템 생성의 코드 / 장비와 몬스터 또한 비슷한 로직으로 만들어지기 때문에 생략
+
+![스크린샷 2024-10-29 034905](https://github.com/user-attachments/assets/4220322e-c208-47cd-9cb2-8415d108d486)
+
+
+
     [Assets/Scripts/Managers/Map/MonsterManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Map/MonsterManager.cs)
-- 층계에 따라 계산되어 각각의 티어 아이템 확률 차등 적용
-- 데이터 저장을 이용한 씬이동으로 층계 구현 방문한 층에는 기존의 데이터를 가져옴
+
+- 데이터 저장을 이용한 씬이동으로 층계 구현 방문한 층에는 기존의 데이터를 가져옴 (Json으로 각 데이터의 Text파일 생성 및 저장 / 읽어오기)
+  
 - CSV파일을 Resources.Load 함수를 이용 해 읽어 몬스터/아이템 데이터 적용
 
   주석 처리 된 부분은 직접 짠 코드이나 공백이 생기면 데이터를 잘 읽지 못하는 문제가 생겨 해결하지 못해 인터넷상의 코드 사용
@@ -180,7 +189,7 @@ public void OnkeyPlayerMove()
 - 우선순위 큐와 A*를 이용 해 어느정도까지 플레이어를 추격하는 몬스터 AI
   
   [Assets/Scripts/LivingEntity/Monsters/PathFinding.cs](https://github.com/Althep/FirstProject_Rework/tree/main/Assets/Scripts/LivingEntity/Monsters/MonsterAct)
-  ActState에 따라
+  ActState에 따라 몬스터의 행동양식을 다르게 함
   ````
       public void TurnAct()
     {
@@ -198,7 +207,7 @@ public void OnkeyPlayerMove()
                 break;
         }
     }
- 추후에는 각 ActState를 특정 함수를 상속하는 함수로 작성하는게 좋아보임
+ 추후에는 각 ActState를 특정 함수를 상속하는 함수로 작성하는게 좋아보임 현재는 각 다른 스크립트를 만들어서 넣었으나 비효율적
  ### 4-2 데이터관련[Assets/Scripts/Managers/Datas/DataManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/Datas/DataManager.cs)
  - 각 함수명들을 아이템의 정보에 포함, 딕셔너리로 불러오는 기능 ex) 회복포션
   ```
@@ -208,13 +217,13 @@ public class HealingPotion : ConsumeFunction
     protected override void ConsumeFunc(LivingEntity entity)
     {
 
-        if (entity.myState.currntHp + 10 > entity.myState.maxHp)
+        if (entity.myState.currntHp + amount > entity.myState.maxHp)
         {
             entity.myState.currntHp = entity.myState.maxHp;
         }
         else
         {
-            entity.myState.currntHp += 10;
+            entity.myState.currntHp += amount;
         }
         entity.SetHpbarValue();
         EventManager.Instance.OnPlayerBattle.Invoke();
@@ -223,12 +232,76 @@ public class HealingPotion : ConsumeFunction
  // 각 스탯을 Get, Set함수로 사용 해 Get,Set 함수에 이벤트를 넣는것이 더 좋아보임
 ```
  - 각 아이템 상속구조를 이용해 고유 필드 구현 ItemBase를 상속하는 ConsumeItem, EquipItem 구현 후 이를 다시 상세히 나누는 방식 (Use 함수를 Override해 장비와 소모품의 기능 차별화)
+   ```
+   public class EquipItem : ItemBase
+   {
+    public EquipType _equipType;
+    public EquipOptions options;
+
+    public EquipItem()
+    {
+        Register();
+    }
+    protected void Register()
+    { // 아이템 생성 하는 로직에 필요 한 각 Script를 등록
+        string name = this.GetType().Name;
+        //Debug.Log(name);
+        if (name == "EquipItem")
+            return;
+        if (!GameManager.instance.item.EquipScripts.ContainsKey(name))
+        {
+            GameManager.instance.item.EquipScripts.Add(name, this);
+        }
+    }
+    public override void Use(LivingEntity entity)
+    {
+        Debug.Log("ItemUse");
+        if (entity.equips.ContainsKey(_equipType))
+        {
+            UnEquip(entity);
+            AddValue(entity);
+        }
+        else
+        {
+            AddValue(entity);
+        }
+    }
+    public virtual void AddValue(LivingEntity entity)
+    {
+
+    }
+    public virtual void UnEquip(LivingEntity entity)
+    {
+        if (entity.equips.ContainsKey(_equipType))
+        {
+            entity.equips.Remove(_equipType);
+        }
+    }
+    public virtual EquipItem Clone(EquipType type)
+    { // 아이템을 생성 할 때에 스크립트를 넣어주기 위해 해당하는 타입의 스크립트를 클론 해 반환
+        if (_equipType != type)
+        {
+            _equipType = type;
+        }
+        switch (type)
+        {
+            case EquipType.Weapon:
+                return new Weapon();
+            //생략
+            case EquipType.Ring:
+                return new Ring();
+        }
+        throw new ArgumentException("Type Exception", nameof(type));
+    }
+
+    }
+```
   ### 4-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
   - 유니티 이벤트를 이용 해 플레이어 레벨업,피격 시 UI갱신
   - 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
   ```
-  public class StrengthPotion : MaintainPotion
-{
+    public class StrengthPotion : MaintainPotion
+    {
     protected override void ConsumeFunc(LivingEntity entity)
     {
         maintain = 10;
@@ -252,7 +325,7 @@ public class HealingPotion : ConsumeFunction
         
     }
 
-  ```
+ 
   ### 4-5 기타
 - 플레이어의 인벤토리 구현, List<ItemBase> 이 정보를 바탕으로 인벤토리 UI 구현
   [Assets/Scripts/UI/Inventory/InventoryUI.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/UI/Inventory/InventoryUI.cs)
