@@ -295,10 +295,12 @@ public class HealingPotion : ConsumeFunction
     }
 
     }
-```
-  ### 4-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
-  - 유니티 이벤트를 이용 해 플레이어 레벨업,피격 시 UI갱신
-  - 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
+
+### 4-3 이벤트 관련[Assets/Scripts/Managers/EventManager.cs](https://github.com/Althep/FirstProject_Rework/blob/main/Assets/Scripts/Managers/EventManager.cs)
+   - 유니티 이벤트를 이용 해 플레이어 레벨업,피격 시 UI갱신
+   - 유니티 이벤트를 이용 해 지속성 포션 아이템의 기능 구현
+
+
   ```
     public class StrengthPotion : MaintainPotion
     {
@@ -324,7 +326,7 @@ public class HealingPotion : ConsumeFunction
         }
         
     }
-
+```
  
   ### 4-5 기타
 - 플레이어의 인벤토리 구현, List<ItemBase> 이 정보를 바탕으로 인벤토리 UI 구현
